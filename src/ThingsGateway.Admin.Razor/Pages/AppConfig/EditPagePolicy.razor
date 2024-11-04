@@ -1,0 +1,24 @@
+﻿@inherits ComponentDefault
+@namespace ThingsGateway.Admin.Razor
+@using ThingsGateway.Admin.Application
+@using ThingsGateway.NewLife.X
+
+<ValidateForm class="p-4" Model="@Model" OnValidSubmit="OnSave">
+
+    <SelectObject class="mb-2" @bind-Value="Model.Shortcuts" GetTextCallback="a=>a.Count.ToString()" Height="300">
+        <TreeView TItem="SysResource" Items="ShortcutsTreeViewItems" ShowIcon="true" ShowSearch ClickToggleCheck="true"
+                  ShowCheckbox="true" AutoCheckParent="true" AutoCheckChildren="true"
+                  IsAccordion=false OnTreeItemChecked="OnShortcutsTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnShortcutsClickSearch">
+        </TreeView>
+    </SelectObject>
+
+
+    <SelectObject class="mb-2" @bind-Value="Model.Razor" GetTextCallback="b=>AppContext.AllMenus.FirstOrDefault(a=>a.Id==b)?.Title" Height="300">
+        <TreeView TItem="SysResource" Items="RazorTreeViewItems" ShowIcon="true" ShowSearch
+                  AutoCheckParent="false" AutoCheckChildren="false" OnTreeItemClick="(a)=>OnRazorTreeItemClick(a,context)"
+                  IsAccordion=false ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnRazorClickSearch">
+        </TreeView>
+    </SelectObject>
+
+    <Button class="mt-2" ButtonType="ButtonType.Submit" Icon="fa-solid fa-floppy-disk" IsAsync Text=@RazorLocalizer["Save"] />
+</ValidateForm>

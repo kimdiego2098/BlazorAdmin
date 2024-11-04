@@ -1,0 +1,87 @@
+﻿{
+  "ThingsGateway.Admin.Razor.UserLogin": {
+    "Account": "Username",
+    "Password": "Password",
+    "Login": "Login"
+  },
+  "ThingsGateway.Admin.Razor._Imports": {
+    "Org": "Org",
+    "Position": "Position",
+    "Role": "Role",
+    "RoleList": "Role List",
+    "PositionList": "Position List",
+    "OrgList": "Org List",
+    "OnlyOneUser": "Only one user",
+    "All": "All",
+    "Copy": "Copy",
+    "Choice": "Choice",
+    "Picture": "Picture",
+    "Root": "Root",
+    "Save": "Save",
+    "CurrentVerificat": "CurrentVerificat",
+    "EmptyText": "Empty",
+    "SelectPlaceHolder": "Please select ...",
+    "ExportButtonText": "Export/Import"
+  },
+  "ThingsGateway.Admin.Razor.ChoiceModuleComponent": {
+    "SetDefaultModule": "Set as default module"
+  },
+  "ThingsGateway.Admin.Razor.NotFound404": {
+    "404": "Sorry, the page you are looking for does not exist.",
+    "401": "Sorry, you do not have permission to access this page.",
+    "Home": "Back to Home",
+    "Login": "Login"
+  },
+  "ThingsGateway.Admin.Razor.Login": {
+    "LoginErrorh1": "Login Error",
+    "LoginSuccessh1": "Login Success",
+    "LoginSuccessc1": "Redirecting to the page",
+    "LoginErrorh2": "Login Failed",
+    "LoginErrorc2": "Please contact the administrator!",
+    "Remark1": "Edge Collection Gateway",
+    "Remark2": "Data Aggregation, Multi-path Forwarding",
+    "Remark3": "Edge Computing, Efficient Processing",
+    "Welcome": "Welcome"
+  },
+  "ThingsGateway.Admin.Razor.HardwareInfoPage": {
+    "SystemInfo": "System Information",
+    "HardwareInfo": "Hardware Resources",
+    "HardwareInfoChart": "Hardware Resources History Chart",
+    "CpuUsage": "CPU Usage",
+    "AvailableMemory": "Available Memory",
+    "TotalMemory": "Total Memory",
+    "WorkingSet": "WorkingSet",
+    "MemoryUsage": "Memory Usage",
+    "AvailableDisk": "Available Disk",
+    "TotalDisk": "Total Disk",
+    "DiskUsage": "Disk Usage",
+    "HistoryHardwareInfo": "Historical Trends",
+    "DateTime": "Date Time",
+    "Data": "Data",
+    "OSName": "OS Name",
+    "OSVersion": "OS Version"
+  },
+  "ThingsGateway.Admin.Razor.OperLogPage": {
+    "Date": "Date",
+    "Count": "Count",
+    "Operate": "Succeed",
+    "Exception": "Failed",
+    "Login": "Login",
+    "Logout": "Logout",
+    "SysOperateLog": "Operation Log"
+  },
+  "ThingsGateway.Admin.Razor.SessionPage": {
+    "VerificatInfo": "Token List",
+    "ExitSession": "Force Logout"
+  },
+  "ThingsGateway.Admin.Razor.VerificatListDialog": {
+    "ExitVerificat": "Force Logout Token"
+  },
+  "ThingsGateway.Admin.Razor.UserCenterPage": {
+    "UpdateUserInfo": "Update Personal Information",
+    "UserInfo": "Personal Information",
+    "UpdatePasswordInfo": "Change Password",
+    "UpdateWorkbenchInfo": "Update Personal Workbench",
+    "WorkbenchInfo": "Personal Workbench"
+  }
+}

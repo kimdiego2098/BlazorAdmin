@@ -1,0 +1,16 @@
+﻿{
+  "RECORDS": [
+    {
+      "Id": "511723919061061",
+      "OrgId": "510753093025861",
+      "Name": "管理员",
+      "Code": "gateway",
+      "Category": "HIGH",
+      "SortCode": "99",
+      "CreateUserId": "212725263002001",
+      "IsDelete": "0",
+      "ExtJson": "",
+      "Status": 1
+    }
+  ]
+}

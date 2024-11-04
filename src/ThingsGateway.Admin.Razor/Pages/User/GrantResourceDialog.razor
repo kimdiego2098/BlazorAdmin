@@ -1,0 +1,26 @@
+﻿@inherits ComponentDefault
+@using ThingsGateway.Admin.Application
+@namespace ThingsGateway.Admin.Razor
+
+<div class="tree-menu h-100">
+    <TreeView TItem="SysResource" Items="Items" ShowCheckbox="true" ShowIcon="true" AutoCheckParent="true" AutoCheckChildren="true" ClickToggleCheck OnTreeItemChecked="OnTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer"></TreeView>
+
+</div>
+<style>
+    /*弹窗表格*/
+    .dialog-table .modal-body {
+        height: calc(100vh - 400px);
+        overflow: hidden;
+    }
+
+</style>
+@code {
+    RenderFragment<SysResource> RenderTreeItem => item =>
+    @<div class="d-flex flex-fill " style="padding-right: 5rem!important;padding-left: 0rem!important;">
+        <span class="flex-fill">@item.Title</span>
+        <span class="mx-3">@item.SortCode</span>
+        <span class="menu-type">@item.Category.ToDisplayName()</span>
+        <span class="menu-text">@GetApp(item.Module)</span>
+        <span class="menu-text" title=@item.Href>@item.Href</span>
+    </div>;
+}

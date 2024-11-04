@@ -1,0 +1,42 @@
+﻿@namespace ThingsGateway.Admin.Razor
+@using ThingsGateway.Admin.Application
+
+
+<div class="row h-100" style="padding: 1px;margin:auto">
+
+    <div class="col-12  col-md-3 h-100">
+        <Tab>
+
+            <TabItem Text=@AdminLocalizer["Role"]>
+                <RoleTree ValueChanged="RoleTreeChangedAsync"></RoleTree>
+            </TabItem>
+            <TabItem Text=@AdminLocalizer["Position"]>
+                <PositionTree ValueChanged="PositionTreeChangedAsync"></PositionTree>
+            </TabItem>
+            <TabItem Text=@AdminLocalizer["Org"]>
+                <OrgTree ValueChanged="OrgTreeChangedAsync"></OrgTree>
+            </TabItem>
+        </Tab>
+
+    </div>
+    <div class="col-12  col-md-9 h-100">
+        <ChoiceTable @ref=userChoiceTable OnChangedAsync="OnChanged" TItem="UserSelectorOutput" OnQueryAsync="OnQueryAsync" SelectedRows="SelectedRows"></ChoiceTable>
+    </div>
+</div>
+<style>
+    /*弹窗表格*/
+    .dialog-table .modal-body {
+        height: calc(100vh - 200px);
+        overflow: hidden;
+    }
+    /*弹窗Tree*/
+    .dialog-table .listtree-view .tree-view {
+        height: calc(100vh - 320px);
+        overflow: hidden;
+        padding-bottom: 10px;
+    }
+</style>
+
+@code {
+    ChoiceTable<UserSelectorOutput> userChoiceTable;
+}

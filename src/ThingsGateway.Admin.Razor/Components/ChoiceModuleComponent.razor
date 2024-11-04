@@ -1,0 +1,32 @@
+﻿@namespace ThingsGateway.Admin.Razor
+@using ThingsGateway.Admin.Application
+@inherits ComponentDefault
+
+
+<div class="row g-3 form-inline">
+
+    <div class="col-12">
+        <SelectItemChooser Items="SelectedItems" @bind-Value=Value>
+            <ItemTemplate>
+                <div>
+                    <i class=@ModuleList.FirstOrDefault(a=>a.Id==context)?.Icon></i>
+                    <span class="h6">@ModuleList.FirstOrDefault(a => a.Id == context)?.Title</span>
+                </div>
+            </ItemTemplate>
+
+        </SelectItemChooser>
+    </div>
+
+    <div class="col-12">
+        <Checkbox @bind-Value="SetDefaultModule" ShowLabel="true"/>
+    </div>
+</div>
+
+<div class="form-footer">
+
+    <Button Text="@RazorLocalizer["Save"]" OnClick="Save" />
+
+</div>
+
+
+

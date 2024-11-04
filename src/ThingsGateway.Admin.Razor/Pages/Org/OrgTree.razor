@@ -1,0 +1,15 @@
+﻿@namespace ThingsGateway.Admin.Razor
+@using ThingsGateway.Admin.Application
+
+<div class="listtree-view">
+    <h6>@AdminLocalizer["OrgList"]</h6>
+
+    <TreeView
+        class="pt-3"
+    TItem="SysOrg" Items="Items" ShowIcon="true" ShowSearch IsAccordion=false OnTreeItemClick="OnTreeItemClick" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnClickSearch">
+
+
+    </TreeView>
+
+</div>
+
