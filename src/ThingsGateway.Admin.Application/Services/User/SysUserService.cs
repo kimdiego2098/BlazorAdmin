@@ -337,7 +337,6 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
                         .Any())//指定角色
 
        .LeftJoin<SysOrg>((u, o) => u.OrgId == o.Id).LeftJoin<SysPosition>((u, o, p) => u.PositionId == p.Id)
-
           .Select((u, o, p) => new SysUser
           {
               Id = u.Id.SelectAll(),

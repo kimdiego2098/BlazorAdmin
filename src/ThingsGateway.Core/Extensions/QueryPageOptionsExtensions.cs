@@ -62,12 +62,10 @@ public static class QueryPageOptionsExtensions
     /// 根据查询条件返回sqlsugar ISugarQueryable
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="db"></param>
-    /// <param name="option"></param>
     /// <returns></returns>
-    public static ISugarQueryable<T> GetQuery<T>(this SqlSugarClient db, QueryPageOptions option)
+    public static ISugarQueryable<T> GetQuery<T>(this SqlSugarClient db, QueryPageOptions option, ISugarQueryable<T>? query = null)
     {
-        ISugarQueryable<T>? query = db.Queryable<T>();
+        query ??= db.Queryable<T>();
 
         var where = option.ToFilter();
         if (where.HasFilters())

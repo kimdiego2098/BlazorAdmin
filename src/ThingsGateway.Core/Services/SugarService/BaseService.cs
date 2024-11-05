@@ -90,9 +90,11 @@ public class BaseService<T> : IDataService<T>, IDisposable where T : class, new(
         };
 
         using var db = GetDB();
-        var query = db.GetQuery<T>(option);
+        var query = db.Queryable<T>();
         if (queryFunc != null)
             query = queryFunc(query);
+        query = db.GetQuery<T>(option, query);
+
         if (option.IsPage)
         {
             RefAsync<int> totalCount = 0;
