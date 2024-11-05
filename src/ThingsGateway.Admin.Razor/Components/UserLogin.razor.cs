@@ -42,7 +42,9 @@ public partial class UserLogin
     /// <inheritdoc/>
     protected override async Task OnInitializedAsync()
     {
-        Items = OrgUtil.BuildOrgSelectList(await SysOrgService.GetTenantListAsync()).ToList();
+        var tenantList = await SysOrgService.GetTenantListAsync();
+        Items = OrgUtil.BuildOrgSelectList(tenantList).ToList();
+        Model.TenantId = tenantList.FirstOrDefault().Id;        //默认第一个
 
         await base.OnInitializedAsync();
 #if DEBUG

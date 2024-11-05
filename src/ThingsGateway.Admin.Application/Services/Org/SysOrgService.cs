@@ -288,7 +288,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
         if (tenantList == null)
         {
             var orgList = await GetAllAsync(false);
-            tenantList = orgList.Where(it => it.Category == OrgEnum.COMPANY).ToList();
+            tenantList = orgList.Where(it => it.Category == OrgEnum.COMPANY).OrderBy(x => x.SortCode).ToList();
             if (tenantList.Count > 0)
             {
                 //插入Redis
