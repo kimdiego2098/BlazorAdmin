@@ -29,11 +29,11 @@ public class SysOrgSeedData : ISqlSugarEntitySeedData<SysOrg>
                   Status=true,
                   IsDelete=false,
                   DirectorId=RoleConst.SuperAdminId,
-                  Name="系统管理",
+                  Name="X科技有限公司",
                   Code="Diego",
                   Category=OrgEnum.COMPANY,
                   CreateUserId=RoleConst.SuperAdminId,
-                  Names="系统管理",
+                  Names="X科技有限公司",
                   SortCode=0
             }
         }.Concat(SeedDataUtil.GetSeedDataByJson<SysOrg>(SeedDataUtil.GetManifestResourceStream(assembly, "SeedData.Admin.seed_sys_org.json")).Concat(data));

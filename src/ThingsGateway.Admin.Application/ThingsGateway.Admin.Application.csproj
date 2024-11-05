@@ -29,9 +29,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="SeedData\Admin\seed_biz_resource.json" />
-  </ItemGroup>
 
 
   <!--<ItemGroup>

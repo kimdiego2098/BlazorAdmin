@@ -28,7 +28,7 @@ public class SysPositionSeedData : ISqlSugarEntitySeedData<SysPosition>
                   Id=RoleConst.DefaultPositionId,
                   Status=true,
                   IsDelete=false,
-                  Name="系统管理",
+                  Name="管理员",
                   OrgId=RoleConst.DefaultTenantId,
                   Code="Diego",
                   Category=PositionCategoryEnum.HIGH,
