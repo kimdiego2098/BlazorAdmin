@@ -22,7 +22,18 @@ namespace ThingsGateway.Admin.Application;
 internal class SessionService : BaseService<SysUser>, ISessionService
 {
     private readonly IVerificatInfoService _verificatInfoService;
-
+    private ISysUserService _sysUserService;
+    private ISysUserService SysUserService
+    {
+        get
+        {
+            if (_sysUserService == null)
+            {
+                _sysUserService = App.GetService<ISysUserService>();
+            }
+            return _sysUserService;
+        }
+    }
     public SessionService(IVerificatInfoService verificatInfoService)
     {
         _verificatInfoService = verificatInfoService;
@@ -43,9 +54,13 @@ internal class SessionService : BaseService<SysUser>, ISessionService
             IsAdvanceSearch = option.AdvanceSearches.Any() || option.CustomerSearches.Any(),
             IsSearch = option.Searches.Any()
         };
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
 
         using var db = GetDB();
-        var query = db.GetQuery<SysUser>(option).WhereIF(!option.SearchText.IsNullOrWhiteSpace(), a => a.Account.Contains(option.SearchText!));
+        var query = db.GetQuery<SysUser>(option)
+            .WhereIF(dataScope != null && dataScope?.Count > 0, u => dataScope.Contains(u.OrgId))//在指定机构列表查询
+            .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId)
+            .WhereIF(!option.SearchText.IsNullOrWhiteSpace(), a => a.Account.Contains(option.SearchText!));
 
         if (option.IsPage)
         {
