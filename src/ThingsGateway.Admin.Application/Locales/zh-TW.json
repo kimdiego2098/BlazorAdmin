@@ -70,7 +70,12 @@
     "CanotDeleteAdmin": "不可刪除系統內建超管角色",
     "CanotEditAdmin": "不可編輯超管角色",
     "CanotGrantAdmin": "不能分配超管角色",
-    "NameDup": "存在重複的角色名稱 {0}"
+    "NameDup": "存在重複的角色名稱 {0}",
+
+    "OrgNotNull": "機構不能為空",
+    "SameOrgNameDup": "存在重複的角色名稱 {0}",
+    "CannotRoleScopeAll": "機構角色不能選擇全局數據範圍",
+    "CodeDup": "存在重複的編碼 {0}"
   },
   "ThingsGateway.Admin.Application.RoleCategoryEnum": {
     "Global": "全局",

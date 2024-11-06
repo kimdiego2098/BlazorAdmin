@@ -520,7 +520,7 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
         }
         //判断是否有相同的Code
         if (sysRoles.Any(it => it.Code == sysRole.Code && it.Id != sysRole.Id))
-            throw Oops.Bah(Localizer["CodeDup:{sysRole.Code}"]);
+            throw Oops.Bah(Localizer["CodeDup", sysRole.Code]);
 
 
     }

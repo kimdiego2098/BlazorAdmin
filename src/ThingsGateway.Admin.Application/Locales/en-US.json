@@ -70,9 +70,12 @@
     "CanotDeleteAdmin": "Cannot delete built-in super admin role",
     "CanotEditAdmin": "Cannot edit super admin role",
     "CanotGrantAdmin": "Cannot assign admins roles",
-    "NameDup": "Duplicate role name {0}"
+    "NameDup": "Duplicate role name {0}",
 
-
+    "OrgNotNull": "Organization cannot be null",
+    "SameOrgNameDup": "Duplicate role name exists: {0}",
+    "CannotRoleScopeAll": "Organization role cannot select global data scope",
+    "CodeDup": "Duplicate code exists: {0}"
   },
 
   "ThingsGateway.Admin.Application.RoleCategoryEnum": {

@@ -69,7 +69,11 @@
     "CanotEditAdmin": "不可编辑超管角色",
     "CanotGrantAdmin": "不能分配超管角色",
 
-    "NameDup": "存在重复的角色名称 {0}"
+    "NameDup": "存在重复的角色名称 {0}",
+    "OrgNotNull": "机构不能为空",
+    "SameOrgNameDup": "存在重复的角色名称 {0}",
+    "CannotRoleScopeAll": "机构角色不能选择全局数据范围",
+    "CodeDup": "存在重复的编码 {0}"
   },
   "ThingsGateway.Admin.Application.RoleCategoryEnum": {
     "Global": "全局",
