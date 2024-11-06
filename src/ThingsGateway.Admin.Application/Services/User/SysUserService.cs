@@ -55,7 +55,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     /// <inheritdoc/>
     public async Task<List<long>?> GetCurrentUserDataScopeAsync()
     {
-        if (UserManager.SuperAdmin)
+        if (UserManager.SuperAdmin || UserManager.UserId == 0)
             return null;
         var userInfo = await GetUserByIdAsync(UserManager.UserId);//获取用户信息
         var roles = await _roleService.GetRoleListByUserIdAsync(UserManager.UserId);
