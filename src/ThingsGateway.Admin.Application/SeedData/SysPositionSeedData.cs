@@ -30,7 +30,7 @@ public class SysPositionSeedData : ISqlSugarEntitySeedData<SysPosition>
                   IsDelete=false,
                   Name="管理员",
                   OrgId=RoleConst.DefaultTenantId,
-                  Code="Diego",
+                  Code="ThingsGateway",
                   Category=PositionCategoryEnum.HIGH,
                   CreateUserId=RoleConst.SuperAdminId,
                   SortCode=0
