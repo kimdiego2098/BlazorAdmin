@@ -31,6 +31,7 @@ public class Startup : AppStartup
 
 
         services.AddConfigurableOptions<WebsiteOptions>();
+        services.AddConfigurableOptions<SqlSugarOptions>();
 
         services.AddSingleton(typeof(IDataService<>), typeof(BaseService<>));
         services.AddSingleton(typeof(IEventService<>), typeof(EventService<>));

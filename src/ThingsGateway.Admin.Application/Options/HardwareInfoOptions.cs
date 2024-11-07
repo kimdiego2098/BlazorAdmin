@@ -8,12 +8,14 @@
 //  QQ群：605534569
 //------------------------------------------------------------------------------
 
+using ThingsGateway.ConfigurableOptions;
+
 namespace ThingsGateway.Admin.Application;
 
 /// <summary>
 /// 历史硬件信息
 /// </summary>
-public class HardwareInfoOptions
+public class HardwareInfoOptions : IConfigurableOptions
 {
     /// <summary>
     /// 启用

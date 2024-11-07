@@ -10,6 +10,8 @@
 
 using SqlSugar;
 
+using ThingsGateway.ConfigurableOptions;
+
 namespace ThingsGateway;
 
 /// <summary>
@@ -41,6 +43,6 @@ public sealed class SqlSugarOption : ConnectionConfig
 /// <summary>
 /// SqlSugar配置
 /// </summary>
-public class SqlSugarOptions : List<SqlSugarOption>
+public class SqlSugarOptions : List<SqlSugarOption>, IConfigurableOptions
 {
 }

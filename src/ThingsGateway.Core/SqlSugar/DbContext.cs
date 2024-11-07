@@ -8,7 +8,6 @@
 //  QQ群：605534569
 //------------------------------------------------------------------------------
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using SqlSugar;
@@ -49,7 +48,7 @@ public static class DbContext
     static DbContext()
     {
         // 配置映射
-        DbConfigs = App.Configuration?.GetSection(nameof(SqlSugarOptions)).Get<SqlSugarOptions>()!;
+        DbConfigs = App.GetOptions<SqlSugarOptions>();
         Db = new(DbConfigs.Select(a => (ConnectionConfig)a).ToList(), db =>
         {
             DbConfigs.ForEach(it =>

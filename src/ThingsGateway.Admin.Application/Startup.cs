@@ -24,6 +24,7 @@ public class Startup : AppStartup
     public void ConfigureAdminApp(IServiceCollection services)
     {
         services.AddConfigurableOptions<EmailOptions>();
+        services.AddConfigurableOptions<HardwareInfoOptions>();
         services.AddSingleton<IEmailService, EmailService>();
 
         services.AddSingleton<INoticeService, NoticeService>();
