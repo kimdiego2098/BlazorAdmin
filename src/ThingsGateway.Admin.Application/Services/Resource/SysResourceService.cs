@@ -289,7 +289,7 @@ internal class SysResourceService : BaseService<SysResource>, ISysResourceServic
         //获取所有列表
         var menList = await GetAllAsync().ConfigureAwait(false);
         //判断是否有同级且同名
-        if (menList.Any(it => it.ParentId == sysResource.ParentId && it.Title == sysResource.Title && it.Id != sysResource.Id))
+        if (menList.Any(it => it.ParentId == sysResource.ParentId && it.Title == sysResource.Title && it.Id != sysResource.Id && it.Module == sysResource.Module))
             throw Oops.Bah(Localizer["ResourceDup", sysResource.Title]);
         if (sysResource.ParentId != 0)
         {
