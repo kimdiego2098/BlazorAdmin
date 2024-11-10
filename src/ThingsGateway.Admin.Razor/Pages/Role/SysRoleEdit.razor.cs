@@ -48,7 +48,7 @@ public partial class SysRoleEdit
 
         OrgItems = OrgUtil.BuildTreeIdItemList(items, new List<long> { Model.OrgId });
 
-        if (AppContext.CurrentUser.IsGlobal)
+        if (!AppContext.CurrentUser.IsGlobal)
             Model.Category = RoleCategoryEnum.Org;
         await base.OnInitializedAsync();
     }
