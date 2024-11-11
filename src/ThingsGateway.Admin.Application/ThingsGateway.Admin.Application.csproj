@@ -30,14 +30,6 @@
     </Content>
   </ItemGroup>
 
-
-  <!--<ItemGroup>
-    <Content Remove="SeedData\Json\*.json" />
-    <Content Include="SeedData\Json\*.json" Pack="true" PackagePath="\SeedData\Json\" >
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>-->
-
   <ItemGroup>
     <Content Include="Directory.build.targets">
       <Pack>true</Pack>
