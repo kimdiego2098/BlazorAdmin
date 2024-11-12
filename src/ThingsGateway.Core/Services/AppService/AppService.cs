@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 
 using System.Net;
+using System.Reflection;
 using System.Security.Claims;
 
 using UAParser;
@@ -61,7 +62,7 @@ public class AppService : IAppService
     {
         var diffTime = DateTime.MaxValue;
         //var diffTime = DateTime.Now.AddMinutes(expire);
-        await App.HttpContext!.SignInAsync(nameof(ThingsGateway), new ClaimsPrincipal(identity), new AuthenticationProperties()
+        await App.HttpContext!.SignInAsync(Assembly.GetEntryAssembly().GetName().Name, new ClaimsPrincipal(identity), new AuthenticationProperties()
         {
             IsPersistent = true,
             AllowRefresh = true,

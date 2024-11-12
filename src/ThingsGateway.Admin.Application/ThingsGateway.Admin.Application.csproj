@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(SolutionDir)Version.props" />
   <Import Project="$(SolutionDir)PackNuget.props" />
+  
+  <PropertyGroup>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Rougamo.Fody" Version="4.0.4" />
@@ -8,7 +12,7 @@
     <ProjectReference Include="..\ThingsGateway.Core\ThingsGateway.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
-    
+
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0-rc.2.24473.5" />
 
   </ItemGroup>

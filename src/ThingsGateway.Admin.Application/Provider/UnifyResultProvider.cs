@@ -81,13 +81,13 @@ public class UnifyResultProvider : IUnifyResultProvider
 
     public IActionResult OnAuthorizeException(DefaultHttpContext context, ExceptionMetadata metadata)
     {
-        return new JsonResult(RESTfulResult(metadata.StatusCode, data: metadata.Data, errors: metadata.Errors)
+        return new JsonResult(RESTfulResult(metadata.StatusCode, data: metadata.Data, errors: metadata.Errors ?? metadata.Exception?.Message)
                , UnifyContext.GetSerializerSettings(context));
     }
 
     public IActionResult OnException(ExceptionContext context, ExceptionMetadata metadata)
     {
-        return new JsonResult(RESTfulResult(metadata.StatusCode, data: metadata.Data, errors: metadata.Errors)
+        return new JsonResult(RESTfulResult(metadata.StatusCode, data: metadata.Data, errors: metadata.Errors ?? metadata.Exception?.Message)
                  , UnifyContext.GetSerializerSettings(context));
     }
 

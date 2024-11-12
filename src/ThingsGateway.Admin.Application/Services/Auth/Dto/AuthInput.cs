@@ -20,7 +20,7 @@ public class OpenApiLoginInput
     /// <summary>
     /// 账号
     ///</summary>
-    /// <example>BizAdmin</example>
+    /// <example>SuperAdmin</example>
     [Required]
     public string Account { get; set; }
 
@@ -48,7 +48,7 @@ public class LoginInput
     /// <summary>
     /// 账号
     ///</summary>
-    /// <example>BizAdmin</example>
+    /// <example>SuperAdmin</example>
     [Required]
     public string Account { get; set; }
 

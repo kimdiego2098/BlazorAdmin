@@ -352,6 +352,9 @@ public static class PathHelper
 
         if (fi.Name.EndsWithIgnoreCase(".zip"))
         {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+            ZipFile.ExtractToDirectory(fi.FullName, destDir, overwrite);
+#else
             using var zip = ZipFile.Open(fi.FullName, ZipArchiveMode.Read, null);
             var di = Directory.CreateDirectory(destDir);
             var fullName = di.FullName;
@@ -377,6 +380,7 @@ public static class PathHelper
                     catch { }
                 }
             }
+#endif
         }
         else
         {
