@@ -6,10 +6,9 @@
       "Name": "业务管理员",
       "Category": "ORG",
       "CreateUserId": 212725263002001,
-      "DefaultDataScope": "{\"Level\":5,\"ScopeCategory\":\"SCOPE_ORG_CHILD\",\"ScopeDefineOrgIdList\":[]}",
+      "DefaultDataScope": "{\"ScopeCategory\":\"SCOPE_ORG_CHILD\",\"ScopeDefineOrgIdList\":[]}",
       "OrgId": "510753093025861",
-      "IsDelete": "0",
-      "Status": 1,
+      "IsDelete": "0",      
       "SortCode": 2
     }
 
