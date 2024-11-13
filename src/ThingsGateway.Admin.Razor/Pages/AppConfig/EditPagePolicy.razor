@@ -6,7 +6,7 @@
 <ValidateForm class="p-4" Model="@Model" OnValidSubmit="OnSave">
 
     <SelectObject class="mb-2" @bind-Value="Model.Shortcuts" GetTextCallback="a=>a.Count.ToString()" Height="300">
-        <TreeView TItem="SysResource" Items="ShortcutsTreeViewItems" ShowIcon="true" ShowSearch ClickToggleCheck="true"
+        <TreeView TItem="SysResource" Items="ShortcutsTreeViewItems" ShowIcon="true" ShowSearch ClickToggleCheck="true" IsVirtualize="true"
                   ShowCheckbox="true" AutoCheckParent="true" AutoCheckChildren="true"
                   IsAccordion=false OnTreeItemChecked="OnShortcutsTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnShortcutsClickSearch">
         </TreeView>
@@ -14,7 +14,7 @@
 
 
     <SelectObject class="mb-2" @bind-Value="Model.Razor" GetTextCallback="b=>AppContext.AllMenus.FirstOrDefault(a=>a.Id==b)?.Title" Height="300">
-        <TreeView TItem="SysResource" Items="RazorTreeViewItems" ShowIcon="true" ShowSearch
+        <TreeView TItem="SysResource" Items="RazorTreeViewItems" ShowIcon="true" IsVirtualize="true"  ShowSearch
                   AutoCheckParent="false" AutoCheckChildren="false" OnTreeItemClick="(a)=>OnRazorTreeItemClick(a,context)"
                   IsAccordion=false ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnRazorClickSearch">
         </TreeView>

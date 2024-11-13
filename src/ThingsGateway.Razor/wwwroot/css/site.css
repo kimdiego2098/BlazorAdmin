@@ -77,8 +77,8 @@
 
 /*#*/
 .menu {
-    --bb-menu-item-hover-bg: var(--bs-primary-bg1);
-    --bb-menu-item-hover-color: var(--bs-primary);
+    --bb-menu-item-hover-bg: var(--bs-primary-bg1) !important;
+    --bb-menu-item-hover-color: var(--bs-primary) !important;
 }
 
 /*顶栏文字样式*/

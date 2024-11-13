@@ -32,7 +32,7 @@
         {
             <SelectObject @bind-Value="Model.DefaultDataScope.ScopeDefineOrgIdList" GetTextCallback="a=>a.Count.ToString()" Height="300">
                 <TreeView TItem="SysOrg" Items="Items" ShowIcon="true" ShowSearch ClickToggleCheck="true"
-                          ShowCheckbox="true" AutoCheckParent="false" AutoCheckChildren="false"
+                          ShowCheckbox="true" AutoCheckParent="false" AutoCheckChildren="false" IsVirtualize="true"
                           IsAccordion=false OnTreeItemChecked="OnTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnClickSearch">
                 </TreeView>
             </SelectObject>
