@@ -45,7 +45,6 @@ public class Startup : AppStartup
             options.ServicesStopConcurrently = true;
         });
 
-
         // 事件总线
         services.AddEventBus(options =>
         {

@@ -2,10 +2,10 @@
 
   <Import Project="$(SolutionDir)PackNuget.props" />
   <Import Project="$(SolutionDir)Version.props" />
-  
+
   <PropertyGroup>
-    <NoWarn>CS8603;CS8618;CS1591;CS8625;CS8602;CS8604;CS8600;CS8601;CS8714;</NoWarn>
-    <TargetFrameworks>net452;net462;netstandard2.0;net6.0;net6.0-windows;net8.0;net8.0-windows</TargetFrameworks>
+    <NoWarn>CS8603;CS8618;CS1591;CS8625;CS8602;CS8604;CS8600;CS8601;CS8714;CA2022;</NoWarn>
+    <TargetFrameworks>net452;net462;netstandard2.0;net6.0;net6.0-windows;net8.0;net8.0-windows;net9.0;net9.0-windows</TargetFrameworks>
     <AssemblyName>ThingsGateway.NewLife.X</AssemblyName>
     <RootNamespace>ThingsGateway.NewLife</RootNamespace>
     <AssemblyTitle>工具核心库</AssemblyTitle>
@@ -23,7 +23,7 @@
     <None Remove="$(SolutionDir)..\README.zh-CN.md" Pack="false" PackagePath="\" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net452' or '$(TargetFramework)'=='net462' or '$(TargetFramework)'=='net5.0-windows' or '$(TargetFramework)'=='net6.0-windows' or '$(TargetFramework)'=='net7.0-windows' or '$(TargetFramework)'=='net8.0-windows'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net452' or '$(TargetFramework)'=='net462' or '$(TargetFramework)'=='net5.0-windows' or '$(TargetFramework)'=='net6.0-windows' or '$(TargetFramework)'=='net7.0-windows' or '$(TargetFramework)'=='net8.0-windows' or '$(TargetFramework)'=='net9.0-windows'">
     <DefineConstants>WIN</DefineConstants>
   </PropertyGroup>
 
@@ -35,14 +35,22 @@
     <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" IsImplicitlyDefined="true" TargetingPackVersion="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net9.0-windows'">
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" IsImplicitlyDefined="true" TargetingPackVersion="9.0.0" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Memory" Version="4.6.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net452' or '$(TargetFramework)'=='net462'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net462'">
+    <PackageReference Include="System.Memory" Version="4.6.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
-  
+  <ItemGroup Condition="'$(TargetFramework)'=='net452'">
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)'=='net452' or '$(TargetFramework)'=='net462'">
     <Using Include="System.Net.Http" />
     <Reference Include="Microsoft.VisualBasic" />

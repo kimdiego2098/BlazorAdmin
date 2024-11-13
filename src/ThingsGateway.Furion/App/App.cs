@@ -502,7 +502,7 @@ public static class App
                 catch (Exception ex)
                 {
                     _BakImages.TryAdd(assemblyFileFullPath);
-                    Console.WriteLine("Load external assembly error: {0} {1}", assemblyFileFullPath, ex);
+                    Console.WriteLine("Load external assembly error: {0} {1} {2}", assemblyFileFullPath, Environment.NewLine, ex);
                 }
             }
         }

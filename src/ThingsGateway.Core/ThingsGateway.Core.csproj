@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
   </PropertyGroup>
@@ -9,6 +9,8 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Npgsql" Version="8.0.5" />
     <PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
     <PackageReference Include="MiniExcel" Version="1.35.0" />
     <PackageReference Include="UAParser" Version="3.1.47" />
@@ -16,7 +18,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="8.11.0" />
+    <PackageReference Include="BootstrapBlazor" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
