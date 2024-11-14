@@ -8,6 +8,11 @@
 //  QQ群：605534569
 //------------------------------------------------------------------------------
 
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+
+using System.Diagnostics.CodeAnalysis;
+
 namespace ThingsGateway.Admin.Razor;
 
 public partial class NotFound404
