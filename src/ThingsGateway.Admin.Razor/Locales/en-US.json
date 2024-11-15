@@ -1,4 +1,7 @@
 ﻿{
+  "ThingsGateway.Admin.Razor.LoginConnectionHub": {
+    "Jump": "Jump"
+  },
   "ThingsGateway.Admin.Razor.UserLogin": {
     "Account": "Username",
     "Password": "Password",
@@ -26,7 +29,7 @@
   "ThingsGateway.Admin.Razor.ChoiceModuleComponent": {
     "SetDefaultModule": "Set as default module"
   },
-  
+
   "ThingsGateway.Admin.Razor.HardwareInfoPage": {
     "SystemInfo": "System Information",
     "HardwareInfo": "Hardware Resources",

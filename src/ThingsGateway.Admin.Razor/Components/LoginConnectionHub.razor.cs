@@ -27,7 +27,9 @@ public partial class LoginConnectionHub : ComponentBase, IDisposable
     [Inject]
     private IEventService<AppMessage> NewMessage { get; set; }
     [Inject]
-    private IEventService<string> LoginOut { get; set; }
+    private IEventService<UserLoginOut> LoginOut { get; set; }
+    [Inject]
+    private IEventService<NavigationUri> NavigationUri { get; set; }
 
     /// <inheritdoc/>
     public void Dispose()
@@ -36,6 +38,7 @@ public partial class LoginConnectionHub : ComponentBase, IDisposable
         var clientId = ClientId.ToString();
         NewMessage.UnSubscribe(clientId);
         LoginOut.UnSubscribe(clientId);
+        NavigationUri.UnSubscribe(clientId);
     }
     private long VerificatId;
     private long ClientId;
@@ -48,7 +51,7 @@ public partial class LoginConnectionHub : ComponentBase, IDisposable
             var clientId = ClientId.ToString();
             LoginOut.Subscribe(clientId, async (message) =>
             {
-                await InvokeAsync(async () => await ToastService.Warning(message));
+                await InvokeAsync(async () => await ToastService.Warning(message.Message));
                 await Task.Delay(2000);
                 NavigationManager.NavigateTo(NavigationManager.Uri, true);
             });
@@ -59,7 +62,10 @@ public partial class LoginConnectionHub : ComponentBase, IDisposable
                 else
                     await InvokeAsync(async () => await ToastService.Warning(message.Data));
             });
-
+            NavigationUri.Subscribe(clientId, async (message) =>
+            {
+                await ShowMessage(message);
+            });
             UpdateVerificat(ClientId, VerificatId, isConnect: true);
         }
         catch (OperationCanceledException)
@@ -73,7 +79,24 @@ public partial class LoginConnectionHub : ComponentBase, IDisposable
         return base.OnInitializedAsync();
     }
 
-
+    [Inject]
+    private IStringLocalizer<LoginConnectionHub> Localizers { get; set; }
+    [Inject]
+    private MessageService MessageService { get; set; }
+    private async Task ShowMessage(NavigationUri navigationUri)
+    {
+        await MessageService.Show(new MessageOption()
+        {
+            Icon = "fa-solid fa-circle-info",
+            ShowDismiss = true,
+            IsAutoHide = false,
+            ChildContent = RenderItem(navigationUri),
+            OnDismiss = () =>
+            {
+                return Task.CompletedTask;
+            }
+        });
+    }
     /// <summary>
     /// 更新cache
     /// </summary>

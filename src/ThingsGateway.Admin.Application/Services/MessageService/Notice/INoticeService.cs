@@ -15,6 +15,11 @@ public interface INoticeService
     /// <summary>
     /// 发送新消息通知给指定用户
     /// </summary>
+    Task NavigationMesage(IEnumerable<long>? clientIds, string uri, string message);
+
+    /// <summary>
+    /// 发送新消息通知给指定用户
+    /// </summary>
     /// <param name="clientIds">客户端ID列表</param>
     /// <param name="message">消息内容</param>
     /// <returns>异步操作结果</returns>

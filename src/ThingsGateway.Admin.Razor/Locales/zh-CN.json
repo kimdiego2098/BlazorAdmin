@@ -1,4 +1,7 @@
 ﻿{
+  "ThingsGateway.Admin.Razor.LoginConnectionHub": {
+    "Jump": "跳转"
+  },
   "ThingsGateway.Admin.Razor.UserLogin": {
     "Account": "登录账号",
     "Password": "登录密码",
@@ -26,7 +29,7 @@
   "ThingsGateway.Admin.Razor.ChoiceModuleComponent": {
     "SetDefaultModule": "设置为默认模块"
   },
- 
+
   "ThingsGateway.Admin.Razor.HardwareInfoPage": {
     "SystemInfo": "系统信息",
     "HardwareInfo": "硬件资源",

@@ -9,18 +9,21 @@
 //------------------------------------------------------------------------------
 
 namespace ThingsGateway.Admin.Application;
-
 internal class NoticeService : INoticeService
 {
     private IEventService<AppMessage>? MessageDispatchService { get; set; }
-    private IEventService<string>? StringDispatchService { get; set; }
+    private IEventService<UserLoginOut>? UserLoginOutDispatchService { get; set; }
+    private IEventService<NavigationUri>? NavigationMesageDispatchService { get; set; }
     public NoticeService(IEventService<AppMessage> signalRMessageDispatchService,
-         IEventService<string> stringDispatchService
+         IEventService<UserLoginOut> userLoginOutDispatchService,
+         IEventService<NavigationUri> navigationMesageDispatchService
         )
     {
         MessageDispatchService = signalRMessageDispatchService;
-        StringDispatchService = stringDispatchService;
+        UserLoginOutDispatchService = userLoginOutDispatchService;
+        NavigationMesageDispatchService = navigationMesageDispatchService;
     }
+
 
     /// <inheritdoc/>
     public async Task NewMesage(IEnumerable<long>? clientIds, AppMessage message)
@@ -43,7 +46,22 @@ internal class NoticeService : INoticeService
         {
             foreach (var clientId in clientIds)
             {
-                await StringDispatchService.Publish(clientId.ToString(), message).ConfigureAwait(false);
+                await UserLoginOutDispatchService.Publish(clientId.ToString(), new(message)).ConfigureAwait(false);
+            }
+        }
+    }
+
+
+
+    /// <inheritdoc/>
+    public async Task NavigationMesage(IEnumerable<long>? clientIds, string uri, string message)
+    {
+        //发送消息给用户
+        if (clientIds != null)
+        {
+            foreach (var clientId in clientIds)
+            {
+                await NavigationMesageDispatchService.Publish(clientId.ToString(), new(uri, message)).ConfigureAwait(false);
             }
         }
     }
