@@ -45,7 +45,7 @@ public class BlazorAppContext
     public IEnumerable<MenuItem> OwnMenuItems { get; private set; }
 
     /// <summary>
-    /// 用户个人菜单
+    /// 用户个人菜单，多个模块
     /// </summary>
     public IEnumerable<SysResource> OwnMenus { get; private set; }
 
@@ -64,9 +64,6 @@ public class BlazorAppContext
     /// </summary>
     public IEnumerable<SysResource> UserWorkbenchOutputs { get; private set; }
 
-    /// <summary>
-    /// 用户个人快捷方式菜单
-    /// </summary>
     public IEnumerable<SysResource> AllResource { get; private set; }
 
     private ISysResourceService ResourceService { get; }
@@ -107,7 +104,8 @@ public class BlazorAppContext
                 CurrentModuleId = CurrentUser.ModuleList.FirstOrDefault()?.Id ?? 0;
             }
             UserWorkBench = await UserCenterService.GetLoginWorkbenchAsync(UserManager.UserId);
-            OwnMenus = (await UserCenterService.GetOwnMenuAsync(UserManager.UserId, CurrentModuleId)).Adapt<List<SysResource>>();
+            OwnMenus = (await UserCenterService.GetOwnMenuAsync(UserManager.UserId, 0)).Adapt<List<SysResource>>();
+
             if (TitleLocalizer != null)
             {
                 foreach (var a in OwnMenus)
@@ -115,8 +113,9 @@ public class BlazorAppContext
                     a.Title = TitleLocalizer[a.Title];
                 }
             }
-            OwnMenuItems = ResourceUtil.BuildMenuTrees(OwnMenus).ToList();
-            OwnSameLevelMenuItems = OwnMenus.Where(a => !a.Href.IsNullOrWhiteSpace()).Select(item => new MenuItem()
+            var ownMenus = OwnMenus.Where(a => a.Module == CurrentModuleId || a.Module == ResourceConst.SpaId).ToList();
+            OwnMenuItems = ResourceUtil.BuildMenuTrees(ownMenus).ToList();
+            OwnSameLevelMenuItems = ownMenus.Where(a => !a.Href.IsNullOrWhiteSpace()).Select(item => new MenuItem()
             {
                 Match = item.NavLinkMatch ?? Microsoft.AspNetCore.Components.Routing.NavLinkMatch.All,
                 Text = item.Title,

@@ -13,6 +13,7 @@ using BootstrapBlazor.Components;
 using System.Text.RegularExpressions;
 
 using ThingsGateway.Extension;
+using ThingsGateway.Extension.Generic;
 using ThingsGateway.FriendlyException;
 using ThingsGateway.NewLife.Extension;
 
@@ -113,7 +114,7 @@ internal class UserCenterService : BaseService<SysUser>, IUserCenterService
 
             //获取所有的菜单 ，并按分类和排序码排序 //首页例外
             var allMenuList = (all).Where(a => a.Category == ResourceCategoryEnum.Menu
-            && (a.Module == ResourceConst.SpaId || a.Module == moduleId)).OrderBy(a => a.Module).ThenBy(a => a.SortCode);
+           ).WhereIf(moduleId > 0, a => a.Module == ResourceConst.SpaId || a.Module == moduleId).OrderBy(a => a.Module).ThenBy(a => a.SortCode);
 
             //输出的用户权限菜单
             IEnumerable<SysResource> myMenus;
