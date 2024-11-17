@@ -44,10 +44,11 @@ public partial class GrantApiDialog
 
     private async Task OnTreeItemChecked(List<TreeViewItem<OpenApiPermissionTreeSelector>> items)
     {
-        Value = items.Where(a => a.Items == null || a.Items.Count <= 0).Select(a => a.Value.ApiRoute).ToList();
+        var value = items.Where(a => a.Items == null || a.Items.Count <= 0).Select(a => a.Value.ApiRoute).ToList();
+        Value = value;
         if (ValueChanged != null)
         {
-            await ValueChanged.Invoke(Value);
+            await ValueChanged.Invoke(value);
         }
     }
 }

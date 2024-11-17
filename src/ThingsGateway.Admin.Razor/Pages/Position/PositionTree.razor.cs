@@ -37,10 +37,11 @@ public partial class PositionTree : IDisposable
 
     private async Task OnTreeItemClick(TreeViewItem<PositionTreeOutput> item)
     {
-        Value = item.Value.Id;
+        var value = item.Value.Id;
+        Value = value;
         if (ValueChanged != null && item.Value.IsPosition)
         {
-            await ValueChanged.Invoke(Value);
+            await ValueChanged.Invoke(value);
         }
     }
 

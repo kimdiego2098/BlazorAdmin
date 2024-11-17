@@ -127,7 +127,7 @@ public partial class SysUserPage
                     {
                         var relationResourcePermission = new RelationResourcePermission();
                         relationResourcePermission.MenuId = item.Id;
-                        relationResourcePermission.ButtonIds = SysResourceService.GetResourceChilden(allResource, item.Id).Select(a => a.Id);
+                        relationResourcePermission.ButtonIds = SysResourceService.GetResourceChilden(allResource, item.Id).Where(a=>value.Contains(a.Id)).Select(a => a.Id);
                         grantInfoList.Add(relationResourcePermission);
                     }
                     data.GrantInfoList = grantInfoList;

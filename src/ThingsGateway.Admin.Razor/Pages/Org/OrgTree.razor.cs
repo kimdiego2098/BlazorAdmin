@@ -38,10 +38,11 @@ public partial class OrgTree : IDisposable
 
     private async Task OnTreeItemClick(TreeViewItem<SysOrg> item)
     {
-        Value = item.Value.Id;
+        var value = item.Value.Id;
+        Value = value;
         if (ValueChanged != null)
         {
-            await ValueChanged.Invoke(Value);
+            await ValueChanged.Invoke(value);
         }
     }
 

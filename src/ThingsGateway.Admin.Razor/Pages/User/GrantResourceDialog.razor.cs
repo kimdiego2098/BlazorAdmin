@@ -48,10 +48,11 @@ public partial class GrantResourceDialog
 
     private async Task OnTreeItemChecked(List<TreeViewItem<SysResource>> items)
     {
-        Value = items.Select(a => a.Value.Id).ToList();
+        var value = items.Select(a => a.Value.Id).ToList();
+        Value = value;
         if (ValueChanged != null)
         {
-            await ValueChanged.Invoke(Value);
+            await ValueChanged.Invoke(value);
         }
     }
 }

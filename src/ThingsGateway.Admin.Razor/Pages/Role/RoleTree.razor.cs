@@ -37,10 +37,11 @@ public partial class RoleTree : IDisposable
 
     private async Task OnTreeItemClick(TreeViewItem<RoleTreeOutput> item)
     {
-        Value = item.Value.Id;
+        var value = item.Value.Id;
+        Value = value;
         if (ValueChanged != null && item.Value.IsRole)
         {
-            await ValueChanged.Invoke(Value);
+            await ValueChanged.Invoke(value);
         }
     }
 
