@@ -39,11 +39,13 @@ public partial class SysRoleEdit
         StateHasChanged();
         return Task.CompletedTask;
     }
+
+    private List<SysOrg>? items;
     [Inject]
     private BlazorAppContext AppContext { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        var items = (await SysOrgService.SelectorAsync());
+        items = (await SysOrgService.SelectorAsync());
         Items = OrgUtil.BuildTreeItemList(items, Model.DefaultDataScope.ScopeDefineOrgIdList).ToList();
 
         OrgItems = OrgUtil.BuildTreeIdItemList(items, new List<long> { Model.OrgId });

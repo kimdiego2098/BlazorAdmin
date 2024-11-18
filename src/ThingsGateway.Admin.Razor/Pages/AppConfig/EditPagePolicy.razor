@@ -18,9 +18,7 @@
             @{
                 var text = AppContext.OwnMenus.FirstOrDefault(a => Model.Shortcuts.Contains(a.Id))?.Title;
             }
-            <div class="multi-select-item-group">
-                <span class="multi-select-item">@($"{text}...")</span>
-            </div>
+            <span>@($"{text}...")</span>
         </Template>
     </SelectObject>
 
