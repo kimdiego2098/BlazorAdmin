@@ -6,15 +6,27 @@
 <ValidateForm class="p-4" Model="@Model" OnValidSubmit="OnSave">
 
     <SelectObject class="mb-2" @bind-Value="Model.Shortcuts" GetTextCallback="a=>a.Count.ToString()" Height="300">
-        <TreeView TItem="SysResource" Items="ShortcutsTreeViewItems" ShowIcon="true" ShowSearch ClickToggleCheck="true" IsVirtualize="true"
-                  ShowCheckbox="true" AutoCheckParent="true" AutoCheckChildren="true"
-                  IsAccordion=false OnTreeItemChecked="OnShortcutsTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnShortcutsClickSearch">
-        </TreeView>
+        <ChildContent>
+
+            <TreeView TItem="SysResource" Items="ShortcutsTreeViewItems" ShowIcon="true" ShowSearch ClickToggleCheck="true" IsVirtualize="true"
+                      ShowCheckbox="true" AutoCheckParent="true" AutoCheckChildren="true"
+                      IsAccordion=false OnTreeItemChecked="OnShortcutsTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnShortcutsClickSearch">
+            </TreeView>
+        </ChildContent>
+
+        <Template>
+            @{
+                var text = AppContext.OwnMenus.FirstOrDefault(a => Model.Shortcuts.Contains(a.Id))?.Title;
+            }
+            <div class="multi-select-item-group">
+                <span class="multi-select-item">@($"{text}...")</span>
+            </div>
+        </Template>
     </SelectObject>
 
 
     <SelectObject class="mb-2" @bind-Value="Model.Razor" GetTextCallback="b=>AppContext.AllMenus.FirstOrDefault(a=>a.Id==b)?.Title" Height="300">
-        <TreeView TItem="SysResource" Items="RazorTreeViewItems" ShowIcon="true" IsVirtualize="true"  ShowSearch
+        <TreeView TItem="SysResource" Items="RazorTreeViewItems" ShowIcon="true" IsVirtualize="true" ShowSearch
                   AutoCheckParent="false" AutoCheckChildren="false" OnTreeItemClick="(a)=>OnRazorTreeItemClick(a,context)"
                   IsAccordion=false ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnRazorClickSearch">
         </TreeView>
