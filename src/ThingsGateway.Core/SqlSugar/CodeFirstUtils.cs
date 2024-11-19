@@ -56,7 +56,7 @@ public static class CodeFirstUtils
             if (tenantAtt == null) continue;//如果没有多库特性就下一个
             using var db = DbContext.Db.GetConnectionScope(tenantAtt.configId.ToString()).CopyNew();//获取数据库对象
             var config = DbContext.DbConfigs.FirstOrDefault(u => u.ConfigId.ToString() == tenantAtt.configId.ToString());//获取数据库配置
-            if (config?.InitTable != true) continue;
+            if (config?.InitSeedData != true) continue;
             var entityInfo = db.EntityMaintenance.GetEntityInfo(entityType);
             // seedDataTable.TableName = db.EntityMaintenance.GetEntityInfo(entityType).DbTableName;//获取表名
             var ignoreAdd = seedDataMethod!.GetCustomAttribute<IgnoreSeedDataAddAttribute>();//读取忽略插入特性
