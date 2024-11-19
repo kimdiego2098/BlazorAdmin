@@ -238,6 +238,10 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
                 buttonCodeList.Add(item.Key.Href, buttonS.Select(a => a.Title).ToList());
             }
         }
+
+        var firstbuttons = allResources.Where(it => it.Category == ResourceCategoryEnum.Button && relationResourcePermissions.FirstOrDefault(a => a.MenuId == 0)?.ButtonIds?.Contains(it.Id) == true);
+        buttonCodeList.Add(string.Empty, firstbuttons?.Select(a => a.Title).ToList());
+
         return buttonCodeList!;
     }
 

@@ -20,16 +20,10 @@ namespace ThingsGateway;
 [ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class QueryPageOptionsExtensions
 {
-    /// <summary>
-    /// 根据查询条件返回IEnumerable
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="datas"></param>
-    /// <param name="option"></param>
-    /// <returns></returns>
-    public static IEnumerable<T> GetData<T>(this IEnumerable<T> datas, QueryPageOptions option)
+
+    public static IEnumerable<T> GetData<T>(this IEnumerable<T> datas, QueryPageOptions option, FilterKeyValueAction where = null)
     {
-        var where = option.ToFilter();
+        where ??= option.ToFilter();
         if (where.HasFilters())
         {
             datas = datas.Where(where.GetFilterFunc<T>());//name asc模式
@@ -63,11 +57,11 @@ public static class QueryPageOptionsExtensions
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static ISugarQueryable<T> GetQuery<T>(this SqlSugarClient db, QueryPageOptions option, ISugarQueryable<T>? query = null)
+    public static ISugarQueryable<T> GetQuery<T>(this SqlSugarClient db, QueryPageOptions option, ISugarQueryable<T>? query = null, FilterKeyValueAction where = null)
     {
         query ??= db.Queryable<T>();
+        where ??= option.ToFilter();
 
-        var where = option.ToFilter();
         if (where.HasFilters())
         {
             query = query.Where(where.GetFilterLambda<T>());//name asc模式
@@ -88,11 +82,7 @@ public static class QueryPageOptionsExtensions
     /// <summary>
     /// 根据查询条件返回QueryData
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="datas"></param>
-    /// <param name="option"></param>
-    /// <returns></returns>
-    public static QueryData<T> GetQueryData<T>(this IEnumerable<T> datas, QueryPageOptions option)
+    public static QueryData<T> GetQueryData<T>(this IEnumerable<T> datas, QueryPageOptions option, FilterKeyValueAction where = null)
     {
         var ret = new QueryData<T>()
         {
@@ -101,7 +91,7 @@ public static class QueryPageOptionsExtensions
             IsAdvanceSearch = option.AdvanceSearches.Any() || option.CustomerSearches.Any(),
             IsSearch = option.Searches.Any()
         };
-        var items = datas.GetData(option);
+        var items = datas.GetData(option, where);
         ret.TotalCount = datas.Count();
         ret.Items = items.ToList();
         return ret;

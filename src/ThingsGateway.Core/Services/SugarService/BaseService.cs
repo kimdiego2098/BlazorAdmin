@@ -75,11 +75,11 @@ public class BaseService<T> : IDataService<T>, IDisposable where T : class, new(
     /// <inheritdoc/>
     public Task<QueryData<T>> QueryAsync(QueryPageOptions option)
     {
-        return QueryAsync(option, null);
+        return QueryAsync(option, null, null);
     }
 
     /// <inheritdoc/>
-    public virtual async Task<QueryData<T>> QueryAsync(QueryPageOptions option, Func<ISugarQueryable<T>, ISugarQueryable<T>>? queryFunc = null)
+    public virtual async Task<QueryData<T>> QueryAsync(QueryPageOptions option, Func<ISugarQueryable<T>, ISugarQueryable<T>>? queryFunc = null, FilterKeyValueAction where = null)
     {
         var ret = new QueryData<T>()
         {
@@ -93,7 +93,7 @@ public class BaseService<T> : IDataService<T>, IDisposable where T : class, new(
         var query = db.Queryable<T>();
         if (queryFunc != null)
             query = queryFunc(query);
-        query = db.GetQuery<T>(option, query);
+        query = db.GetQuery<T>(option, query, where);
 
         if (option.IsPage)
         {
