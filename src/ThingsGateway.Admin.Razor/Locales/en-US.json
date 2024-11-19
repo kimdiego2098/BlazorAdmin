@@ -14,7 +14,7 @@
     "RoleList": "Role List",
     "PositionList": "Position List",
     "OrgList": "Org List",
-    "OnlyOneUser": "Only one user",
+    "MaxCount": "Exceeding the quantity limit",
     "All": "All",
     "Copy": "Copy",
     "Choice": "Choice",

@@ -20,7 +20,7 @@
 
     </div>
     <div class="col-12  col-md-9 h-100">
-        <ChoiceTable @ref=userChoiceTable OnChangedAsync="OnChanged" TItem="UserSelectorOutput" OnQueryAsync="OnQueryAsync" SelectedRows="SelectedRows"></ChoiceTable>
+        <ChoiceTable @ref=userChoiceTable OnChangedAsync="OnChanged" TItem="UserSelectorOutput" OnQueryAsync="OnQueryAsync" SelectedRows="@SelectedRows" MaxCount=@MaxCount></ChoiceTable>
     </div>
 </div>
 <style>

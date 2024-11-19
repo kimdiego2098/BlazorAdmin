@@ -42,7 +42,8 @@ public partial class UserChoiceDialog
         }
     }
 
-
+    [Parameter]
+    public int MaxCount { get; set; } = 0;
 
     [Inject]
     [NotNull]

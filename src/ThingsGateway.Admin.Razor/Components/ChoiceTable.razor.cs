@@ -25,13 +25,13 @@ public partial class ChoiceTable<TItem> where TItem : class, new()
     private List<TItem> SelectedDeleteRows { get; set; } = new();
 
     [Parameter]
-    public int MaxCount { get; set; } = 1;
+    public int MaxCount { get; set; } = 0;
 
     public async Task OnAddAsync(IEnumerable<TItem> selectorOutputs)
     {
-        if (selectorOutputs.Count() + SelectedRows.Count > MaxCount)
+        if (MaxCount >= 0 && selectorOutputs.Count() + SelectedRows.Count > MaxCount)
         {
-            await ToastService.Warning(AdminLocalizer["OnlyOneUser"]);
+            await ToastService.Warning(AdminLocalizer["MaxCount"]);
             return;
         }
         foreach (var item in selectorOutputs)
@@ -45,7 +45,7 @@ public partial class ChoiceTable<TItem> where TItem : class, new()
     {
         if (1 + SelectedRows.Count > MaxCount)
         {
-            await ToastService.Warning(AdminLocalizer["OnlyOneUser"]);
+            await ToastService.Warning(AdminLocalizer["MaxCount"]);
             return;
         }
         SelectedRows.Add(item);

@@ -76,6 +76,7 @@ public partial class UserChoice
             },
             BodyTemplate = BootstrapDynamicComponent.CreateComponent<UserChoiceDialog>(new Dictionary<string, object?>
             {
+                [nameof(UserChoiceDialog.MaxCount)] = 1,
                 [nameof(UserChoiceDialog.Values)] = Values,
                 [nameof(UserChoiceDialog.ValuesChanged)] = (List<long> v) => OnValueChanged(v)
             }).Render(),
