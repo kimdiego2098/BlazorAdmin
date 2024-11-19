@@ -1,1 +1,1 @@
-https://github.com/Blazor-Diagrams/ThingsGateway.Blazor.Diagrams
+https://github.com/Blazor-Diagrams/Blazor.Diagrams
