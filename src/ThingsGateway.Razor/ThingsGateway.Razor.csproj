@@ -26,11 +26,7 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="_Imports.razor.cs">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Compile>
-  </ItemGroup>
+ 
 </Project>
 
 
