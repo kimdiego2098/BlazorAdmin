@@ -29,7 +29,7 @@ public partial class ChoiceTable<TItem> where TItem : class, new()
 
     public async Task OnAddAsync(IEnumerable<TItem> selectorOutputs)
     {
-        if (MaxCount >= 0 && selectorOutputs.Count() + SelectedRows.Count > MaxCount)
+        if (MaxCount > 0 && selectorOutputs.Count() + SelectedRows.Count > MaxCount)
         {
             await ToastService.Warning(AdminLocalizer["MaxCount"]);
             return;
@@ -43,7 +43,7 @@ public partial class ChoiceTable<TItem> where TItem : class, new()
     }
     public async Task OnAddAsync(TItem item)
     {
-        if (1 + SelectedRows.Count > MaxCount)
+        if (MaxCount > 0 && 1 + SelectedRows.Count > MaxCount)
         {
             await ToastService.Warning(AdminLocalizer["MaxCount"]);
             return;

@@ -59,10 +59,19 @@ public class SysRole : BaseEntity
     [AutoGenerateColumn(Ignore = true)]
     public virtual DefaultDataScope DefaultDataScope { get; set; } = new();
 
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || !(obj is SysRole))
+        {
+            return false;
+        }
+
+        return Id == ((SysRole)obj).Id;
+    }
+
     public override int GetHashCode()
     {
         return Id.GetHashCode();
-
     }
 }
 

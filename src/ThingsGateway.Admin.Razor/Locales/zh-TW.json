@@ -14,7 +14,7 @@
     "RoleList": "角色列表",
     "PositionList": "崗位列表",
     "OrgList": "機構列表",
-    "OnlyOneUser": "超過數量限制",
+    "MaxCount": "超過數量限制",
     "All": "全部",
     "Copy": "複製",
     "Choice": "選擇",
