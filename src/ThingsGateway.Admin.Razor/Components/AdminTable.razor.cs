@@ -285,6 +285,22 @@ public partial class AdminTable<TItem> where TItem : class, new()
     [Parameter]
     public bool ShowMultiFilterHeader { get; set; } = false;
 
+    /// <inheritdoc cref="Table{TItem}.FixedExtendButtonsColumn"/>
+    [Parameter]
+    public bool FixedExtendButtonsColumn { get; set; } = false;
+
+    /// <inheritdoc cref="Table{TItem}.FixedMultipleColumn"/>
+    [Parameter]
+    public bool FixedMultipleColumn { get; set; } = false;
+
+    /// <inheritdoc cref="Table{TItem}.FixedDetailRowHeaderColumn"/>
+    [Parameter]
+    public bool FixedDetailRowHeaderColumn { get; set; } = false;
+
+    /// <inheritdoc cref="Table{TItem}.FixedLineNoColumn"/>
+    [Parameter]
+    public bool FixedLineNoColumn { get; set; } = false;
+
     /// <inheritdoc cref="Table{TItem}.ShowRefresh"/>
     [Parameter]
     public bool ShowRefresh { get; set; } = true;
