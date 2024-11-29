@@ -12,7 +12,6 @@ namespace ThingsGateway.Extension;
 /// <summary>
 /// 时间扩展类
 /// </summary>
-[ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class DateExtensions
 {
     /// <summary>

@@ -15,18 +15,21 @@ namespace ThingsGateway.Core.Json.Extension;
 /// <summary>
 /// json扩展
 /// </summary>
-[ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class JsonExtensions
 {
     /// <summary>
     /// 默认Json规则
     /// </summary>
-    public static JsonSerializerSettings Options = new JsonSerializerSettings
+    public static JsonSerializerSettings Options;
+    static JsonExtensions()
     {
-        Formatting = Formatting.Indented,// 使用缩进格式化输出
-        NullValueHandling = NullValueHandling.Ignore // 忽略空值属性
-    };
-
+        Options = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,// 使用缩进格式化输出
+            NullValueHandling = NullValueHandling.Ignore, // 忽略空值属性
+        };
+        Options.Converters.Add(new ByteArrayToNumberArrayConverter());
+    }
     /// <summary>
     /// 反序列化
     /// </summary>

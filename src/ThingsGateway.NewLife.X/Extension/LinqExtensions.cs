@@ -8,10 +8,11 @@
 //  QQ群：605534569
 //------------------------------------------------------------------------------
 
+using System.Collections.Concurrent;
+
 namespace ThingsGateway.Extension.Generic;
 
 /// <inheritdoc/>
-[ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class LinqExtensions
 {
     /// <inheritdoc/>
@@ -60,4 +61,14 @@ public static class LinqExtensions
             @this.Add(item);
         }
     }
+
+    /// <summary>
+    /// 从并发字典中删除
+    /// </summary>
+    public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key) where TKey : notnull
+    {
+        return dict.TryRemove(key, out TValue? _);
+    }
+
+
 }

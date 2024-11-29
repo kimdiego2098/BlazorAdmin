@@ -11,7 +11,6 @@
 namespace ThingsGateway;
 
 /// <inheritdoc/>
-[ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class PathExtensions
 {
     /// <summary>

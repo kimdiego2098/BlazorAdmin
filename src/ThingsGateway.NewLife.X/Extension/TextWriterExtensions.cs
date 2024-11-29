@@ -13,7 +13,6 @@ namespace ThingsGateway;
 /// <summary>
 /// TextWriter扩展
 /// </summary>
-[ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class TextWriterExtensions
 {
     private const string DefaultBackgroundColor = "\x1B[49m";

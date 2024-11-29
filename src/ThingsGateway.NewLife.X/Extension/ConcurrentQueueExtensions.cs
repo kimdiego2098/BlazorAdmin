@@ -13,7 +13,6 @@ using System.Collections.Concurrent;
 namespace ThingsGateway.Extension;
 
 /// <inheritdoc/>
-[ThingsGateway.DependencyInjection.SuppressSniffer]
 public static class ConcurrentQueueExtensions
 {
     /// <summary>
