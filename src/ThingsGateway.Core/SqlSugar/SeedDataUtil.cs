@@ -111,7 +111,7 @@ public class SeedDataRecords<T>
     public List<T> Records { get; set; }
 }
 
-internal class ZeroAsFalseConverter : JsonConverter
+internal sealed class ZeroAsFalseConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {

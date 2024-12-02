@@ -31,7 +31,7 @@ public partial class SysRoleEdit
     [NotNull]
     private ISysOrgService? SysOrgService { get; set; }
 
-    private bool ModelEqualityComparer(SysOrg x, SysOrg y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(SysOrg x, SysOrg y) => x.Id == y.Id;
 
     private Task OnTreeItemChecked(List<TreeViewItem<SysOrg>> items)
     {

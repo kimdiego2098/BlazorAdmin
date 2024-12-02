@@ -18,7 +18,7 @@ namespace ThingsGateway.Schedule;
 /// <summary>
 /// 作业调度器日志默认实现类
 /// </summary>
-internal class ScheduleLogger : IScheduleLogger
+internal sealed class ScheduleLogger : IScheduleLogger
 {
     /// <summary>
     /// 日志对象

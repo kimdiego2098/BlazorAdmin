@@ -21,6 +21,8 @@ namespace ThingsGateway.Server;
 
 public class Program
 {
+    private static readonly string[] second = new[] { "application/octet-stream" };
+
     public static async Task Main(string[] args)
     {
         //当前工作目录设为程序集的基目录
@@ -66,7 +68,7 @@ public class Program
                    builder.Services.AddResponseCompression(
                        opts =>
                        {
-                           opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
+                           opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(second);
                        });
                }
 
@@ -98,7 +100,7 @@ public class Program
 #endif
 
             })
-            );
+            ).ConfigureAwait(false);
 
 
 

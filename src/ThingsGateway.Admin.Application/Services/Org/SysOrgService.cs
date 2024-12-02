@@ -17,7 +17,7 @@ using ThingsGateway.FriendlyException;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
+internal sealed class SysOrgService : BaseService<SysOrg>, ISysOrgService
 {
     private ISysUserService _sysUserService;
     private ISysUserService SysUserService
@@ -40,8 +40,8 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     [OperDesc("CopyOrg")]
     public async Task CopyAsync(SysOrgCopyInput input)
     {
-        var orgList = await GetAllAsync();//获取所有
-        var positionList = await App.GetService<ISysPositionService>().GetAllAsync();//获取所有职位
+        var orgList = await GetAllAsync().ConfigureAwait(false);//获取所有
+        var positionList = await App.GetService<ISysPositionService>().GetAllAsync().ConfigureAwait(false);//获取所有职位
         var ids = new HashSet<long>();//定义不重复Id集合
         var addOrgList = new List<SysOrg>();//添加机构列表
         var addPositionList = new List<SysPosition>();//添加职位列表
@@ -67,7 +67,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
                 if (org != null && !alreadyIds.Contains(id))
                 {
                     alreadyIds.Add(id);//添加到已复制列表
-                    RedirectOrg(org);//生成新的实体
+                    SysOrgService.RedirectOrg(org);//生成新的实体
                     org.ParentId = input.TargetId;//父id为目标Id
                     addOrgList.Add(org);
                     //是否包含职位
@@ -85,7 +85,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
                     //是否包含下级
                     if (input.ContainsChild)
                     {
-                        var childIds = await GetOrgChildIdsAsync(id, false);//获取下级id列表
+                        var childIds = await GetOrgChildIdsAsync(id, false).ConfigureAwait(false);//获取下级id列表
                         alreadyIds.AddRange(childIds);//添加到已复制id
                         var childList = orgList.Where(c => childIds.Contains(c.Id)).ToList();//获取下级
                         var sysOrgChildren = CopySysOrgChildren(childList, id, org.Id, input.ContainsPosition,
@@ -112,10 +112,10 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
             //事务
             var result = await db.UseTranAsync(async () =>
             {
-                await db.Insertable(addOrgList).ExecuteCommandAsync();//插入组织
+                await db.Insertable(addOrgList).ExecuteCommandAsync().ConfigureAwait(false);//插入组织
                 if (addPositionList.Count > 0)
                 {
-                    await db.Insertable(addPositionList).ExecuteCommandAsync();
+                    await db.Insertable(addPositionList).ExecuteCommandAsync().ConfigureAwait(false);
                 }
             }).ConfigureAwait(false);
             if (result.IsSuccess)//如果成功了
@@ -138,25 +138,25 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
         if (ids.Any())
         {
             using var db = GetDB();
-            var sysOrgList = await GetAllAsync();//获取所有组织
+            var sysOrgList = await GetAllAsync().ConfigureAwait(false);//获取所有组织
             var sysDeleteOrgList = new List<long>();//需要删除的组织ID集合
             foreach (var it in ids)
             {
-                var children = GetSysOrgChildren(sysOrgList, it);//查找下级组织
+                var children = SysOrgService.GetSysOrgChildren(sysOrgList, it);//查找下级组织
                 sysDeleteOrgList.AddRange(children.Select(it => it.Id).ToList());
                 sysDeleteOrgList.Add(it);
             }
             //如果组织下有用户则不能删除
-            if (await db.Queryable<SysUser>().AnyAsync(it => sysDeleteOrgList.Contains(it.OrgId)))
+            if (await db.Queryable<SysUser>().AnyAsync(it => sysDeleteOrgList.Contains(it.OrgId)).ConfigureAwait(false))
             {
                 throw Oops.Bah(Localizer["DeleteUserFirst"]);
             }
             //判断组织下是否有角色
-            var hasRole = await db.Queryable<SysRole>().Where(it => sysDeleteOrgList.Contains(it.OrgId)).CountAsync() > 0;
+            var hasRole = await db.Queryable<SysRole>().Where(it => sysDeleteOrgList.Contains(it.OrgId)).CountAsync().ConfigureAwait(false) > 0;
             if (hasRole)
                 throw Oops.Bah(Localizer["DeleteRoleFirst"]);
             // 判断组织下是否有职位
-            var hasPosition = await db.Queryable<SysPosition>().Where(it => sysDeleteOrgList.Contains(it.OrgId)).CountAsync() > 0;
+            var hasPosition = await db.Queryable<SysPosition>().Where(it => sysDeleteOrgList.Contains(it.OrgId)).CountAsync().ConfigureAwait(false) > 0;
             if (hasPosition)
                 throw Oops.Bah(Localizer["DeletePositionFirst"]);
             //删除组织
@@ -196,7 +196,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     /// <inheritdoc />
     public async Task<SysOrg> GetSysOrgByIdAsync(long id)
     {
-        var sysOrg = await GetAllAsync();
+        var sysOrg = await GetAllAsync().ConfigureAwait(false);
         var result = sysOrg.FirstOrDefault(it => it.Id == id);
         return result;
     }
@@ -206,18 +206,18 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     /// </summary>
     public async Task<QueryData<SysOrg>> PageAsync(QueryPageOptions option, Func<ISugarQueryable<SysOrg>, ISugarQueryable<SysOrg>>? queryFunc = null)
     {
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         queryFunc += a =>
         a.WhereIF(dataScope != null && dataScope?.Count > 0, u => dataScope.Contains(u.Id))//在指定机构列表查询
                 .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId);
-        return await QueryAsync(option, queryFunc);
+        return await QueryAsync(option, queryFunc).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
     public async Task<List<SysOrg>> SelectorAsync()
     {
-        var sysOrgList = await GetAllAsync();//获取所有组织
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
+        var sysOrgList = await GetAllAsync().ConfigureAwait(false);//获取所有组织
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         sysOrgList = sysOrgList
            .WhereIf(dataScope != null && dataScope?.Count > 0, b => dataScope.Contains(b.Id))
            .WhereIf(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId)
@@ -237,8 +237,8 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
             {
                 if (!input.Status)
                 {
-                    var orgIds = await GetOrgChildIdsAsync(input.Id, true);//获取所有下级
-                    await ClearTokenUtil.DeleteUserTokenByOrgIds(orgIds);//清除用户token
+                    var orgIds = await GetOrgChildIdsAsync(input.Id, true).ConfigureAwait(false);//获取所有下级
+                    await ClearTokenUtil.DeleteUserTokenByOrgIds(orgIds).ConfigureAwait(false);//清除用户token
                 }
             }
             RefreshCache();
@@ -255,7 +255,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
         if (orgId > 0)//如果orgId有值
         {
             //获取所有子集
-            var childList = await GetChildListByIdAsync(orgId, isContainOneself, sysOrgList);
+            var childList = await GetChildListByIdAsync(orgId, isContainOneself, sysOrgList).ConfigureAwait(false);
             orgIds = childList.Select(x => x.Id).ToList();//提取ID列表
         }
         return orgIds;
@@ -265,9 +265,9 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     public async Task<List<SysOrg>> GetChildListByIdAsync(long orgId, bool isContainOneself = true, List<SysOrg> sysOrgList = null)
     {
         //获取所有组织
-        sysOrgList ??= await GetAllAsync();
+        sysOrgList ??= await GetAllAsync().ConfigureAwait(false);
         //查找下级
-        var childList = GetSysOrgChildren(sysOrgList, orgId);
+        var childList = SysOrgService.GetSysOrgChildren(sysOrgList, orgId);
         if (isContainOneself)//如果包含自己
         {
             //获取自己的组织信息
@@ -287,7 +287,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
         var tenantList = App.CacheService.Get<List<SysOrg>>(key);
         if (tenantList == null)
         {
-            var orgList = await GetAllAsync(false);
+            var orgList = await GetAllAsync(false).ConfigureAwait(false);
             tenantList = orgList.Where(it => it.Category == OrgEnum.COMPANY).OrderBy(x => x.SortCode).ToList();
             if (tenantList.Count > 0)
             {
@@ -307,7 +307,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
         if (tenantId == null)
         {
             //获取所有组织
-            sysOrgList ??= await GetAllAsync();
+            sysOrgList ??= await GetAllAsync().ConfigureAwait(false);
             var userOrg = sysOrgList.FirstOrDefault(it => it.Id == orgId);
             if (userOrg != null)
             {
@@ -348,7 +348,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     /// <param name="isCopyPosition"></param>
     /// <param name="positions"></param>
     /// <returns></returns>
-    private Tuple<List<SysOrg>, List<SysPosition>> CopySysOrgChildren(List<SysOrg> orgList, long parentId, long newParentId, bool isCopyPosition, List<SysPosition> positions)
+    private static Tuple<List<SysOrg>, List<SysPosition>> CopySysOrgChildren(List<SysOrg> orgList, long parentId, long newParentId, bool isCopyPosition, List<SysPosition> positions)
     {
         //找下级组织列表
         var orgInfos = orgList.Where(it => it.ParentId == parentId).ToList();
@@ -360,7 +360,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
             foreach (var item in orgInfos)//遍历组织
             {
                 var oldId = item.Id;//获取旧Id
-                RedirectOrg(item);//实体重新赋值
+                SysOrgService.RedirectOrg(item);//实体重新赋值
                 var children = CopySysOrgChildren(orgList, oldId, item.Id, isCopyPosition,
                     positions);//获取子节点
                 item.ParentId = newParentId;//赋值新的父Id
@@ -391,7 +391,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     /// <param name="orgList"></param>
     /// <param name="parentId"></param>
     /// <returns></returns>
-    private List<SysOrg> GetSysOrgChildren(List<SysOrg> orgList, long parentId)
+    private static List<SysOrg> GetSysOrgChildren(List<SysOrg> orgList, long parentId)
     {
         //找下级组织ID列表
         var orgInfos = orgList.Where(it => it.ParentId == parentId).ToList();
@@ -400,7 +400,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
             var data = new List<SysOrg>();
             foreach (var item in orgInfos)//遍历组织
             {
-                var children = GetSysOrgChildren(orgList, item.Id);//获取子节点
+                var children = SysOrgService.GetSysOrgChildren(orgList, item.Id);//获取子节点
                 data.AddRange(children);//添加子节点);
                 data.Add(item);//添加到列表
             }
@@ -414,7 +414,7 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     /// 重新生成组织实体
     /// </summary>
     /// <param name="org"></param>
-    private void RedirectOrg(SysOrg org)
+    private static void RedirectOrg(SysOrg org)
     {
         //重新生成ID并赋值
         var newId = CommonUtils.GetSingleId();
@@ -430,14 +430,14 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     private async Task CheckInput(SysOrg input)
     {
 
-        if (!(await SysUserService.GetUserByIdAsync(UserManager.UserId)).IsGlobal)
+        if (!(await SysUserService.GetUserByIdAsync(UserManager.UserId).ConfigureAwait(false)).IsGlobal)
         {
             if (input.ParentId == 0)
             {
                 throw Oops.Bah(Localizer["RootOrg"]);
             }
         }
-        var sysOrgList = await GetAllAsync();//获取全部
+        var sysOrgList = await GetAllAsync().ConfigureAwait(false);//获取全部
         if (sysOrgList.Any(it => it.ParentId == input.ParentId && it.Name == input.Name && it.Id != input.Id))//判断同级是否有名称重复的
             throw Oops.Bah(Localizer["NameDup", input.Name]);
         input.Names = input.Name;//全称默认自己
@@ -496,11 +496,11 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
     /// <param name="orgName">组织名称</param>
     /// <param name="names">组织全称</param>
     /// <returns>组织父Id列表</returns>
-    private List<long> GetNames(List<SysOrg> sysOrgList, long parentId, string orgName, out string names)
+    private static List<long> GetNames(List<SysOrg> sysOrgList, long parentId, string orgName, out string names)
     {
         names = string.Empty;
         //获取父级菜单
-        var parents = GetOrgParents(sysOrgList, parentId);
+        var parents = SysOrgService.GetOrgParents(sysOrgList, parentId);
         foreach (var item in parents)
         {
             names += $"{item.Name}/";
@@ -512,14 +512,14 @@ internal class SysOrgService : BaseService<SysOrg>, ISysOrgService
 
 
     /// <inheritdoc />
-    private List<SysOrg> GetOrgParents(List<SysOrg> allOrgList, long orgId, bool includeSelf = true)
+    private static List<SysOrg> GetOrgParents(List<SysOrg> allOrgList, long orgId, bool includeSelf = true)
     {
         //找到组织
         var sysOrgList = allOrgList.Where(it => it.Id == orgId).FirstOrDefault();
         if (sysOrgList != null)//如果组织不为空
         {
             var data = new List<SysOrg>();
-            var parents = GetOrgParents(allOrgList, sysOrgList.ParentId, includeSelf);//递归获取父节点
+            var parents = SysOrgService.GetOrgParents(allOrgList, sysOrgList.ParentId, includeSelf);//递归获取父节点
             data.AddRange(parents);//添加父节点;
             if (includeSelf)
                 data.Add(sysOrgList);//添加到列表

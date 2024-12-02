@@ -22,7 +22,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ThingsGateway.Admin.Application;
 
 /// <inheritdoc/>
-internal class EmailService : IEmailService
+internal sealed class EmailService : IEmailService
 {
     private readonly EmailOptions _emailOptions;
     private readonly WebsiteOptions _websiteOptions;
@@ -51,11 +51,11 @@ internal class EmailService : IEmailService
         };
 
         using var client = new SmtpClient();
-        client.Connect(_emailOptions.Host, _emailOptions.Port, _emailOptions.EnableSsl);
-        client.Authenticate(_emailOptions.UserName, _emailOptions.Password);
-        client.Send(message);
-        client.Disconnect(true);
+        await client.ConnectAsync(_emailOptions.Host, _emailOptions.Port, _emailOptions.EnableSsl).ConfigureAwait(false);
+        await client.AuthenticateAsync(_emailOptions.UserName, _emailOptions.Password).ConfigureAwait(false);
+        await client.SendAsync(message).ConfigureAwait(false);
+        await client.DisconnectAsync(true).ConfigureAwait(false);
 
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 }

@@ -6,7 +6,7 @@ namespace ThingsGateway.NewLife.Data
     /// <summary>二叉树</summary>
     public class BinaryTree
     {
-        private class Node
+        private sealed class Node
         {
             public Node Left { get; private set; }
             public Node Right { get; private set; }
@@ -27,10 +27,10 @@ namespace ThingsGateway.NewLife.Data
         {
             if (size == 0) return new Node[] { null };
 
-            return from i in Enumerable.Range(0, size)
-                   from left in GetAll(i)
-                   from right in GetAll(size - 1 - i)
-                   select new Node(left, right);
+            return Enumerable.Range(0, size)
+               .SelectMany(i => GetAll(i)
+               .SelectMany(left => GetAll(size - 1 - i)
+                  .Select(right => new Node(left, right))));
         }
 
         /// <summary>构建表达式树</summary>

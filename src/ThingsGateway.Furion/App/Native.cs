@@ -61,7 +61,9 @@ public static class Native
         var ctorParameters = new List<object>();
 
         // 创建服务作用域
+#pragma warning disable CA2000 // 丢失范围之前释放对象
         var serviceScope = App.RootServices.CreateScope();
+#pragma warning restore CA2000 // 丢失范围之前释放对象
 
         // 遍历构造函数参数
         for (var i = 0; i < parameterInfos.Length; i++)

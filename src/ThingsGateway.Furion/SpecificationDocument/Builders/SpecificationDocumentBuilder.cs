@@ -502,7 +502,7 @@ public static class SpecificationDocumentBuilder
                         else if (memberName.Contains('('))
                         {
                             var noParamsClassName = regex.Match(memberName).Value;
-                            var className = noParamsClassName[noParamsClassName.IndexOf(":")..noParamsClassName.LastIndexOf(".")];
+                            var className = noParamsClassName[noParamsClassName.IndexOf(':')..noParamsClassName.LastIndexOf(':')];
                             value = GenerateInheritdocCref(xmlDoc, memberName, className);
                         }
                         // 处理不带参数的注释
@@ -514,7 +514,7 @@ public static class SpecificationDocumentBuilder
 
                             try
                             {
-                                var className = memberName[memberName.IndexOf(":")..memberName.LastIndexOf(".")];
+                                var className = memberName[memberName.IndexOf(':')..memberName.LastIndexOf(':')];
                                 value = GenerateInheritdocCref(xmlDoc, memberName, className);
                             }
                             catch (Exception ex)
@@ -554,7 +554,7 @@ public static class SpecificationDocumentBuilder
         var _ref_value = classElement.Attribute("_ref_")?.Value;
         if (_ref_value == null) return default;
 
-        var classCrefValue = _ref_value[_ref_value.IndexOf(":")..];
+        var classCrefValue = _ref_value[_ref_value.IndexOf(':')..];
         return memberName.Replace(className, classCrefValue);
     }
 

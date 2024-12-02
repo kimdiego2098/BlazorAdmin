@@ -16,7 +16,7 @@ namespace ThingsGateway.Reflection;
 /// <summary>
 /// 方法参数信息
 /// </summary>
-internal class MethodParameterInfo
+internal sealed class MethodParameterInfo
 {
     /// <summary>
     /// 参数

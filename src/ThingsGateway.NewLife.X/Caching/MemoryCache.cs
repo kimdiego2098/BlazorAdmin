@@ -2,10 +2,8 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-using ThingsGateway.NewLife.Data;
 using ThingsGateway.NewLife.Log;
 using ThingsGateway.NewLife.Reflection;
-using ThingsGateway.NewLife.Serialization;
 using ThingsGateway.NewLife.Threading;
 
 namespace ThingsGateway.NewLife.Caching;
@@ -74,7 +72,7 @@ public class MemoryCache : Cache
 #if !NET452
 
     /// <summary>返回全部</summary>
-    public IReadOnlyDictionary< string, CacheItem> GetAll() => _cache;
+    public IReadOnlyDictionary<string, CacheItem> GetAll() => _cache;
 #endif
     /// <summary>初始化配置</summary>
     /// <param name="config"></param>
@@ -670,7 +668,7 @@ public class MemoryCache : Cache
         if (tx != null /*&& tx.Period == 60_000*/) tx.Period = Period * 1000;
 
         var dic = _cache;
-        if (_count == 0 && !dic.Any()) return;
+        if (_count == 0 && !dic.IsEmpty) return;
 
         // 过期时间升序，用于缓存满以后删除
         var slist = new SortedList<Int64, IList<String>>();
@@ -750,130 +748,6 @@ public class MemoryCache : Cache
 
         return !e.Cancel;
     }
-    #endregion
-
-    #region 持久化
-    private const String MAGIC = "NewLifeCache";
-    private const Byte _Ver = 1;
-    /// <summary>保存到数据流</summary>
-    /// <param name="stream"></param>
-    /// <returns></returns>
-    public void Save(Stream stream)
-    {
-        var bn = new Binary
-        {
-            Stream = stream,
-            EncodeInt = true,
-        };
-
-        // 头部，幻数、版本和标记
-        bn.Write(MAGIC.GetBytes(), 0, MAGIC.Length);
-        bn.Write(_Ver);
-        bn.Write(0);
-
-        bn.WriteSize(_cache.Count);
-        foreach (var item in _cache)
-        {
-            var ci = item.Value;
-
-            // Key+Expire+Empty
-            // Key+Expire+TypeCode+Value
-            // Key+Expire+TypeCode+Type+Length+Value
-            bn.Write(item.Key);
-            bn.Write((Int32)(ci.ExpiredTime / 1000));
-
-            var value = ci.Value;
-            var type = value?.GetType();
-            if (type == null)
-            {
-                bn.Write((Byte)TypeCode.Empty);
-            }
-            else
-            {
-                var code = type.GetTypeCode();
-                bn.Write((Byte)code);
-
-                if (code != TypeCode.Object)
-                    bn.Write(value);
-                else
-                {
-                    bn.Write(type.FullName);
-                    if (value != null) bn.Write(Binary.FastWrite(value));
-                }
-            }
-        }
-    }
-
-    /// <summary>从数据流加载</summary>
-    /// <param name="stream"></param>
-    /// <returns></returns>
-    public void Load(Stream stream)
-    {
-        var bn = new Binary
-        {
-            Stream = stream,
-            EncodeInt = true,
-        };
-
-        // 头部，幻数、版本和标记
-        var magic = bn.ReadBytes(MAGIC.Length).ToStr();
-        if (magic != MAGIC) throw new InvalidDataException();
-
-        var ver = bn.Read<Byte>();
-        _ = bn.Read<Byte>();
-
-        // 版本兼容
-        if (ver > _Ver) throw new InvalidDataException($"MemoryCache[ver={_Ver}] Unable to support newer versions [{ver}]");
-
-        var count = bn.ReadSize();
-        while (count-- > 0)
-        {
-            // Key+Expire+Empty
-            // Key+Expire+TypeCode+Value
-            // Key+Expire+TypeCode+Type+Length+Value
-            var key = bn.Read<String>();
-            var exp = bn.Read<Int32>();
-            var code = (TypeCode)bn.ReadByte();
-
-            Object? value = null;
-            if (code == TypeCode.Empty)
-            {
-            }
-            else if (code != TypeCode.Object)
-            {
-                var type = Type.GetType("System." + code);
-                if (type != null) value = bn.Read(type);
-            }
-            else
-            {
-                var typeName = bn.Read<String>();
-                //var type = Type.GetType(typeName);
-                var type = typeName?.GetTypeEx();
-
-                var pk = bn.Read<IPacket>();
-                value = pk;
-                if (type != null && pk != null)
-                {
-                    var bn2 = new Binary() { Stream = pk.GetStream(), EncodeInt = true };
-                    value = bn2.Read(type);
-                }
-            }
-
-            if (key != null) Set(key, value, exp - (Int32)(Runtime.TickCount64 / 1000));
-        }
-    }
-
-    /// <summary>保存到文件</summary>
-    /// <param name="file"></param>
-    /// <param name="compressed"></param>
-    /// <returns></returns>
-    public Int64 Save(String file, Boolean compressed) => file.AsFile().OpenWrite(compressed, s => Save(s));
-
-    /// <summary>从文件加载</summary>
-    /// <param name="file"></param>
-    /// <param name="compressed"></param>
-    /// <returns></returns>
-    public Int64 Load(String file, Boolean compressed) => file.AsFile().OpenRead(compressed, s => Load(s));
     #endregion
 
     #region 性能测试
@@ -998,7 +872,7 @@ public class MemoryQueue<T> : DisposeBase, IProducerConsumer<T>
         {
             if (timeout <= 0) return default;
 
-            if (!await _occupiedNodes.WaitAsync(timeout * 1000)) return default;
+            if (!await _occupiedNodes.WaitAsync(timeout * 1000).ConfigureAwait(false)) return default;
         }
 
         return _collection.TryTake(out var item) ? item : default;
@@ -1014,7 +888,7 @@ public class MemoryQueue<T> : DisposeBase, IProducerConsumer<T>
         {
             if (timeout <= 0) return default;
 
-            if (!await _occupiedNodes.WaitAsync(timeout * 1000, cancellationToken)) return default;
+            if (!await _occupiedNodes.WaitAsync(timeout * 1000, cancellationToken).ConfigureAwait(false)) return default;
         }
 
         return _collection.TryTake(out var item) ? item : default;

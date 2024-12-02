@@ -55,7 +55,10 @@ public class JWTEncryption
         var (Payload, JWTSettings) = CombinePayload(payload, expiredTime);
         return Encrypt(JWTSettings.IssuerSigningKey, Payload, JWTSettings.Algorithm);
     }
-
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
     /// <summary>
     /// 生成 Token
     /// </summary>
@@ -66,10 +69,7 @@ public class JWTEncryption
     public static string Encrypt(string issuerSigningKey, IDictionary<string, object> payload, string algorithm = SecurityAlgorithms.HmacSha256)
     {
         // 处理 JwtPayload 序列化不一致问题
-        var stringPayload = payload is JwtPayload jwtPayload ? jwtPayload.SerializeToJson() : JsonSerializer.Serialize(payload, new JsonSerializerOptions
-        {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        });
+        var stringPayload = payload is JwtPayload jwtPayload ? jwtPayload.SerializeToJson() : JsonSerializer.Serialize(payload, _jsonSerializerOptions);
         return Encrypt(issuerSigningKey, stringPayload, algorithm);
     }
 
@@ -131,11 +131,11 @@ public class JWTEncryption
     public static async Task<string> Exchange(string expiredToken, string refreshToken, long? expiredTime = null, long clockSkew = 5)
     {
         // 交换刷新Token 必须原Token 已过期
-        var (_isValid, _, _) = await Validate(expiredToken);
+        var (_isValid, _, _) = await Validate(expiredToken).ConfigureAwait(false);
         if (_isValid) return default;
 
         // 判断刷新Token 是否过期
-        var (isValid, refreshTokenObj, _) = await Validate(refreshToken);
+        var (isValid, refreshTokenObj, _) = await Validate(refreshToken).ConfigureAwait(false);
         if (!isValid) return default;
 
         // 解析 HttpContext
@@ -143,11 +143,11 @@ public class JWTEncryption
 
         // 判断这个刷新Token 是否已刷新过
         var blacklistRefreshKey = "BLACKLIST_REFRESH_TOKEN:" + refreshToken;
-        var distributedCache = httpContext?.RequestServices?.GetService<IDistributedCache>();
+        var distributedCache = httpContext?.RequestServices?.GetRequiredService<IDistributedCache>();
 
         // 处理token并发容错问题
         var nowTime = DateTimeOffset.UtcNow;
-        var cachedValue = distributedCache?.GetString(blacklistRefreshKey);
+        var cachedValue = await distributedCache.GetStringAsync(blacklistRefreshKey).ConfigureAwait(false);
         var isRefresh = !string.IsNullOrWhiteSpace(cachedValue);    // 判断是否刷新过
         if (isRefresh)
         {
@@ -180,10 +180,10 @@ public class JWTEncryption
         // 交换成功后登记刷新Token，标记失效
         if (!isRefresh)
         {
-            distributedCache?.SetString(blacklistRefreshKey, nowTime.Ticks.ToString(), new DistributedCacheEntryOptions
+            await distributedCache.SetStringAsync(blacklistRefreshKey, nowTime.Ticks.ToString(), new DistributedCacheEntryOptions
             {
                 AbsoluteExpiration = DateTimeOffset.FromUnixTimeSeconds(refreshTokenObj.GetPayloadValue<long>(JwtRegisteredClaimNames.Exp))
-            });
+            }).ConfigureAwait(false);
         }
 
         return Encrypt(payload, expiredTime);
@@ -222,7 +222,7 @@ public class JWTEncryption
         if (string.IsNullOrWhiteSpace(expiredToken) || string.IsNullOrWhiteSpace(refreshToken)) return false;
 
         // 交换新的 Token
-        var accessToken = await Exchange(expiredToken, refreshToken, expiredTime, clockSkew);
+        var accessToken = await Exchange(expiredToken, refreshToken, expiredTime, clockSkew).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(accessToken)) return false;
 
         // 读取新的 Token Clamis
@@ -236,7 +236,7 @@ public class JWTEncryption
 
         // 设置 HttpContext.User 并登录
         httpContext.User = claimsPrincipal;
-        await httpContext.SignInAsync(claimsPrincipal);
+        await httpContext.SignInAsync(claimsPrincipal).ConfigureAwait(false);
 
         string accessTokenKey = "access-token"
              , xAccessTokenKey = "x-access-token"
@@ -276,7 +276,7 @@ public class JWTEncryption
         var tokenHandler = new JsonWebTokenHandler();
         try
         {
-            var tokenValidationResult = await tokenHandler.ValidateTokenAsync(accessToken, tokenValidationParameters);
+            var tokenValidationResult = await tokenHandler.ValidateTokenAsync(accessToken, tokenValidationParameters).ConfigureAwait(false);
             if (!tokenValidationResult.IsValid) return (false, null, tokenValidationResult);
 
             var jsonWebToken = tokenValidationResult.SecurityToken as JsonWebToken;
@@ -305,7 +305,7 @@ public class JWTEncryption
         }
 
         // 验证token
-        var (IsValid, Token, _) = await Validate(accessToken);
+        var (IsValid, Token, _) = await Validate(accessToken).ConfigureAwait(false);
         var token = IsValid ? Token : null;
 
         return (IsValid, token);

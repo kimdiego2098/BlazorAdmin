@@ -121,3 +121,12 @@ public class SugarAopService : ISugarAopService
     }
 
 }
+
+
+public class SugarConfigAopService : ISugarConfigAopService
+{
+    public SqlSugarOptions Config(SqlSugarOptions sqlSugarOptions)
+    {
+        return sqlSugarOptions;
+    }
+}

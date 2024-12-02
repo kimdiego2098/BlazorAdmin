@@ -446,7 +446,7 @@ public static class App
         IEnumerable<string> pathOfExternalAssemblies = Array.Empty<string>();
 
         // 加载 appsettings.json 配置的外部程序集
-        if (Settings.ExternalAssemblies != null && Settings.ExternalAssemblies.Any())
+        if (Settings.ExternalAssemblies != null && Settings.ExternalAssemblies.Length > 0)
         {
             var externalDlls = new List<string>();
             foreach (var item in Settings.ExternalAssemblies)
@@ -508,7 +508,7 @@ public static class App
         }
 
         // 处理排除的程序集
-        if (Settings.ExcludeAssemblies != null && Settings.ExcludeAssemblies.Any())
+        if (Settings.ExcludeAssemblies != null && Settings.ExcludeAssemblies.Length > 0)
         {
             scanAssemblies = scanAssemblies.Where(ass => !Settings.ExcludeAssemblies.Contains(ass.GetName().Name, StringComparer.OrdinalIgnoreCase));
         }

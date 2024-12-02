@@ -15,7 +15,7 @@ namespace ThingsGateway.DependencyInjection;
 /// 设置依赖注入方式
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Class)]
-public class InjectionAttribute : Attribute
+public sealed class InjectionAttribute : Attribute
 {
     /// <summary>
     /// 构造函数

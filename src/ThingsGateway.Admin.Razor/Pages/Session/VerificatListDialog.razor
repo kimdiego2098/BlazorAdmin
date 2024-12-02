@@ -49,5 +49,6 @@
     }
 </style>
 @code {
-    AdminTable<VerificatInfo> table;
+    [NotNull]
+    AdminTable<VerificatInfo>? table { get; set; }
 }

@@ -67,8 +67,6 @@ public class TimerScheduler : ILogFeature
     {
         if (timer == null) throw new ArgumentNullException(nameof(timer));
 
-        using var span = DefaultTracer.Instance?.NewSpan("timer:Add", timer.ToString());
-
         timer.Id = Interlocked.Increment(ref _tid);
         WriteLog("Timer.Add {0}", timer);
 
@@ -105,7 +103,6 @@ public class TimerScheduler : ILogFeature
     {
         if (timer == null || timer.Id == 0) return;
 
-        using var span = DefaultTracer.Instance?.NewSpan("timer:Remove", reason + " " + timer);
         WriteLog("Timer.Remove {0} reason:{1}", timer, reason);
 
         lock (this)
@@ -113,9 +110,8 @@ public class TimerScheduler : ILogFeature
             timer.Id = 0;
 
             var list = new List<TimerX>(Timers);
-            if (list.Contains(timer))
+            if (list.Remove(timer))
             {
-                list.Remove(timer);
                 Timers = list.ToArray();
 
                 Count--;
@@ -242,8 +238,6 @@ public class TimerScheduler : ILogFeature
 
         timer.hasSetNext = false;
 
-        DefaultSpan.Current = null;
-        using var span = timer.Tracer?.NewSpan(timer.TracerName ?? $"timer:Execute", timer.Timers + "");
         var sw = Stopwatch.StartNew();
         try
         {
@@ -264,7 +258,6 @@ public class TimerScheduler : ILogFeature
         // 如果用户代码没有拦截错误，则这里拦截，避免出错了都不知道怎么回事
         catch (Exception ex)
         {
-            span?.SetError(ex, null);
             XTrace.WriteException(ex);
         }
         finally
@@ -288,8 +281,6 @@ public class TimerScheduler : ILogFeature
 
         timer.hasSetNext = false;
 
-        DefaultSpan.Current = null;
-        using var span = timer.Tracer?.NewSpan(timer.TracerName ?? $"timer:ExecuteAsync", timer.Timers + "");
         var sw = Stopwatch.StartNew();
         try
         {
@@ -303,14 +294,13 @@ public class TimerScheduler : ILogFeature
             }
 
             var func = timer.Method.As<Func<Object?, Task>>(target);
-            await func!(timer.State);
+            await func!(timer.State).ConfigureAwait(false);
         }
         catch (ThreadAbortException) { throw; }
         catch (ThreadInterruptedException) { throw; }
         // 如果用户代码没有拦截错误，则这里拦截，避免出错了都不知道怎么回事
         catch (Exception ex)
         {
-            span?.SetError(ex, null);
             XTrace.WriteException(ex);
         }
         finally

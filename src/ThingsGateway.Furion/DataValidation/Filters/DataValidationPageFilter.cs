@@ -74,7 +74,7 @@ public sealed class DataValidationPageFilter : IAsyncPageFilter, IOrderedFilter
         // 排除 WebSocket 请求处理
         if (context.HttpContext.IsWebSocketRequest())
         {
-            await next.Invoke();
+            await next.Invoke().ConfigureAwait(false);
             return;
         }
 
@@ -84,7 +84,7 @@ public sealed class DataValidationPageFilter : IAsyncPageFilter, IOrderedFilter
         // 处理 Blazor Server
         if (method == null)
         {
-            await CallUnHandleResult(context, next);
+            await CallUnHandleResult(context, next).ConfigureAwait(false);
             return;
         }
 
@@ -98,7 +98,7 @@ public sealed class DataValidationPageFilter : IAsyncPageFilter, IOrderedFilter
             modelState.IsValid ||
             context.Result != null)
         {
-            await CallUnHandleResult(context, next);
+            await CallUnHandleResult(context, next).ConfigureAwait(false);
             return;
         }
 
@@ -108,7 +108,7 @@ public sealed class DataValidationPageFilter : IAsyncPageFilter, IOrderedFilter
         // 处理 Mvc 未处理结果情况
         if (!handledResult)
         {
-            await CallUnHandleResult(context, next);
+            await CallUnHandleResult(context, next).ConfigureAwait(false);
         }
     }
 
@@ -121,7 +121,7 @@ public sealed class DataValidationPageFilter : IAsyncPageFilter, IOrderedFilter
     private async Task CallUnHandleResult(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
     {
         // 处理执行后验证信息
-        var resultContext = await next.Invoke();
+        var resultContext = await next.Invoke().ConfigureAwait(false);
 
         // 如果异常不为空且属于友好验证异常
         if (resultContext.Exception != null && resultContext.Exception is AppFriendlyException friendlyException && friendlyException.ValidationException)

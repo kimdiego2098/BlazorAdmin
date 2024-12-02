@@ -18,7 +18,7 @@ namespace ThingsGateway.DynamicApiController;
 /// <summary>
 /// 动态 WebAPI 运行时感知提供器
 /// </summary>
-internal class DynamicApiRuntimeChangeProvider : IDynamicApiRuntimeChangeProvider
+internal sealed class DynamicApiRuntimeChangeProvider : IDynamicApiRuntimeChangeProvider
 {
     /// <summary>
     /// 应用程序部件管理器

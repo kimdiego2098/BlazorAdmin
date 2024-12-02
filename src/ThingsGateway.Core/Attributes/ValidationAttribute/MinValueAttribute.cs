@@ -15,7 +15,7 @@ namespace ThingsGateway;
 /// <summary>
 /// 最小值校验
 /// </summary>
-public class MinValueAttribute : ValidationAttribute
+public sealed class MinValueAttribute : ValidationAttribute
 {
     /// <summary>
     /// 最小值

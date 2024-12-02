@@ -4,7 +4,6 @@
   <Import Project="$(SolutionDir)Version.props" />
 
   <PropertyGroup>
-    <NoWarn>CS8603;CS8618;CS1591;CS8625;CS8602;CS8604;CS8600;CS8601;CS8714;CA2022;</NoWarn>
     <TargetFrameworks>net462;netstandard2.0;net6.0;net6.0-windows;net8.0;net8.0-windows;net9.0;net9.0-windows</TargetFrameworks>
     <AssemblyName>ThingsGateway.NewLife.X</AssemblyName>
     <RootNamespace>ThingsGateway.NewLife</RootNamespace>

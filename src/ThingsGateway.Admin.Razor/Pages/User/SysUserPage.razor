@@ -53,5 +53,6 @@
 </div>
 
 @code {
-    AdminTable<SysUser> table;
+    [NotNull]
+    AdminTable<SysUser>? table { get; set; }
 }

@@ -110,7 +110,7 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
         if (Persistence is not null)
         {
             // 创建长时间运行的后台任务，并将作业运行消息写入持久化中
-            _processQueueTask = Task.Factory.StartNew(async state => await ((SchedulerFactory)state).ProcessQueueAsync()
+            _processQueueTask = Task.Factory.StartNew(async state => await ((SchedulerFactory)state).ProcessQueueAsync().ConfigureAwait(false)
                 , this, TaskCreationOptions.LongRunning);
         }
     }
@@ -152,7 +152,7 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
             IEnumerable<SchedulerBuilder> preloadSchedulerBuilders = null;
             if (isSetPersistence)
             {
-                preloadSchedulerBuilders = await Persistence.PreloadAsync(stoppingToken);
+                preloadSchedulerBuilders = await Persistence.PreloadAsync(stoppingToken).ConfigureAwait(false);
             }
 
             // 装载初始作业计划
@@ -167,7 +167,7 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
                     SchedulerBuilder schedulerBuilderObj = null;
                     if (isSetPersistence)
                     {
-                        schedulerBuilderObj = await Persistence.OnLoadingAsync(schedulerBuilder, stoppingToken);
+                        schedulerBuilderObj = await Persistence.OnLoadingAsync(schedulerBuilder, stoppingToken).ConfigureAwait(false);
                     }
 
                     _ = TrySaveJob(schedulerBuilderObj ?? schedulerBuilder, out _, false);
@@ -275,7 +275,7 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
             // 进入休眠状态
             while (delay > 0)
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(Math.Min(int.MaxValue, delay)), _sleepCancellationTokenSource.Token);
+                await Task.Delay(TimeSpan.FromMilliseconds(Math.Min(int.MaxValue, delay)), _sleepCancellationTokenSource.Token).ConfigureAwait(false);
                 delay -= int.MaxValue;
             }
         }
@@ -444,7 +444,7 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
             // 作业触发记录通知
             if (Persistence is not null)
             {
-                await Persistence.OnExecutionRecordAsync(context);
+                await Persistence.OnExecutionRecordAsync(context).ConfigureAwait(false);
             }
 
             // 调用事件委托
@@ -461,7 +461,7 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
     private double? GetSleepMilliseconds(DateTime startAt)
     {
         // 空检查
-        if (!_schedulers.Any())
+        if (_schedulers.IsEmpty)
         {
             // 输出作业调度器休眠总时长和唤醒时间日志
             _logger.LogWarning("Schedule hosted service will sleep until it wakes up.");
@@ -503,12 +503,12 @@ internal sealed partial class SchedulerFactory : ISchedulerFactory
                 // 作业触发器更改通知
                 if (context is PersistenceTriggerContext triggerContext)
                 {
-                    await Persistence.OnTriggerChangedAsync(triggerContext);
+                    await Persistence.OnTriggerChangedAsync(triggerContext).ConfigureAwait(false);
                 }
                 // 作业信息更改通知
                 else
                 {
-                    await Persistence.OnChangedAsync(context);
+                    await Persistence.OnChangedAsync(context).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)

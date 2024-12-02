@@ -26,7 +26,7 @@ public class JobPersistence : IJobPersistence
     /// <exception cref="NotSupportedException"></exception>
     public async Task<IEnumerable<SchedulerBuilder>> PreloadAsync(CancellationToken stoppingToken)
     {
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
         // 获取所有定义的作业
         var allJobs = App.EffectiveTypes.ScanToBuilders().ToList();
         return allJobs;
@@ -50,7 +50,7 @@ public class JobPersistence : IJobPersistence
     /// <returns></returns>
     public async Task OnChangedAsync(PersistenceContext context)
     {
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class JobPersistence : IJobPersistence
     /// <returns></returns>
     public async Task OnTriggerChangedAsync(PersistenceTriggerContext context)
     {
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
 
     }
 
@@ -71,6 +71,6 @@ public class JobPersistence : IJobPersistence
     /// <returns></returns>
     public async Task OnExecutionRecordAsync(PersistenceExecutionRecordContext context)
     {
-        await Task.CompletedTask;
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 }

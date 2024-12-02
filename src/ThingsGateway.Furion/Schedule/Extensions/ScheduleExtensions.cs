@@ -205,16 +205,22 @@ public static class ScheduleExtensions
 
             // 穷举方式获取值
             object value;
-            if (sourcePropertyValues.ContainsKey(propertyName)) value = sourcePropertyValues[propertyName];
-            else if (sourcePropertyValues.ContainsKey(camelCasePropertyName)) value = sourcePropertyValues[camelCasePropertyName];
-            else if (sourcePropertyValues.ContainsKey(pascalPropertyName)) value = sourcePropertyValues[pascalPropertyName];
-            else if (sourcePropertyValues.ContainsKey(underScoreCasePropertyName)) value = sourcePropertyValues[underScoreCasePropertyName];
-            else continue;
+            // 穷举方式获取值
+            if (sourcePropertyValues.TryGetValue(propertyName, out value) ||
+                sourcePropertyValues.TryGetValue(camelCasePropertyName, out value) ||
+                sourcePropertyValues.TryGetValue(pascalPropertyName, out value) ||
+                sourcePropertyValues.TryGetValue(underScoreCasePropertyName, out value))
+            {
+                // 忽略空值控制
+                if (ignoreNullValue && value == null) continue;
 
-            // 忽略空值控制
-            if (ignoreNullValue && value == null) continue;
+                property.SetValue(target, value);
+            }
+            else
+            {
+                continue;
+            }
 
-            property.SetValue(target, value);
         }
 
         return target as TTarget;

@@ -5,9 +5,9 @@ using ThingsGateway.NewLife.Reflection;
 
 namespace ThingsGateway.NewLife.Extension;
 
-internal class SpeakProvider
+internal sealed class SpeakProvider
 {
-    private static readonly String typeName = "System.Speech.Synthesis.SpeechSynthesizer";
+    private const String typeName = "System.Speech.Synthesis.SpeechSynthesizer";
     private Type? _type;
 
     public SpeakProvider()
@@ -52,8 +52,8 @@ internal class SpeakProvider
         {
             try
             {
-                synth = _type.CreateInstance(new Object[0]);
-                synth?.Invoke("SetOutputToDefaultAudioDevice", new Object[0]);
+                synth = _type.CreateInstance(Array.Empty<object>());
+                synth?.Invoke("SetOutputToDefaultAudioDevice", Array.Empty<object>());
             }
             catch (Exception ex)
             {

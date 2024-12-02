@@ -16,7 +16,7 @@ namespace ThingsGateway.Schedule;
 /// <summary>
 /// 支持重复 Key 的字典比较器
 /// </summary>
-internal class RepeatKeyEqualityComparer : IEqualityComparer<JobDetail>
+internal sealed class RepeatKeyEqualityComparer : IEqualityComparer<JobDetail>
 {
     /// <summary>
     /// 相等比较

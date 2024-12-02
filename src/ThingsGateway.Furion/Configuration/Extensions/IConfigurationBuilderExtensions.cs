@@ -206,13 +206,13 @@ public static class IConfigurationBuilderExtensions
     /// <param name="parameterName">参数名</param>
     /// <param name="value">参数值</param>
     private static void TrySetParameter(IDictionary<string, bool> parameters
-        , string parameterName
-        , ref bool value)
+    , string parameterName
+    , ref bool value)
     {
         // 只有包含该参数才改变值
-        if (parameters.ContainsKey(parameterName))
+        if (parameters.TryGetValue(parameterName, out var parameterValue))
         {
-            value = parameters[parameterName];
+            value = parameterValue;
         }
     }
 }

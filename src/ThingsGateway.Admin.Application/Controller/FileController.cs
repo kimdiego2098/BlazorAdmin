@@ -28,6 +28,12 @@ public class FileController : ControllerBase
     [HttpGet("download")]
     public IActionResult Download(string fileName)
     {
+        // Validate the fileName to prevent path injection
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return BadRequest("Invalid file name.");
+        }
+
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);
 
         if (!System.IO.File.Exists(filePath))

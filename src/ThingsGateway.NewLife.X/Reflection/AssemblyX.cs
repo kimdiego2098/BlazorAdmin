@@ -694,9 +694,8 @@ public class AssemblyX
                 if (file.IsNullOrEmpty()) continue;
                 if (!file.StartsWithIgnoreCase(cur)) continue;
 
-                if (!hs.Contains(file))
+                if (hs.Add(file))
                 {
-                    hs.Add(file);
                     list.Add(asmx);
                 }
             }

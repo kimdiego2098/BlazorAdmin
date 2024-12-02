@@ -77,7 +77,7 @@ public sealed class DataValidationFilter : IAsyncActionFilter, IOrderedFilter
         // 排除 WebSocket 请求处理
         if (context.HttpContext.IsWebSocketRequest())
         {
-            await next();
+            await next().ConfigureAwait(false);
             return;
         }
 
@@ -99,7 +99,7 @@ public sealed class DataValidationFilter : IAsyncActionFilter, IOrderedFilter
             method.DeclaringType.Assembly.GetName().Name.StartsWith("Microsoft.AspNetCore.OData") ||
             context.Result != null)
         {
-            await CallUnHandleResult(context, next, actionDescriptor, method);
+            await CallUnHandleResult(context, next, actionDescriptor, method).ConfigureAwait(false);
             return;
         }
 
@@ -109,7 +109,7 @@ public sealed class DataValidationFilter : IAsyncActionFilter, IOrderedFilter
         // 处理 Mvc 未处理结果情况
         if (!handledResult)
         {
-            await CallUnHandleResult(context, next, actionDescriptor, method);
+            await CallUnHandleResult(context, next, actionDescriptor, method).ConfigureAwait(false);
         }
     }
 
@@ -124,7 +124,7 @@ public sealed class DataValidationFilter : IAsyncActionFilter, IOrderedFilter
     private async Task CallUnHandleResult(ActionExecutingContext context, ActionExecutionDelegate next, ControllerActionDescriptor actionDescriptor, MethodInfo method)
     {
         // 处理执行后验证信息
-        var resultContext = await next();
+        var resultContext = await next().ConfigureAwait(false);
 
         // 如果异常不为空且属于友好验证异常
         if (resultContext.Exception != null && resultContext.Exception is AppFriendlyException friendlyException && friendlyException.ValidationException)

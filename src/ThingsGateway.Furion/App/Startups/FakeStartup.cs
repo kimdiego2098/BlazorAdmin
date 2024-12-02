@@ -11,6 +11,7 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+#pragma warning disable CA1822 // 将成员标记为 static
 
 namespace ThingsGateway;
 

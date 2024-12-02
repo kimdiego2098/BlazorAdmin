@@ -38,5 +38,6 @@ await ToastService.Default();
 </div>
 
 @code {
-    AdminTable<SessionOutput> table;
+    [NotNull]
+    AdminTable<SessionOutput>? table { get; set; }
 }

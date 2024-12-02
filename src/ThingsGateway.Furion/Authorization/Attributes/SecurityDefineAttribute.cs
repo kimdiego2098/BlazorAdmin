@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Authorization;
 /// 安全定义特性
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class SecurityDefineAttribute : Attribute
+public sealed class SecurityDefineAttribute : Attribute
 {
     /// <summary>
     /// 构造函数

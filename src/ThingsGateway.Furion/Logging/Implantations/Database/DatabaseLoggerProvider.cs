@@ -153,7 +153,7 @@ public sealed class DatabaseLoggerProvider : ILoggerProvider, ISupportExternalSc
         _databaseLoggingWriter = _serviceScope.ServiceProvider.GetRequiredService(databaseLoggingWriterType) as IDatabaseLoggingWriter;
 
         // 创建长时间运行的后台任务，并将日志消息队列中数据写入存储中
-        _processQueueTask = Task.Factory.StartNew(async state => await ((DatabaseLoggerProvider)state).ProcessQueueAsync()
+        _processQueueTask = Task.Factory.StartNew(async state => await ((DatabaseLoggerProvider)state).ProcessQueueAsync().ConfigureAwait(false)
             , this, TaskCreationOptions.LongRunning);
     }
 
@@ -168,7 +168,7 @@ public sealed class DatabaseLoggerProvider : ILoggerProvider, ISupportExternalSc
             try
             {
                 // 调用数据库写入器写入数据库方法
-                await _databaseLoggingWriter.WriteAsync(logMsg, _logMessageQueue.Count == 0);
+                await _databaseLoggingWriter.WriteAsync(logMsg, _logMessageQueue.Count == 0).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

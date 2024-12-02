@@ -136,7 +136,7 @@ public class TcpConnectionInformation2 : TcpConnectionInformation
                 (MIB_TCPTABLE_OWNER_PID)Marshal.PtrToStructure(
                     buffTable,
                     typeof(MIB_TCPTABLE_OWNER_PID))!;
-            var rowPtr = (IntPtr)((Int64)buffTable +
+            var rowPtr = (nint)((Int64)buffTable +
                 Marshal.SizeOf(tab.dwNumEntries));
             //tTable = new MIB_TCPROW_OWNER_PID[tab.dwNumEntries];
 
@@ -148,7 +148,7 @@ public class TcpConnectionInformation2 : TcpConnectionInformation
                 list.Add(new TcpConnectionInformation2(tcpRow));
 
                 // next entry
-                rowPtr = (IntPtr)((Int64)rowPtr + Marshal.SizeOf(tcpRow));
+                rowPtr = (nint)((Int64)rowPtr + Marshal.SizeOf(tcpRow));
             }
         }
         finally
@@ -215,7 +215,7 @@ public class TcpConnectionInformation2 : TcpConnectionInformation
 
         return ParseTcps(text);
     }
-
+    private static readonly char[] SpaceChars = new Char[] { ' ' };
     /// <summary>分析Tcp连接信息</summary>
     /// <param name="text"></param>
     /// <returns></returns>
@@ -228,7 +228,7 @@ public class TcpConnectionInformation2 : TcpConnectionInformation
         // 逐行读取TCP连接信息
         foreach (var line in text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
         {
-            var parts = line.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split(SpaceChars, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length < 4 || parts[1].IndexOf(':') < 0) continue;
 
             //// 提取连接信息
@@ -277,7 +277,7 @@ public class TcpConnectionInformation2 : TcpConnectionInformation
     private static String[] GetNodes(Int32 processId)
     {
         var path = $"/proc/{processId}/fd".AsDirectory();
-        if (!path.Exists) return new String[0];
+        if (!path.Exists) return Array.Empty<string>();
 
         var files = new List<String>();
         foreach (var fi in path.GetFiles())

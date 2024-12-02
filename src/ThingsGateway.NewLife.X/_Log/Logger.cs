@@ -115,7 +115,7 @@ public abstract class Logger : ILog
     /// <summary>空日志实现</summary>
     public static ILog Null { get; } = new NullLogger();
 
-    private class NullLogger : Logger
+    private sealed class NullLogger : Logger
     {
         public override Boolean Enable { get => false; set { } }
 

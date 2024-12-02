@@ -80,6 +80,8 @@ await OnChangedAsync(SelectedRows);
 </div>
 
 @code {
-    AdminTable<TItem> table1;
-    AdminTable<TItem> table2;
+    [NotNull]
+    AdminTable<TItem>? table1 { get; set; }
+    [NotNull]
+    AdminTable<TItem>? table2 { get; set; }
 }

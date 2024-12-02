@@ -228,7 +228,7 @@ public class ScriptEngine
         {
             // 如果代码不含有reutrn关键字，则在最前面加上，因为可能是简单表达式
             if (!code.Contains("return ")) code = "return " + code;
-            if (!code.EndsWith(";")) code += ";";
+            if (!code.EndsWith(';')) code += ";";
 
             var sb = new StringBuilder(64 + code.Length);
             sb.Append("\t\tpublic static Object Eval(");
@@ -431,7 +431,7 @@ public class ScriptEngine
             var msbuild = pro.CombinePath(@"MSBuild\14.0\bin");
             if (File.Exists(msbuild.CombinePath("csc.exe"))) opts["CompilerDirectoryPath"] = msbuild;
         }
-        var provider = CodeDomProvider.CreateProvider("CSharp", opts);
+        using var provider = CodeDomProvider.CreateProvider("CSharp", opts);
         //var provider = CodeDomProvider.CreateProvider("CSharp");
         return provider.CompileAssemblyFromSource(options, classCode);
     }
@@ -496,7 +496,7 @@ public class ScriptEngine
             if (!String.IsNullOrEmpty(item))
             {
                 var line = item.Trim();
-                if (line.StartsWith("using ") && line.EndsWith(";"))
+                if (line.StartsWith("using ") && line.EndsWith(';'))
                 {
                     var len = "using ".Length;
                     line = line.Substring(len, line.Length - len - 1);

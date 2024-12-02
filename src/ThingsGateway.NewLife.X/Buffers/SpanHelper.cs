@@ -267,7 +267,7 @@ public static class SpanHelper
             {
                 ArrayPool<Byte>.Shared.Return(array);
             }
-        });
+        }, cancellationToken);
     }
 
 #if NETFRAMEWORK || NETSTANDARD

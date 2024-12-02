@@ -80,7 +80,7 @@ public class SaltPasswordProvider : IPasswordProvider
         return $"${Algorithm}${salt}${hash}";
     }
 
-    private static readonly String _cs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
+    private const String _cs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
 
     /// <summary>创建盐值</summary>
     /// <returns></returns>

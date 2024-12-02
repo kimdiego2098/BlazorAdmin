@@ -19,6 +19,8 @@ namespace Microsoft.AspNetCore.Builder;
 [SuppressSniffer]
 public static class UnifyResultMiddlewareExtensions
 {
+    private static readonly string[] DefaultAuthorizedHeaders = { "WWW-Authenticate" };
+
     /// <summary>
     /// 添加状态码拦截中间件
     /// </summary>
@@ -32,7 +34,7 @@ public static class UnifyResultMiddlewareExtensions
         UnifyContext.EnabledStatusCodesMiddleware = true;   // 设置标识
 
         // 设置授权验证失败识别头，如果不匹配将不进入规范化处理，主要解决 Windows 域授权或其他授权重新发起失败问题
-        var checkAuthorizedHeaders = (authorizedHeaders ?? Array.Empty<string>()).Concat(new[] { "WWW-Authenticate" }).ToArray();
+        var checkAuthorizedHeaders = (authorizedHeaders ?? Array.Empty<string>()).Concat(DefaultAuthorizedHeaders).ToArray();
 
         builder.UseMiddleware<UnifyResultStatusCodesMiddleware>(new object[] { checkAuthorizedHeaders, withAuthorizationHeaderCheck });
 

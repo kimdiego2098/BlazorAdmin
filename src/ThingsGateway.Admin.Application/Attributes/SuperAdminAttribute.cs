@@ -14,7 +14,7 @@ namespace ThingsGateway.Admin.Application;
 /// 管理员才能访问
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class SuperAdminAttribute : Attribute
+public sealed class SuperAdminAttribute : Attribute
 {
 }
 
@@ -22,6 +22,6 @@ public class SuperAdminAttribute : Attribute
 /// 忽略超级管理员才能访问特性
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
-public class IgnoreSuperAdminAttribute : Attribute
+public sealed class IgnoreSuperAdminAttribute : Attribute
 {
 }

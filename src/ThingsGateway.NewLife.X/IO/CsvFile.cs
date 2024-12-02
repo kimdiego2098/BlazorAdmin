@@ -90,15 +90,15 @@ public class CsvFile : IDisposable
         _disposed = true;
 
         // 必须刷新写入器，否则可能丢失一截数据
-        if (_writer != null) await _writer.FlushAsync();
+        if (_writer != null) await _writer.FlushAsync().ConfigureAwait(false);
 
         if (!_leaveOpen && _stream != null)
         {
             _reader.TryDispose();
 
-            if (_writer != null) await _writer.DisposeAsync();
+            if (_writer != null) await _writer.DisposeAsync().ConfigureAwait(false);
 
-            await _stream.DisposeAsync();
+            await _stream.DisposeAsync().ConfigureAwait(false);
         }
 
         GC.SuppressFinalize(this);
@@ -117,23 +117,22 @@ public class CsvFile : IDisposable
         if (line == null) return null;
 
         var list = new List<String>();
-
         // 直接分解，引号合并
         var arr = line.Split(Separator);
         for (var i = 0; i < arr.Length; i++)
         {
             var str = (arr[i] + "").Trim();
-            if (str.StartsWith("\""))
+            if (str.StartsWith('\"'))
             {
                 var txt = "";
-                if (str.EndsWith("\"") && !str.EndsWith("\"\""))
+                if (str.EndsWith('\"') && !str.EndsWith("\"\""))
                     txt = str.Trim('\"');
                 else
                 {
                     // 找到下一个以引号结尾的项
                     for (var j = i + 1; j < arr.Length; j++)
                     {
-                        if (arr[j].EndsWith("\""))
+                        if (arr[j].EndsWith('\"'))
                         {
                             txt = arr.Skip(i).Take(j - i + 1).Join(Separator + "").Trim('\"');
 
@@ -219,7 +218,7 @@ public class CsvFile : IDisposable
 
         var str = BuildLine(line);
 
-        await _writer.WriteLineAsync(str);
+        await _writer.WriteLineAsync(str).ConfigureAwait(false);
     }
 
     /// <summary>构建一行</summary>

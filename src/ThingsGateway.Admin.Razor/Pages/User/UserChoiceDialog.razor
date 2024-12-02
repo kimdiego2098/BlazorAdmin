@@ -38,5 +38,6 @@
 </style>
 
 @code {
-    ChoiceTable<UserSelectorOutput> userChoiceTable;
+    [NotNull]
+    ChoiceTable<UserSelectorOutput>? userChoiceTable { get; set; }
 }

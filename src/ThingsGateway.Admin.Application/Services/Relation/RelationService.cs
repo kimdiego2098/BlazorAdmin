@@ -12,7 +12,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class RelationService : BaseService<SysRelation>, IRelationService
+internal sealed class RelationService : BaseService<SysRelation>, IRelationService
 {
     #region 查询
 

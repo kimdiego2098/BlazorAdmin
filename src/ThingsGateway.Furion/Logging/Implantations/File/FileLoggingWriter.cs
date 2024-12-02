@@ -14,7 +14,7 @@ namespace ThingsGateway.Logging;
 /// <summary>
 /// 文件日志写入器
 /// </summary>
-internal class FileLoggingWriter
+internal sealed class FileLoggingWriter
 {
     /// <summary>
     /// 文件日志记录器提供程序
@@ -65,7 +65,7 @@ internal class FileLoggingWriter
         GetCurrentFileName();
 
         // 打开文件并持续写入，调用 .Wait() 确保文件流创建完毕
-        Task.Run(async () => await OpenFileAsync(_options.Append)).Wait();
+        Task.Run(async () => await OpenFileAsync(_options.Append).ConfigureAwait(false)).Wait();
     }
 
     /// <summary>
@@ -238,13 +238,13 @@ internal class FileLoggingWriter
         // 重新创建新文件并写入
         if (openNewFile)
         {
-            await CloseAsync();
+            await CloseAsync().ConfigureAwait(false);
 
             // 计算新文件名
             _fileName = GetNextFileName();
 
             // 打开新文件并写入
-            await OpenFileAsync(false);
+            await OpenFileAsync(false).ConfigureAwait(false);
         }
 
         // 是否超出限制的最大大小
@@ -321,12 +321,12 @@ internal class FileLoggingWriter
 
         try
         {
-            await CheckForNewLogFileAsync();
-            await _textWriter.WriteLineAsync(logMsg.Message);
+            await CheckForNewLogFileAsync().ConfigureAwait(false);
+            await _textWriter.WriteLineAsync(logMsg.Message).ConfigureAwait(false);
 
             if (flush)
             {
-                await _textWriter.FlushAsync();
+                await _textWriter.FlushAsync().ConfigureAwait(false);
             }
         }
         catch (Exception ex)
@@ -355,8 +355,8 @@ internal class FileLoggingWriter
         var textloWriter = _textWriter;
         _textWriter = null;
 
-        await textloWriter.DisposeAsync();
-        await _fileStream.DisposeAsync();
+        await textloWriter.DisposeAsync().ConfigureAwait(false);
+        await _fileStream.DisposeAsync().ConfigureAwait(false);
 
         _fileStream = null;
     }

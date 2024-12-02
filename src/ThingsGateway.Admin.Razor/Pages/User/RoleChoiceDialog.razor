@@ -32,5 +32,6 @@
 </style>
 
 @code {
-    ChoiceTable<SysRole> userChoiceTable;
+    [NotNull]
+    ChoiceTable<SysRole>? userChoiceTable { get; set; }
 }

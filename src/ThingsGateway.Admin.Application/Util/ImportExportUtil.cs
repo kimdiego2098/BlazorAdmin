@@ -17,7 +17,7 @@ public static class ImportExportUtil
 {
     public static string GetFileDir(ref string fileName)
     {
-        if (!fileName.Contains("."))
+        if (!fileName.Contains('.'))
             fileName += ".xlsx";
 
         var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "exports");

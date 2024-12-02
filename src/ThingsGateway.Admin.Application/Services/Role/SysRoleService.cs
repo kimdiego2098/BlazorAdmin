@@ -17,7 +17,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class SysRoleService : BaseService<SysRole>, ISysRoleService
+internal sealed class SysRoleService : BaseService<SysRole>, ISysRoleService
 {
     private readonly IRelationService _relationService;
     private readonly ISysResourceService _sysResourceService;
@@ -50,9 +50,9 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
     public async Task<List<RoleTreeOutput>> TreeAsync()
     {
         var result = new List<RoleTreeOutput>();//返回结果
-        var sysOrgList = await _sysOrgService.GetAllAsync(false);//获取所有机构
-        var sysRoles = await GetAllAsync();//获取所有角色
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
+        var sysOrgList = await _sysOrgService.GetAllAsync(false).ConfigureAwait(false);//获取所有机构
+        var sysRoles = await GetAllAsync().ConfigureAwait(false);//获取所有角色
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         sysOrgList = sysOrgList
             .WhereIF(dataScope != null && dataScope?.Count > 0, b => dataScope.Contains(b.Id))
             .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId)
@@ -82,7 +82,7 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
         //遍历顶级机构
         foreach (var org in topOrgList)
         {
-            var childIds = await _sysOrgService.GetOrgChildIdsAsync(org.Id, true, sysOrgList);//获取机构下的所有子级ID
+            var childIds = await _sysOrgService.GetOrgChildIdsAsync(org.Id, true, sysOrgList).ConfigureAwait(false);//获取机构下的所有子级ID
             var childRoles = sysRoles.Where(it => it.OrgId != 0 && childIds.Contains(it.OrgId));//获取机构下的所有角色
             if (childRoles.Any())
             {
@@ -139,12 +139,12 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
     /// <inheritdoc/>
     public async Task<QueryData<SysRole>> PageAsync(QueryPageOptions option, Func<ISugarQueryable<SysRole>, ISugarQueryable<SysRole>>? queryFunc = null)
     {
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync(); //获取机构ID范围
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false); //获取机构ID范围
         queryFunc += a => a
              .WhereIF(dataScope != null && dataScope?.Count > 0, b => dataScope.Contains(b.OrgId))
              .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId);
 
-        return await QueryAsync(option, queryFunc);
+        return await QueryAsync(option, queryFunc).ConfigureAwait(false);
     }
     /// <summary>
     /// 根据角色id获取角色列表
@@ -174,8 +174,8 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
             throw Oops.Bah(Localizer["CanotDeleteAdmin"]);
 
 
-        var dels = (await GetAllAsync()).Where(a => ids.Contains(a.Id));
-        await SysUserService.CheckApiDataScopeAsync(dels.Select(a => a.OrgId).ToList(), dels.Select(a => a.CreateUserId).ToList());
+        var dels = (await GetAllAsync().ConfigureAwait(false)).Where(a => ids.Contains(a.Id));
+        await SysUserService.CheckApiDataScopeAsync(dels.Select(a => a.OrgId).ToList(), dels.Select(a => a.CreateUserId).ToList()).ConfigureAwait(false);
 
         //数据库是string所以这里转下
         var targetIds = ids.Select(it => it.ToString());
@@ -225,14 +225,14 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
 
         if (type == ItemChangedType.Add)
         {
-            if (!((await SysUserService.GetUserByIdAsync(UserManager.UserId)).IsGlobal))
+            if (!((await SysUserService.GetUserByIdAsync(UserManager.UserId).ConfigureAwait(false)).IsGlobal))
             {
                 input.Category = RoleCategoryEnum.Org;
             }
         }
         else
         {
-            await SysUserService.CheckApiDataScopeAsync(input.OrgId, input.CreateUserId);
+            await SysUserService.CheckApiDataScopeAsync(input.OrgId, input.CreateUserId).ConfigureAwait(false);
         }
 
         if (await base.SaveAsync(input, type).ConfigureAwait(false))
@@ -281,7 +281,7 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
         var relationRoles = new List<SysRelation>();//要添加的角色资源和授权关系表
         var sysRole = (await GetAllAsync().ConfigureAwait(false)).FirstOrDefault(it => it.Id == input.Id);//获取角色
 
-        await SysUserService.CheckApiDataScopeAsync(sysRole.OrgId, sysRole.CreateUserId);
+        await SysUserService.CheckApiDataScopeAsync(sysRole.OrgId, sysRole.CreateUserId).ConfigureAwait(false);
 
         if (sysRole != null)
         {
@@ -405,7 +405,7 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
 
         var sysRole = (await GetAllAsync().ConfigureAwait(false)).FirstOrDefault(it => it.Id == input.Id);//获取角色
 
-        await SysUserService.CheckApiDataScopeAsync(sysRole.OrgId, sysRole.CreateUserId);
+        await SysUserService.CheckApiDataScopeAsync(sysRole.OrgId, sysRole.CreateUserId).ConfigureAwait(false);
 
         if (sysRole != null)
         {
@@ -440,8 +440,8 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
         if (isSuperAdmin)
             throw Oops.Bah(Localizer["CanotGrantAdmin"]);
 
-        var sysRole = (await GetAllAsync()).FirstOrDefault(a => a.Id == input.Id);
-        await SysUserService.CheckApiDataScopeAsync(sysRole.OrgId, sysRole.CreateUserId);
+        var sysRole = (await GetAllAsync().ConfigureAwait(false)).FirstOrDefault(a => a.Id == input.Id);
+        await SysUserService.CheckApiDataScopeAsync(sysRole.OrgId, sysRole.CreateUserId).ConfigureAwait(false);
 
         var sysRelations = input.GrantInfoList.Select(it =>
        new SysRelation()
@@ -510,7 +510,7 @@ internal class SysRoleService : BaseService<SysRole>, ISysRoleService
             throw Oops.Bah(Localizer["NameDup", sysRole.Name]);
         }
 
-        if (!((await GetRoleListByUserIdAsync(UserManager.UserId)).Any(a => a.Category == RoleCategoryEnum.Global)) && sysRole.DefaultDataScope.ScopeCategory == DataScopeEnum.SCOPE_ALL)
+        if (!((await GetRoleListByUserIdAsync(UserManager.UserId).ConfigureAwait(false)).Any(a => a.Category == RoleCategoryEnum.Global)) && sysRole.DefaultDataScope.ScopeCategory == DataScopeEnum.SCOPE_ALL)
             throw Oops.Bah(Localizer["CannotRoleScopeAll"]);
 
         //如果code没填

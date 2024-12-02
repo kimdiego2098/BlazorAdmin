@@ -43,7 +43,7 @@ public partial class GrantResourceDialog
 
     private string GetApp(long? moduleId) => ModuleList.FirstOrDefault(i => i.Id == moduleId)?.Title ?? ResourceConst.SpaTitle;
 
-    private bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
 
 
     private async Task OnTreeItemChecked(List<TreeViewItem<SysResource>> items)

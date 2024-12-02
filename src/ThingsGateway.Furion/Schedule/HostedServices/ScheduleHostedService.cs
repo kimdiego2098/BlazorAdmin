@@ -135,16 +135,16 @@ internal sealed class ScheduleHostedService : BackgroundService
         });
 
         // 等待作业集群指示
-        await WaitingClusterAsync();
+        await WaitingClusterAsync().ConfigureAwait(false);
 
         // 作业调度器初始化
-        await _schedulerFactory.PreloadAsync(stoppingToken);
+        await _schedulerFactory.PreloadAsync(stoppingToken).ConfigureAwait(false);
 
         // 监听服务是否取消
         while (!stoppingToken.IsCancellationRequested)
         {
             // 执行具体任务
-            await BackgroundProcessing(stoppingToken);
+            await BackgroundProcessing(stoppingToken).ConfigureAwait(false);
         }
 
         _logger.LogCritical($"Schedule hosted service is stopped.");
@@ -240,7 +240,7 @@ internal sealed class ScheduleHostedService : BackgroundService
                             // 调用执行前监视器
                             if (Monitor != default)
                             {
-                                await Monitor.OnExecutingAsync(jobExecutingContext, jobCancellationTokenSource.Token);
+                                await Monitor.OnExecutingAsync(jobExecutingContext, jobCancellationTokenSource.Token).ConfigureAwait(false);
                             }
 
                             // 计时
@@ -252,7 +252,7 @@ internal sealed class ScheduleHostedService : BackgroundService
                                 // 调用作业处理程序并配置出错执行重试
                                 await Retry.InvokeAsync(async () =>
                                 {
-                                    await jobHandler.ExecuteAsync(jobExecutingContext, jobCancellationTokenSource.Token);
+                                    await jobHandler.ExecuteAsync(jobExecutingContext, jobCancellationTokenSource.Token).ConfigureAwait(false);
                                 }
                                 , trigger.NumRetries
                                 , trigger.RetryTimeout
@@ -260,11 +260,11 @@ internal sealed class ScheduleHostedService : BackgroundService
                                 {
                                     // 输出重试日志
                                     _logger.LogWarning("Retrying {times}/{total} times for {jobExecutingContext}", times, total, jobExecutingContext);
-                                });
+                                }).ConfigureAwait(false);
                             }
                             else
                             {
-                                await Executor.ExecuteAsync(jobExecutingContext, jobHandler, jobCancellationTokenSource.Token);
+                                await Executor.ExecuteAsync(jobExecutingContext, jobHandler, jobCancellationTokenSource.Token).ConfigureAwait(false);
                             }
 
                             // 计时结束
@@ -340,7 +340,7 @@ internal sealed class ScheduleHostedService : BackgroundService
                                         // 输出作业执行回退日志
                                         _logger.LogInformation("Fallback called in {jobExecutedContext}.", jobExecutedContext);
 
-                                        await jobHandler.FallbackAsync(jobExecutedContext, jobCancellationTokenSource.Token);
+                                        await jobHandler.FallbackAsync(jobExecutedContext, jobCancellationTokenSource.Token).ConfigureAwait(false);
                                     }
                                     // 处理二次异常情况，将异常进行汇总
                                     catch (Exception fallbackEx)
@@ -356,7 +356,7 @@ internal sealed class ScheduleHostedService : BackgroundService
                                 // 调用作业执行后监视器
                                 try
                                 {
-                                    if (Monitor != null) await Monitor.OnExecutedAsync(jobExecutedContext, jobCancellationTokenSource.Token);
+                                    if (Monitor != null) await Monitor.OnExecutedAsync(jobExecutedContext, jobCancellationTokenSource.Token).ConfigureAwait(false);
                                 }
                                 catch { }
                             }
@@ -375,13 +375,13 @@ internal sealed class ScheduleHostedService : BackgroundService
                             }
 
                             // 记录作业触发器运行信息
-                            await trigger.RecordTimelineAsync(_schedulerFactory, jobId, executionException?.ToString());
+                            await trigger.RecordTimelineAsync(_schedulerFactory, jobId, executionException?.ToString()).ConfigureAwait(false);
 
                             // 重置触发模式
                             trigger.Mode = 0;
 
                             // 释放服务作用域
-                            await ReleaseJobHandlerAsync(jobHandler);
+                            await ReleaseJobHandlerAsync(jobHandler).ConfigureAwait(false);
                             jobHandler = null;
                             serviceScoped.Dispose();
 
@@ -397,7 +397,7 @@ internal sealed class ScheduleHostedService : BackgroundService
         });
 
         // 作业调度器进入休眠状态
-        await _schedulerFactory.SleepAsync(startAt);
+        await _schedulerFactory.SleepAsync(startAt).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -479,7 +479,7 @@ internal sealed class ScheduleHostedService : BackgroundService
         _logger.LogInformation("The job cluster of <{ClusterId}> service has been enabled, and waiting for instructions.", ClusterId);
 
         // 等待作业集群服务返回消息
-        await ClusterServer.WaitingForAsync(new(ClusterId));
+        await ClusterServer.WaitingForAsync(new(ClusterId)).ConfigureAwait(false);
 
         // 输出作业集群可正常工作日志
         _logger.LogWarning("The job cluster of <{ClusterId}> service worked now, and the current schedule hosted service will be preload.", ClusterId);
@@ -504,7 +504,7 @@ internal sealed class ScheduleHostedService : BackgroundService
         // 手动释放
         if (jobHandler is IAsyncDisposable asyncDisposable)
         {
-            await asyncDisposable.DisposeAsync();
+            await asyncDisposable.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

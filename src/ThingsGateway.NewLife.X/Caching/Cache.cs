@@ -318,7 +318,7 @@ public abstract class Cache : DisposeBase, ICache
         if (!rlock.Acquire(msTimeout, msExpire))
         {
             if (throwOnFailure) throw new InvalidOperationException($"Lock [{key}] failed! msTimeout={msTimeout}");
-
+            rlock.Dispose();
             return null;
         }
 
@@ -729,7 +729,7 @@ public abstract class Cache : DisposeBase, ICache
     public override String ToString() => Name;
     #endregion
 #if NET6_0_OR_GREATER
-#region 集合
+    #region 集合
     /// <inheritdoc/>
     public virtual void HashAdd<T>(string key, string hashKey, T value)
     {
@@ -786,9 +786,9 @@ public abstract class Cache : DisposeBase, ICache
         var exist = GetDictionary<T>(key);
         foreach (var field in fields)
         {
-            if (exist.ContainsKey(field))//如果包含Key
+            if (exist.TryGetValue(field, out var data))//如果包含Key
             {
-                list.Add(exist[field]);
+                list.Add(data);
             }
             else { list.Add(default); }
         }

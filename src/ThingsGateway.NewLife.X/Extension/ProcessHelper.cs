@@ -320,7 +320,7 @@ public static class ProcessHelper
         var fileName = cmd;
         //if (!Path.IsPathRooted(fileName) && !working.IsNullOrEmpty()) fileName = working.CombinePath(fileName);
 
-        var p = new Process();
+        using var p = new Process();
         var si = p.StartInfo;
         si.FileName = fileName;
         if (arguments != null) si.Arguments = arguments;

@@ -77,7 +77,7 @@ public class AuthService : IAuthService
             }
         }
 
-        await BeforeLoginAsync(appConfig, input);//登录前校验
+        await BeforeLoginAsync(appConfig, input).ConfigureAwait(false);//登录前校验
 
         var userInfo = await _sysUserService.GetUserByAccountAsync(input.Account, input.TenantId).ConfigureAwait(false);//获取用户信息
         if (userInfo == null)
@@ -111,7 +111,7 @@ public class AuthService : IAuthService
             };
             RemoveTokenFromCache(loginEvent);//移除verificat
         }
-        await _appService.LoginOutAsync();
+        await _appService.LoginOutAsync().ConfigureAwait(false);
     }
 
     #region 方法
@@ -134,8 +134,8 @@ public class AuthService : IAuthService
             //根据域名获取二级域名
             var domain = origin.Split("//")[1].Split(".")[0];
             //根据二级域名获取租户
-            var tenantList = await _sysOrgService.GetTenantListAsync();
-            var tenant = tenantList.FirstOrDefault(x => x.Code.ToLower() == domain);//获取租户默认是机构编码
+            var tenantList = await _sysOrgService.GetTenantListAsync().ConfigureAwait(false);
+            var tenant = tenantList.FirstOrDefault(x => x.Code.Equals(domain, StringComparison.OrdinalIgnoreCase));//获取租户默认是机构编码
             if (tenant != null)
                 input.TenantId = tenant.Id;
             else
@@ -208,7 +208,7 @@ public class AuthService : IAuthService
         {
             if (!sysUser.ModuleList.Any())
                 throw Oops.Bah(_localizer["UserNoModule"]);//未分配模块
-            var org = await _sysOrgService.GetSysOrgByIdAsync(sysUser.OrgId);//获取机构
+            var org = await _sysOrgService.GetSysOrgByIdAsync(sysUser.OrgId).ConfigureAwait(false);//获取机构
             if (!org.Status) throw Oops.Bah(_localizer["OrgDisable"]);//机构冻结
             #region cookie
 
@@ -220,7 +220,7 @@ public class AuthService : IAuthService
             identity.AddClaim(new Claim(ClaimConst.OrgId, sysUser.OrgId.ToString()));
             identity.AddClaim(new Claim(ClaimConst.TenantId, input.TenantId?.ToString() ?? "0"));
 
-            await _appService.LoginAsync(identity);
+            await _appService.LoginAsync(identity).ConfigureAwait(false);
 
             #endregion cookie
         }

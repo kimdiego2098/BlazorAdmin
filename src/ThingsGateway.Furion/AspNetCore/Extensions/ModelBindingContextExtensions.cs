@@ -48,7 +48,7 @@ public static class ModelBindingContextExtensions
         });
 
         // 调用默认模型绑定器
-        await modelBinder.BindModelAsync(bindingContext);
+        await modelBinder.BindModelAsync(bindingContext).ConfigureAwait(false);
 
         // 处理回调
         configure?.Invoke(bindingContext);

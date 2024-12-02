@@ -36,7 +36,7 @@ public partial class GrantApiDialog
         Items = OpenApiUtil.BuildTreeItemList(items, Value, RenderTreeItem);
     }
 
-    private bool ModelEqualityComparer(OpenApiPermissionTreeSelector x, OpenApiPermissionTreeSelector y) => x.ApiRoute == y.ApiRoute;
+    private static bool ModelEqualityComparer(OpenApiPermissionTreeSelector x, OpenApiPermissionTreeSelector y) => x.ApiRoute == y.ApiRoute;
 
 
 

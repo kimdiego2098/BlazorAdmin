@@ -91,12 +91,12 @@ public class RESTfulResultProvider : IUnifyResultProvider
             // 处理 401 状态码
             case StatusCodes.Status401Unauthorized:
                 await context.Response.WriteAsJsonAsync(RESTfulResult(statusCode, errors: "401 Unauthorized")
-                    , App.GetOptions<JsonOptions>()?.JsonSerializerOptions);
+                    , App.GetOptions<JsonOptions>()?.JsonSerializerOptions).ConfigureAwait(false);
                 break;
             // 处理 403 状态码
             case StatusCodes.Status403Forbidden:
                 await context.Response.WriteAsJsonAsync(RESTfulResult(statusCode, errors: "403 Forbidden")
-                    , App.GetOptions<JsonOptions>()?.JsonSerializerOptions);
+                    , App.GetOptions<JsonOptions>()?.JsonSerializerOptions).ConfigureAwait(false);
                 break;
 
             default: break;

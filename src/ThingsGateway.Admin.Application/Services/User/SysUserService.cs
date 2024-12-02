@@ -21,7 +21,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class SysUserService : BaseService<SysUser>, ISysUserService
+internal sealed class SysUserService : BaseService<SysUser>, ISysUserService
 {
     private readonly IRelationService _relationService;
     private readonly ISysResourceService _sysResourceService;
@@ -57,8 +57,8 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     {
         if (UserManager.SuperAdmin || UserManager.UserId == 0)
             return null;
-        var userInfo = await GetUserByIdAsync(UserManager.UserId);//获取用户信息
-        var roles = await _roleService.GetRoleListByUserIdAsync(UserManager.UserId);
+        var userInfo = await GetUserByIdAsync(UserManager.UserId).ConfigureAwait(false);//获取用户信息
+        var roles = await _roleService.GetRoleListByUserIdAsync(UserManager.UserId).ConfigureAwait(false);
         if (roles.Any(a => a.DefaultDataScope.ScopeCategory == DataScopeEnum.SCOPE_ALL))
         {
             return null;
@@ -86,7 +86,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     {
         var hasPermission = true;
         //判断数据范围
-        var dataScope = await GetCurrentUserDataScopeAsync();
+        var dataScope = await GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         if (dataScope is { Count: > 0 })//如果有机构
         {
             if (orgId == null || !dataScope.Contains(orgId.Value))//判断机构id是否在数据范围
@@ -109,7 +109,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     {
         var hasPermission = true;
         //判断数据范围
-        var dataScope = await GetCurrentUserDataScopeAsync();
+        var dataScope = await GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         if (dataScope is { Count: > 0 })//如果有机构
         {
             if (orgIds == null || !dataScope.ContainsAll(orgIds))//判断机构id列表是否全在数据范围
@@ -176,7 +176,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
         if (tenantId > 0)
         {
             key += $":{tenantId}";
-            orgIds = await _sysOrgService.GetOrgChildIdsAsync(tenantId.Value);//获取下级机构
+            orgIds = await _sysOrgService.GetOrgChildIdsAsync(tenantId.Value).ConfigureAwait(false);//获取下级机构
         }
         //先从Cache拿
         var userId = App.CacheService.HashGetOne<long>(key, account);
@@ -325,8 +325,8 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
         if (input != null)
         {
             option.SortName = "u." + option.SortName;
-            var orgIds = await _sysOrgService.GetOrgChildIdsAsync(input.OrgId);//获取下级机构
-            var dataScope = await GetCurrentUserDataScopeAsync();
+            var orgIds = await _sysOrgService.GetOrgChildIdsAsync(input.OrgId).ConfigureAwait(false);//获取下级机构
+            var dataScope = await GetCurrentUserDataScopeAsync().ConfigureAwait(false);
 
             return await QueryAsync(option, query =>
             query.WhereIF(!option.SearchText.IsNullOrWhiteSpace(), a => a.Account.Contains(option.SearchText))
@@ -355,7 +355,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
                 u.Password = null;//密码清空
                 u.Phone = DESCEncryption.Decrypt(u.Phone);//解密手机号
 #pragma warning restore CS8625 // 无法将 null 字面量转换为非 null 的引用类型。
-            }));
+            })).ConfigureAwait(false);
 
         }
         else
@@ -367,7 +367,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
                     u.Password = null;//密码清空
                     u.Phone = DESCEncryption.Decrypt(u.Phone);//解密手机号
 #pragma warning restore CS8625 // 无法将 null 字面量转换为非 null 的引用类型。
-                }));
+                })).ConfigureAwait(false);
         }
 
 
@@ -430,7 +430,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     {
         var sysUser = await GetUserByIdAsync(input.Id).ConfigureAwait(false);//获取用户
 
-        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId);
+        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId).ConfigureAwait(false);
         if (sysUser != null)
         {
             await _relationService.SaveRelationBatchAsync(RelationCategoryEnum.UserHasOpenApiPermission, input.Id,
@@ -461,7 +461,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
         }
         else
         {
-            await CheckApiDataScopeAsync(input.OrgId, input.CreateUserId);
+            await CheckApiDataScopeAsync(input.OrgId, input.CreateUserId).ConfigureAwait(false);
             var exist = await GetUserByIdAsync(input.Id).ConfigureAwait(false);//获取用户信息
             if (exist != null)
             {
@@ -511,9 +511,9 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     [OperDesc("ResetPassword")]
     public async Task ResetPasswordAsync(long id)
     {
-        var sysUser = await GetUserByIdAsync(id);
+        var sysUser = await GetUserByIdAsync(id).ConfigureAwait(false);
 
-        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId);
+        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId).ConfigureAwait(false);
 
         var password = await GetDefaultPassWord(true).ConfigureAwait(false);//获取默认密码,这里不走Aop所以需要加密一下
         using var db = GetDB();
@@ -536,7 +536,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     public async Task GrantRoleAsync(GrantUserOrRoleInput input)
     {
         var sysUser = await GetUserByIdAsync(input.Id).ConfigureAwait(false);//获取用户信息
-        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId);
+        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId).ConfigureAwait(false);
         if (sysUser != null)
         {
             var isSuperAdmin = (sysUser.Account == RoleConst.SuperAdmin || input.GrantInfoList.Any(a => a == RoleConst.SuperAdminRoleId)) && !UserManager.SuperAdmin;//判断是否有超管
@@ -559,7 +559,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
         var extJsons = input.GrantInfoList.Select(it => it.ToJsonNetString()).ToList();//拓展信息
         var relationUsers = new List<SysRelation>();//要添加的用户资源和授权关系表
         var sysUser = await GetUserByIdAsync(input.Id).ConfigureAwait(false);//获取用户
-        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId);
+        await CheckApiDataScopeAsync(sysUser.OrgId, sysUser.CreateUserId).ConfigureAwait(false);
         if (sysUser != null)
         {
             var resources = await _sysResourceService.GetAllAsync().ConfigureAwait(false);
@@ -666,7 +666,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
             throw Oops.Bah(Localizer["CanotDeleteSelf"]);
 
         var sysUsers = await GetUserListByIdListAsync(ids).ConfigureAwait(false);//获取用户信息
-        await CheckApiDataScopeAsync(sysUsers.Select(a => a.OrgId).ToList(), sysUsers.Select(a => a.CreateUserId).ToList());
+        await CheckApiDataScopeAsync(sysUsers.Select(a => a.OrgId).ToList(), sysUsers.Select(a => a.CreateUserId).ToList()).ConfigureAwait(false);
 
         //定义删除的关系
         var delRelations = new List<RelationCategoryEnum>
@@ -683,7 +683,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
                 DirectorId = null
             })
             .Where(it => ids.Contains(it.DirectorId.Value))
-            .ExecuteCommandAsync();
+            .ExecuteCommandAsync().ConfigureAwait(false);
 
             //删除用户
             await db.Deleteable<SysUser>().In(ids.ToList()).ExecuteCommandHasChangeAsync().ConfigureAwait(false);//删除
@@ -797,11 +797,11 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
     private async Task CheckInput(SysUser sysUser)
     {
 
-        var sysOrgList = await _sysOrgService.GetAllAsync();//获取组织列表
+        var sysOrgList = await _sysOrgService.GetAllAsync().ConfigureAwait(false);//获取组织列表
         var userOrg = sysOrgList.FirstOrDefault(it => it.Id == sysUser.OrgId);
         if (userOrg == null)
             throw Oops.Bah(Localizer[$"NoOrg"]);
-        var tenantId = await _sysOrgService.GetTenantIdByOrgIdAsync(sysUser.OrgId, sysOrgList);
+        var tenantId = await _sysOrgService.GetTenantIdByOrgIdAsync(sysUser.OrgId, sysOrgList).ConfigureAwait(false);
 
         //判断账号重复,直接从cache拿
         var accountId = await GetIdByAccountAsync(sysUser.Account, tenantId).ConfigureAwait(false);
@@ -872,7 +872,7 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
             sysUser.OrgAndPosIdList.AddRange(sysUser.OrgId, sysUser.PositionId ?? 0);//添加组织和职位Id
             if (sysUser.DirectorId != null)
             {
-                sysUser.DirectorInfo = (await GetUserByIdAsync(sysUser.DirectorId.Value)).Adapt<UserSelectorOutput>();//获取主管信息
+                sysUser.DirectorInfo = (await GetUserByIdAsync(sysUser.DirectorId.Value).ConfigureAwait(false)).Adapt<UserSelectorOutput>();//获取主管信息
             }
 
             //获取按钮码
@@ -891,11 +891,11 @@ internal class SysUserService : BaseService<SysUser>, ISysUserService
 
 
 
-            var sysOrgList = await _sysOrgService.GetAllAsync();
+            var sysOrgList = await _sysOrgService.GetAllAsync().ConfigureAwait(false);
             var scopeOrgChildList =
-                (await _sysOrgService.GetChildListByIdAsync(sysUser.OrgId, true, sysOrgList)).Select(it => it.Id).ToList();//获取所属机构的下级机构Id列表
+                (await _sysOrgService.GetChildListByIdAsync(sysUser.OrgId, true, sysOrgList).ConfigureAwait(false)).Select(it => it.Id).ToList();//获取所属机构的下级机构Id列表
             sysUser.ScopeOrgChildList = scopeOrgChildList;
-            var tenantId = await _sysOrgService.GetTenantIdByOrgIdAsync(sysUser.OrgId, sysOrgList);
+            var tenantId = await _sysOrgService.GetTenantIdByOrgIdAsync(sysUser.OrgId, sysOrgList).ConfigureAwait(false);
             sysUser.TenantId = tenantId;
 
             if (sysUser.Account == RoleConst.SuperAdmin)

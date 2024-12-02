@@ -3,7 +3,7 @@
 /// <summary>等级日志提供者，不同等级分不同日志输出</summary>
 public class LevelLog : Logger
 {
-    private IDictionary<LogLevel, ILog> _logs = new Dictionary<LogLevel, ILog>();
+    private Dictionary<LogLevel, ILog> _logs = new Dictionary<LogLevel, ILog>();
 
     /// <summary>通过指定路径和文件格式来实例化等级日志，每个等级使用自己的日志输出</summary>
     /// <param name="logPath"></param>

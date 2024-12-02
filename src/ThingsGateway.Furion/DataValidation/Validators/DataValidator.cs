@@ -145,7 +145,7 @@ public static class DataValidator
     public static DataValidationResult TryValidateValue(object value, ValidationPattern validationOptionss, params object[] validationTypes)
     {
         // 存储验证结果
-        ICollection<ValidationResult> results = new List<ValidationResult>();
+        var results = new List<ValidationResult>();
 
         // 如果值未null，验证失败
         if (value == null)
@@ -228,11 +228,8 @@ public static class DataValidator
             var validationName = Enum.GetName(type, validationType);
 
             // 判断是否配置验证正则表达式
-            if (!ValidationItemMetadatas.ContainsKey(validationName))
+            if (!ValidationItemMetadatas.TryGetValue(validationName, out var validationItemMetadataAttribute))
                 throw new InvalidOperationException($"No {validationName} validation type metadata exists.");
-
-            // 获取对应的验证选项
-            var validationItemMetadataAttribute = ValidationItemMetadatas[validationName];
 
             return (validationName, validationItemMetadataAttribute);
         }
@@ -310,9 +307,9 @@ public static class DataValidator
     private static ValidationItemMetadataAttribute ReplaceValidateErrorMessage(string name, FieldInfo field, Dictionary<string, string> customErrorMessages)
     {
         var validationValidationItemMetadata = field.GetCustomAttribute<ValidationItemMetadataAttribute>();
-        if (customErrorMessages.ContainsKey(name))
+        if (customErrorMessages.TryGetValue(name, out var errorMessage))
         {
-            validationValidationItemMetadata.DefaultErrorMessage = customErrorMessages[name];
+            validationValidationItemMetadata.DefaultErrorMessage = errorMessage;
         }
 
         return validationValidationItemMetadata;

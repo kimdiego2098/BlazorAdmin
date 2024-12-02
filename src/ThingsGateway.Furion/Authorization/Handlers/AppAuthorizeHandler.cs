@@ -41,14 +41,14 @@ public abstract class AppAuthorizeHandler : IAuthorizationHandler
 
         try
         {
-            await HandleAsync(context, httpContext);
+            await HandleAsync(context, httpContext).ConfigureAwait(false);
         }
         catch (Exception exception)
         {
             context.Fail();
 
             // 处理规范化结果
-            await UnifyWrapper(httpContext, exception);
+            await UnifyWrapper(httpContext, exception).ConfigureAwait(false);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class AppAuthorizeHandler : IAuthorizationHandler
                 return;
             }
 
-            await AuthorizeHandleAsync(context);
+            await AuthorizeHandleAsync(context).ConfigureAwait(false);
         }
         else context.GetCurrentHttpContext()?.SignoutToSwagger();    // 退出 Swagger 登录
     }
@@ -113,14 +113,14 @@ public abstract class AppAuthorizeHandler : IAuthorizationHandler
         var httpContext = context.GetCurrentHttpContext();
 
         // 调用子类管道
-        var pipeline = await PipelineAsync(context, httpContext);
+        var pipeline = await PipelineAsync(context, httpContext).ConfigureAwait(false);
         if (pipeline)
         {
             // 通过授权验证
             foreach (var requirement in pendingRequirements)
             {
                 // 验证策略管道
-                var policyPipeline = await PolicyPipelineAsync(context, httpContext, requirement);
+                var policyPipeline = await PolicyPipelineAsync(context, httpContext, requirement).ConfigureAwait(false);
                 if (policyPipeline) context.Succeed(requirement);
                 else context.Fail();
             }
@@ -154,7 +154,7 @@ public abstract class AppAuthorizeHandler : IAuthorizationHandler
 
             // 终止返回
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await httpContext.Response.WriteAsJsonAsync(data, App.GetOptions<JsonOptions>()?.JsonSerializerOptions);
+            await httpContext.Response.WriteAsJsonAsync(data, App.GetOptions<JsonOptions>()?.JsonSerializerOptions).ConfigureAwait(false);
         }
         else throw exception;
     }

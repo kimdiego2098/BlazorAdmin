@@ -58,7 +58,7 @@ internal sealed partial class ChannelEventSourceStorer : IEventSourceStorer
         }
 
         // 写入存储器
-        await _channel.Writer.WriteAsync(eventSource, cancellationToken);
+        await _channel.Writer.WriteAsync(eventSource, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ internal sealed partial class ChannelEventSourceStorer : IEventSourceStorer
     public async ValueTask<IEventSource> ReadAsync(CancellationToken cancellationToken)
     {
         // 读取一条事件源
-        var eventSource = await _channel.Reader.ReadAsync(cancellationToken);
+        var eventSource = await _channel.Reader.ReadAsync(cancellationToken).ConfigureAwait(false);
         return eventSource;
     }
 }

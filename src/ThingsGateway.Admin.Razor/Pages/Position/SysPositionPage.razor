@@ -41,7 +41,8 @@
 </div>
 
 @code {
-    AdminTable<SysPosition> table;
+    [NotNull]
+    AdminTable<SysPosition>? table { get; set; }
 }
 @* @code {
     RenderFragment Render(PositionTableSearchModel model) =>

@@ -16,7 +16,7 @@ namespace ThingsGateway.EventBus;
 /// <summary>
 /// 事件总线工厂默认实现
 /// </summary>
-internal class EventBusFactory : IEventBusFactory
+internal sealed class EventBusFactory : IEventBusFactory
 {
     /// <summary>
     /// 事件源存储器
@@ -53,7 +53,7 @@ internal class EventBusFactory : IEventBusFactory
             Handler = handler,
             HandlerMethod = handlerMethod,
             Operate = EventSubscribeOperates.Append
-        }, cancellationToken);
+        }, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -71,6 +71,6 @@ internal class EventBusFactory : IEventBusFactory
         {
             SubscribeEventId = eventId,
             Operate = EventSubscribeOperates.Remove
-        }, default);
+        }, default).ConfigureAwait(false);
     }
 }

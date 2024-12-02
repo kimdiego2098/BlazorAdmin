@@ -36,7 +36,7 @@ public partial class EditPagePolicy
         return base.OnParametersSetAsync();
     }
 
-    private bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
 
     private Task OnShortcutsTreeItemChecked(List<TreeViewItem<SysResource>> items)
     {

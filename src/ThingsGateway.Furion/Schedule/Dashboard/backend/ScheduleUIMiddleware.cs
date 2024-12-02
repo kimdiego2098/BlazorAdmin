@@ -72,7 +72,7 @@ public sealed class ScheduleUIMiddleware
         // 非看板请求跳过
         if (!context.Request.Path.StartsWithSegments(Options.RequestPath, StringComparison.OrdinalIgnoreCase))
         {
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
             return;
         }
 
@@ -91,7 +91,7 @@ public sealed class ScheduleUIMiddleware
             using (var readStream = currentAssembly.GetManifestResourceStream($"{currentAssembly.GetName().Name}.Schedule.Dashboard.frontend.{(isIndex ? "index.html" : targetPath)}"))
             {
                 buffer = new byte[readStream.Length];
-                _ = await readStream.ReadAsync(buffer);
+                _ = await readStream.ReadAsync(buffer).ConfigureAwait(false);
             }
 
             // 替换配置占位符
@@ -99,7 +99,7 @@ public sealed class ScheduleUIMiddleware
             using (var stream = new MemoryStream(buffer))
             {
                 using var streamReader = new StreamReader(stream, new UTF8Encoding(false));
-                content = await streamReader.ReadToEndAsync();
+                content = await streamReader.ReadToEndAsync().ConfigureAwait(false);
                 content = isIndex
                     ? content.Replace(STATIC_FILES_PATH, $"{Options.VirtualPath}{Options.RequestPath}")
                     : content.Replace("%(RequestPath)", $"{Options.VirtualPath}{Options.RequestPath}")
@@ -111,7 +111,7 @@ public sealed class ScheduleUIMiddleware
 
             // 输出到客户端
             context.Response.ContentType = $"text/{(isIndex ? "html" : "javascript")}; charset=utf-8";
-            await context.Response.WriteAsync(content);
+            await context.Response.WriteAsync(content).ConfigureAwait(false);
             return;
         }
 
@@ -120,14 +120,14 @@ public sealed class ScheduleUIMiddleware
         // 如果不是以 API_REQUEST_PATH 开头，则跳过
         if (!context.Request.Path.StartsWithSegments(ApiRequestPath, StringComparison.OrdinalIgnoreCase))
         {
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
             return;
         }
 
         // 只处理 GET/POST 请求
-        if (context.Request.Method.ToUpper() != "GET" && context.Request.Method.ToUpper() != "POST")
+        if (!context.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase) && !context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
         {
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
             return;
         }
 
@@ -147,7 +147,7 @@ public sealed class ScheduleUIMiddleware
                 var jobs = _schedulerFactory.GetJobsOfModels().OrderBy(u => u.JobDetail.GroupName);
 
                 // 输出 JSON
-                await context.Response.WriteAsync(SerializeToJson(jobs));
+                await context.Response.WriteAsync(SerializeToJson(jobs)).ConfigureAwait(false);
                 break;
             // 操作作业
             case "/operate-job":
@@ -170,7 +170,7 @@ public sealed class ScheduleUIMiddleware
                     {
                         msg = scheduleResult.ToString(),
                         ok = false
-                    }));
+                    })).ConfigureAwait(false);
 
                     return;
                 }
@@ -200,7 +200,7 @@ public sealed class ScheduleUIMiddleware
                 {
                     msg = ScheduleResult.Succeed.ToString(),
                     ok = true
-                }));
+                })).ConfigureAwait(false);
 
                 break;
             // 操作触发器
@@ -225,7 +225,7 @@ public sealed class ScheduleUIMiddleware
                     {
                         msg = scheduleResult1.ToString(),
                         ok = false
-                    }));
+                    })).ConfigureAwait(false);
 
                     return;
                 }
@@ -254,7 +254,7 @@ public sealed class ScheduleUIMiddleware
                         var timelines = trigger?.GetTimelines() ?? Array.Empty<TriggerTimeline>();
 
                         // 输出 JSON
-                        await context.Response.WriteAsync(SerializeToJson(timelines));
+                        await context.Response.WriteAsync(SerializeToJson(timelines)).ConfigureAwait(false);
                         return;
                 }
 
@@ -263,7 +263,7 @@ public sealed class ScheduleUIMiddleware
                 {
                     msg = ScheduleResult.Succeed.ToString(),
                     ok = true
-                }));
+                })).ConfigureAwait(false);
 
                 break;
 
@@ -301,7 +301,7 @@ public sealed class ScheduleUIMiddleware
                         if (!context.RequestAborted.IsCancellationRequested)
                         {
                             var message = "data: " + SerializeToJson(jobDetail) + "\n\n";
-                            await context.Response.WriteAsync(message, context.RequestAborted);
+                            await context.Response.WriteAsync(message, context.RequestAborted).ConfigureAwait(false);
                             //await context.Response.Body.FlushAsync();
                         }
                         else break;

@@ -426,7 +426,7 @@ internal sealed partial class Scheduler
             Task.Run(async () =>
             {
                 // 记录作业触发器运行信息
-                await trigger.RecordTimelineAsync(Factory, JobId);
+                await trigger.RecordTimelineAsync(Factory, JobId).ConfigureAwait(false);
             });
 
             // 输出日志

@@ -73,31 +73,52 @@ public static class SecurityHelper
     /// <param name="data"></param>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static Byte[] SHA1(this Byte[] data, Byte[] key) => new HMACSHA1(key).ComputeHash(data);
-
+    public static Byte[] SHA1(this Byte[] data, Byte[] key)
+    {
+        using var HMACSHA1 = new HMACSHA1(key);
+        return HMACSHA1.ComputeHash(data);
+    }
     /// <summary>SHA256</summary>
     /// <param name="data"></param>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static Byte[] SHA256(this Byte[] data, Byte[] key) => new HMACSHA256(key).ComputeHash(data);
+    public static Byte[] SHA256(this Byte[] data, Byte[] key)
+    {
+        using var HMACSHA256 = new HMACSHA256(key);
+        return HMACSHA256.ComputeHash(data);
+
+    }
 
     /// <summary>SHA384</summary>
     /// <param name="data"></param>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static Byte[] SHA384(this Byte[] data, Byte[] key) => new HMACSHA384(key).ComputeHash(data);
+    public static Byte[] SHA384(this Byte[] data, Byte[] key)
+    {
+        using var HMACSHA384 = new HMACSHA384(key);
+        return HMACSHA384.ComputeHash(data);
+
+    }
 
     /// <summary>SHA512</summary>
     /// <param name="data"></param>
     /// <param name="key"></param>
     /// <returns></returns>
-    public static Byte[] SHA512(this Byte[] data, Byte[] key) => new HMACSHA512(key).ComputeHash(data);
+    public static Byte[] SHA512(this Byte[] data, Byte[] key)
+    {
+        using var HMACSHA512 = new HMACSHA512(key);
+        return HMACSHA512.ComputeHash(data);
+    }
 
     /// <summary>Murmur128哈希</summary>
     /// <param name="data"></param>
     /// <param name="seed"></param>
     /// <returns></returns>
-    public static Byte[] Murmur128(this Byte[] data, UInt32 seed = 0) => new Murmur128(seed).ComputeHash(data);
+    public static Byte[] Murmur128(this Byte[] data, UInt32 seed = 0)
+    {
+        using var Murmur128 = new Murmur128(seed);
+        return Murmur128.ComputeHash(data);
+    }
     #endregion
 
     #region 同步加密扩展

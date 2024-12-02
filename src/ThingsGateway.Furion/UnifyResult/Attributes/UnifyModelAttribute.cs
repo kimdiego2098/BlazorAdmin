@@ -15,7 +15,7 @@ namespace ThingsGateway.UnifyResult;
 /// 规范化模型特性
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Class)]
-public class UnifyModelAttribute : Attribute
+public sealed class UnifyModelAttribute : Attribute
 {
     /// <summary>
     /// 规范化模型

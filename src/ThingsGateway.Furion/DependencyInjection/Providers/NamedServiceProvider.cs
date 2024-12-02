@@ -21,7 +21,7 @@ namespace ThingsGateway.DependencyInjection;
 /// 命名服务提供器默认实现
 /// </summary>
 /// <typeparam name="TService">目标服务接口</typeparam>
-internal class NamedServiceProvider<TService> : INamedServiceProvider<TService>
+internal sealed class NamedServiceProvider<TService> : INamedServiceProvider<TService>
     where TService : class
 {
     /// <summary>

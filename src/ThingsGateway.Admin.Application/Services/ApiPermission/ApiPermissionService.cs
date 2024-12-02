@@ -22,7 +22,7 @@ using ThingsGateway.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class ApiPermissionService : IApiPermissionService
+internal sealed class ApiPermissionService : IApiPermissionService
 {
     private readonly IApiDescriptionGroupCollectionProvider _apiDescriptionGroupCollectionProvider;
     private readonly ISysUserService _sysUserService;
@@ -43,7 +43,7 @@ internal class ApiPermissionService : IApiPermissionService
         if (permissions == null)
         {
             permissions = new();
-            var dataScope = await _sysUserService.GetCurrentUserDataScopeAsync(); //获取机构ID范围
+            var dataScope = await _sysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false); //获取机构ID范围
             var apiDescriptions = _apiDescriptionGroupCollectionProvider.ApiDescriptionGroups.Items;
 
             // 获取所有需要数据权限的控制器
@@ -91,7 +91,7 @@ internal class ApiPermissionService : IApiPermissionService
 
                 openApiPermissionTreeSelector.Children.AddRange(openApiPermissionTreeSelectorDict.Values);
 
-                if (openApiPermissionTreeSelector.Children.Any(a => a.Children.Any()))
+                if (openApiPermissionTreeSelector.Children.Any(a => a.Children.Count > 0))
                     permissions.Add(openApiPermissionTreeSelector);
 
             }
@@ -109,7 +109,7 @@ internal class ApiPermissionService : IApiPermissionService
     /// <returns></returns>
     public string GetRouteName(string controllerName, string template)
     {
-        if (!template.StartsWith("/"))
+        if (!template.StartsWith('/'))
             template = "/" + template;//如果路由名称不是/开头则加上/防止控制器没写
         if (template.Contains("[controller]"))
         {

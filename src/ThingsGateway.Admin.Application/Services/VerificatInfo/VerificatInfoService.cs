@@ -15,7 +15,7 @@ namespace ThingsGateway.Admin.Application;
 /// <summary>
 /// 操作内存，只在程序停止/启动时设置/获取持久化数据
 /// </summary>
-internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfoService
+internal sealed class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfoService
 {
     #region 查询
 
@@ -38,11 +38,11 @@ internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfo
         using var db = GetDB();
         var verificatInfo = db.Queryable<VerificatInfo>().First(u => u.Id == id);
         if (verificatInfo != null)
-            SetCahce(verificatInfo);
+            VerificatInfoService.SetCahce(verificatInfo);
         return verificatInfo;
     }
 
-    private void SetCahce(VerificatInfo verificatInfo)
+    private static void SetCahce(VerificatInfo verificatInfo)
     {
         App.CacheService.HashAdd<VerificatInfo>(CacheConst.Cache_Token, verificatInfo.Id.ToString(), verificatInfo);
     }
@@ -118,9 +118,9 @@ internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfo
     {
         using var db = GetDB();
         db.Insertable<VerificatInfo>(verificatInfo).ExecuteCommand();
-        RemoveCache(verificatInfo.Id);
+        VerificatInfoService.RemoveCache(verificatInfo.Id);
         if (verificatInfo != null)
-            SetCahce(verificatInfo);
+            VerificatInfoService.SetCahce(verificatInfo);
     }
 
     #endregion 添加
@@ -131,9 +131,9 @@ internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfo
     {
         using var db = GetDB();
         db.Updateable<VerificatInfo>(verificatInfo).ExecuteCommand();
-        RemoveCache(verificatInfo.Id);
+        VerificatInfoService.RemoveCache(verificatInfo.Id);
         if (verificatInfo != null)
-            SetCahce(verificatInfo);
+            VerificatInfoService.SetCahce(verificatInfo);
     }
 
     #endregion 更新
@@ -144,7 +144,7 @@ internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfo
     {
         using var db = GetDB();
         db.Deleteable<VerificatInfo>(id).ExecuteCommand();
-        RemoveCache(id);
+        VerificatInfoService.RemoveCache(id);
     }
 
     public void Delete(List<long> ids)
@@ -153,7 +153,7 @@ internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfo
         db.Deleteable<VerificatInfo>().Where(it => ids.Contains(it.Id)).ExecuteCommand();
         foreach (var id in ids)
         {
-            RemoveCache(id);
+            VerificatInfoService.RemoveCache(id);
         }
     }
 
@@ -165,17 +165,17 @@ internal class VerificatInfoService : BaseService<VerificatInfo>, IVerificatInfo
     {
         using var db = GetDB();
         db.Updateable<VerificatInfo>().SetColumns(it => it.ClientIds == default).Where(a => a.Id >= 0).ExecuteCommand();
-        RemoveCache();
+        VerificatInfoService.RemoveCache();
     }
 
     #endregion 去除全部在线Id
 
-    private void RemoveCache()
+    private static void RemoveCache()
     {
         App.CacheService.Remove(CacheConst.Cache_Token);
     }
 
-    private void RemoveCache(long id)
+    private static void RemoveCache(long id)
     {
         App.CacheService.HashDel<VerificatInfo>(CacheConst.Cache_Token, id.ToString());
     }

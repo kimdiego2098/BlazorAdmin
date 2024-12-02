@@ -47,7 +47,7 @@ public class SucceededUnifyResultFilter : IAsyncActionFilter, IOrderedFilter
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         // 执行 Action 并获取结果
-        var actionExecutedContext = await next();
+        var actionExecutedContext = await next().ConfigureAwait(false);
 
         // 排除 WebSocket 请求处理
         if (actionExecutedContext.HttpContext.IsWebSocketRequest()) return;
@@ -85,7 +85,7 @@ public class SucceededUnifyResultFilter : IAsyncActionFilter, IOrderedFilter
                             statusCode = Convert.ToInt32(authorizationFailStatusCode);
                         }
 
-                        await unifyRes.OnResponseStatusCodes(httpContext, statusCode, httpContext.RequestServices.GetService<IOptions<UnifyResultSettingsOptions>>()?.Value);
+                        await unifyRes.OnResponseStatusCodes(httpContext, statusCode, httpContext.RequestServices.GetService<IOptions<UnifyResultSettingsOptions>>()?.Value).ConfigureAwait(false);
                     }
                 }
 

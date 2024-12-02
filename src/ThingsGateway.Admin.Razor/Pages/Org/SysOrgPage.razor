@@ -49,7 +49,8 @@
 </div>
 
 @code {
-    AdminTable<SysOrg> table;
+    [NotNull]
+    AdminTable<SysOrg>? table { get; set; }
 }
 @* @code {
     RenderFragment Render(OrgTableSearchModel model) =>

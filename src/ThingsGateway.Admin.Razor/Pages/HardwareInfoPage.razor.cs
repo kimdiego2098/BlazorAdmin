@@ -15,7 +15,9 @@ namespace ThingsGateway.Admin.Razor;
 public partial class HardwareInfoPage : IDisposable
 {
     public bool Disposed { get; set; }
+
     [Inject]
+    [NotNull]
     private IHardwareJob HardwareJob { get; set; }
 
     public void Dispose()

@@ -13,7 +13,7 @@ using BootstrapBlazor.Components;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class AuthRazorService : IAuthRazorService
+internal sealed class AuthRazorService : IAuthRazorService
 {
 
     private AjaxService AjaxService { get; set; }

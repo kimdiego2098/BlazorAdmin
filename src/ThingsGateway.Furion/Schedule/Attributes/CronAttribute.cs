@@ -13,6 +13,7 @@ using ThingsGateway.TimeCrontab;
 
 namespace ThingsGateway.Schedule;
 
+#pragma warning disable CA1813 // 避免使用非密封特性
 /// <summary>
 /// Cron 表达式作业触发器特性
 /// </summary>

@@ -55,7 +55,7 @@ public static class Reflect
     /// <returns></returns>
     public static MethodInfo[] GetMethodsEx(this Type type, String name, Int32 paramCount = -1)
     {
-        if (name.IsNullOrEmpty()) return new MethodInfo[0];
+        if (name.IsNullOrEmpty()) return Array.Empty<MethodInfo>();
 
         return Provider.GetMethods(type, name, paramCount);
     }
@@ -97,14 +97,14 @@ public static class Reflect
     }
 
     /// <summary>获取用于序列化的字段</summary>
-    /// <remarks>过滤<seealso cref="T:NonSerializedAttribute"/>特性的字段</remarks>
+    /// <remarks>过滤<seealso cref="System. NonSerializedAttribute"/>特性的字段</remarks>
     /// <param name="type"></param>
     /// <param name="baseFirst"></param>
     /// <returns></returns>
     public static IList<FieldInfo> GetFields(this Type type, Boolean baseFirst) => Provider.GetFields(type, baseFirst);
 
     /// <summary>获取用于序列化的属性</summary>
-    /// <remarks>过滤<seealso cref="T:XmlIgnoreAttribute"/>特性的属性和索引器</remarks>
+    /// <remarks>过滤<seealso cref="System.Xml.Serialization. XmlIgnoreAttribute"/>特性的属性和索引器</remarks>
     /// <param name="type"></param>
     /// <param name="baseFirst"></param>
     /// <returns></returns>

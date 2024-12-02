@@ -89,11 +89,10 @@ public sealed class ComponentContext
 
         var properties = RootContext == null ? Properties : RootContext.Properties;
 
-        if (!properties.ContainsKey(key))
+        if (!properties.TryAdd(key, value))
         {
-            properties.Add(key, value);
+            properties[key] = value;
         }
-        else properties[key] = value;
 
         return properties;
     }
@@ -133,9 +132,12 @@ public sealed class ComponentContext
 
         var properties = RootContext == null ? Properties : RootContext.Properties;
 
-        return !properties.ContainsKey(key)
-            ? default
-            : (TComponentOptions)properties[key];
+        if (properties.TryGetValue(key, out var value))
+        {
+            return (TComponentOptions)value;
+        }
+        else
+            return default;
     }
 
     /// <summary>

@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Mvc;
 /// 接口参数约束
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Parameter)]
-public class RouteConstraintAttribute : Attribute
+public sealed class RouteConstraintAttribute : Attribute
 {
     /// <summary>
     /// 构造函数

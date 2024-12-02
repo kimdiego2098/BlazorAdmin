@@ -152,7 +152,7 @@ public class SM4Transform : ICryptoTransform
     private static UInt32 RotateLeft(UInt32 i, Int32 distance) => (i << distance) | (i >> -distance);
 #endif
 
-    private UInt32 T_ap(UInt32 Z) => L_ap(tau(Z));
+    private static UInt32 T_ap(UInt32 Z) => L_ap(tau(Z));
 
     // Key expansion
     private void ExpandKey(Boolean forEncryption, Byte[] key)
@@ -309,7 +309,7 @@ public class SM4Transform : ICryptoTransform
     /// <exception cref="ArgumentException"></exception>
     public Byte[] TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
     {
-        if (inputCount == 0) return new Byte[0];
+        if (inputCount == 0) return Array.Empty<byte>();
 
         var blocks = inputCount / InputBlockSize;
         var output = new Byte[blocks * OutputBlockSize];

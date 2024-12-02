@@ -1,8 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Net;
 
-using ThingsGateway.NewLife.Log;
-
 namespace ThingsGateway.NewLife.Net;
 
 /// <summary>DNS解析器</summary>
@@ -44,7 +42,6 @@ public class DnsResolver : IDnsResolver
 
     private DnsItem? ResolveCore(String host, DnsItem? item, Boolean throwError)
     {
-        using var span = DefaultTracer.Instance?.NewSpan($"dns:{host}");
         try
         {
             // 执行DNS解析
@@ -57,10 +54,8 @@ public class DnsResolver : IDnsResolver
             if (!task.Wait(5000)) throw new TaskCanceledException();
             var addrs = task.ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
-            span?.AppendTag($"addrs={addrs.Join(",")}");
             if (addrs != null && addrs.Length > 0)
             {
-                if (span != null) span.Value = addrs.Length;
 
                 // 更新缓存数据
                 if (item == null)
@@ -78,23 +73,18 @@ public class DnsResolver : IDnsResolver
                     item.Addresses = addrs;
                     item.UpdateTime = DateTime.Now;
 
-                    span?.AppendTag($"CreateTime={item.CreateTime.ToFullString()}");
                 }
             }
         }
         catch (Exception ex)
         {
-            if (item != null) return item;
-
-            span?.SetError(ex, null);
-
-            if (throwError) throw;
+            if (throwError) throw ex;
         }
 
         return item;
     }
 
-    private class DnsItem
+    private sealed class DnsItem
     {
         public String Host { get; set; } = null!;
 

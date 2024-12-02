@@ -6,8 +6,6 @@ using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 
-using ThingsGateway.NewLife.Data;
-
 namespace ThingsGateway.NewLife.Reflection;
 
 /// <summary>反射接口</summary>
@@ -187,8 +185,8 @@ public class DefaultReflect : IReflect
     /// <returns></returns>
     public virtual Type? GetType(String typeName, Boolean isLoadAssembly) => AssemblyX.GetType(typeName, isLoadAssembly);
 
-    private static readonly BindingFlags bf = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
-    private static readonly BindingFlags bfic = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase;
+    private const BindingFlags bf = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
+    private const BindingFlags bfic = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase;
 
     /// <summary>获取方法</summary>
     /// <remarks>用于具有多个签名的同名方法的场合，不确定是否存在性能问题，不建议普通场合使用</remarks>
@@ -331,7 +329,7 @@ public class DefaultReflect : IReflect
             return _cache2.GetOrAdd(type, key => GetFields2(key, false));
     }
 
-    private IList<FieldInfo> GetFields2(Type type, Boolean baseFirst)
+    private List<FieldInfo> GetFields2(Type type, Boolean baseFirst)
     {
         var list = new List<FieldInfo>();
 
@@ -367,7 +365,7 @@ public class DefaultReflect : IReflect
             return _cache4.GetOrAdd(type, key => GetProperties2(key, false));
     }
 
-    private IList<PropertyInfo> GetProperties2(Type type, Boolean baseFirst)
+    private List<PropertyInfo> GetProperties2(Type type, Boolean baseFirst)
     {
         var list = new List<PropertyInfo>();
 
@@ -565,28 +563,13 @@ public class DefaultReflect : IReflect
         // 不是深度拷贝时，直接复制引用
         if (!deep)
         {
-            // 借助 IModel 优化取值赋值，有 IExtend 扩展属性的实体类过于复杂而不支持，例如IEntity就有脏数据问题
-            if (target is IModel dst && target is not IExtend)
+            foreach (var pi in targetType.GetProperties(true))
             {
-                foreach (var pi in targetType.GetProperties(true))
-                {
-                    if (!pi.CanWrite) continue;
-                    if (excludes != null && excludes.Contains(pi.Name)) continue;
+                if (!pi.CanWrite) continue;
+                if (excludes != null && excludes.Contains(pi.Name)) continue;
 
-                    if (sourceProperties.TryGetValue(pi.Name, out var pi2) && pi2.CanRead)
-                        dst[pi.Name] = source is IModel src ? src[pi2.Name] : GetValue(source, pi2);
-                }
-            }
-            else
-            {
-                foreach (var pi in targetType.GetProperties(true))
-                {
-                    if (!pi.CanWrite) continue;
-                    if (excludes != null && excludes.Contains(pi.Name)) continue;
-
-                    if (sourceProperties.TryGetValue(pi.Name, out var pi2) && pi2.CanRead)
-                        SetValue(target, pi, source is IModel src ? src[pi2.Name] : GetValue(source, pi2));
-                }
+                if (sourceProperties.TryGetValue(pi.Name, out var pi2) && pi2.CanRead)
+                    SetValue(target, pi, GetValue(source, pi2));
             }
             return;
         }

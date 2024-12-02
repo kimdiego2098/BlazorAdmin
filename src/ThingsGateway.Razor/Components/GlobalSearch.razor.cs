@@ -8,14 +8,6 @@
 //  QQ群：605534569
 //------------------------------------------------------------------------------
 
-using BootstrapBlazor.Components;
-
-using Microsoft.Extensions.DependencyInjection;
-
-using SqlSugar;
-
-using ThingsGateway.DependencyInjection;
-
 namespace ThingsGateway.Razor;
 
 /// <inheritdoc/>
@@ -52,7 +44,7 @@ public partial class GlobalSearch
 
     private Task OnSearch(string searchText)
     {
-      
+
         if (!string.IsNullOrEmpty(searchText))
         {
             var item = Menus?.FirstOrDefault(i => i.Text?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false);

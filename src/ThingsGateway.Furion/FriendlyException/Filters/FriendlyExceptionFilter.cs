@@ -50,7 +50,7 @@ public sealed class FriendlyExceptionFilter : IAsyncExceptionFilter
             var globalExceptionHandler = context.HttpContext.RequestServices.GetService<IGlobalExceptionHandler>();
             if (globalExceptionHandler != null)
             {
-                await globalExceptionHandler.OnExceptionAsync(context);
+                await globalExceptionHandler.OnExceptionAsync(context).ConfigureAwait(false);
             }
         }
 

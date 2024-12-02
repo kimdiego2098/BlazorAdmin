@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Mvc;
 /// 接口参数位置设置
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Parameter)]
-public class ApiSeatAttribute : Attribute
+public sealed class ApiSeatAttribute : Attribute
 {
     /// <summary>
     /// 构造函数

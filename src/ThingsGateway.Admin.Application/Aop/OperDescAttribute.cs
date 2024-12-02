@@ -24,7 +24,7 @@ namespace ThingsGateway.Admin.Application;
 /// <summary>
 /// Aop拦截器
 /// </summary>
-public class OperDescAttribute : MoAttribute
+public sealed class OperDescAttribute : MoAttribute
 {
     /// <summary>
     /// 日志消息队列（线程安全）
@@ -73,14 +73,14 @@ public class OperDescAttribute : MoAttribute
         else
             log.ExeMessage = context.Exception?.ToString();
 
-        WriteToQueue(log);
+        OperDescAttribute.WriteToQueue(log);
     }
 
     public override void OnSuccess(MethodContext context)
     {
         //插入操作日志
         SysOperateLog log = GetOperLog(LocalizerType, context);
-        WriteToQueue(log);
+        OperDescAttribute.WriteToQueue(log);
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public class OperDescAttribute : MoAttribute
     /// 将日志消息写入队列中等待后台任务出队写入数据库
     /// </summary>
     /// <param name="logMsg">结构化日志消息</param>
-    private void WriteToQueue(SysOperateLog logMsg)
+    private static void WriteToQueue(SysOperateLog logMsg)
     {
         _logMessageQueue.Enqueue(logMsg);
     }

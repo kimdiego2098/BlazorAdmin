@@ -1,41 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-  </PropertyGroup>
 
-  <Import Project="$(SolutionDir)PackNuget.props" />
-  <Import Project="$(SolutionDir)Version.props" />
+	<Import Project="$(SolutionDir)PackNuget.props" />
+	<Import Project="$(SolutionDir)Version.props" />
 
 
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
-    <PackageReference Include="Npgsql" Version="8.0.5" />
-    <PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
-    <PackageReference Include="MiniExcel" Version="1.35.0" />
-    <PackageReference Include="UAParser" Version="3.1.47" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+		<PackageReference Include="Npgsql" Version="8.0.5" />
+		<PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
+		<PackageReference Include="MiniExcel" Version="1.35.0" />
+		<PackageReference Include="UAParser" Version="3.1.47" />
+	</ItemGroup>
 
 
-  <ItemGroup>
-    <PackageReference Include="BootstrapBlazor" Version="9.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BootstrapBlazor" Version="9.1.0" />
+	</ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.122" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.122" />
+	</ItemGroup>
 
 
-  <ItemGroup>
-    <ProjectReference Include="..\ThingsGateway.Furion\ThingsGateway.Furion.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\ThingsGateway.Furion\ThingsGateway.Furion.csproj" />
+	</ItemGroup>
 
 </Project>

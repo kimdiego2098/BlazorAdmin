@@ -52,9 +52,12 @@ public partial class JobDetail
         // 空检查
         if (string.IsNullOrWhiteSpace(key)) throw new ArgumentNullException(nameof(key));
 
-        if (!RuntimeProperties.ContainsKey(key)) return default;
+        if (RuntimeProperties.TryGetValue(key, out var value))
+        {
+            return value;
+        }
 
-        return RuntimeProperties[key];
+        return default;
     }
 
     /// <summary>
@@ -100,11 +103,11 @@ public partial class JobDetail
         // 空检查
         if (string.IsNullOrWhiteSpace(key)) throw new ArgumentNullException(nameof(key));
 
-        if (RuntimeProperties.ContainsKey(key))
+        if (RuntimeProperties.TryGetValue(key, out var existingValue))
         {
             RuntimeProperties[key] = updateAction == null
                 ? newValue
-                : updateAction((T)RuntimeProperties[key]);
+                : updateAction((T)existingValue);
         }
         else RuntimeProperties.TryAdd(key, newValue);
 
@@ -123,9 +126,8 @@ public partial class JobDetail
         // 空检查
         if (string.IsNullOrWhiteSpace(key)) throw new ArgumentNullException(nameof(key));
 
-        if (RuntimeProperties.ContainsKey(key))
+        if (RuntimeProperties.Remove(key))
         {
-            RuntimeProperties.Remove(key);
             Properties = Penetrates.Serialize(RuntimeProperties);
         }
 

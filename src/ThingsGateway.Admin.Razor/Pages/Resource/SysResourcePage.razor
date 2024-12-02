@@ -20,8 +20,8 @@
                 ShowResetButton=false
                 IsTree="true"
                 OnTreeExpand="OnTreeExpand"
-                TreeNodeConverter="TreeNodeConverter"
-                ModelEqualityComparer="ModelEqualityComparer"
+                TreeNodeConverter="SysResourcePage.TreeNodeConverter"
+                ModelEqualityComparer="SysResourcePage.ModelEqualityComparer"
                 OnAfterModifyAsync="OnAfterModifyAsync"
                 OnQueryAsync="OnQueryAsync" CustomerSearchModel="@CustomerSearchModel"
                 OnSaveAsync="Save" OnDeleteAsync="Delete">
@@ -64,7 +64,8 @@
 </div>
 
 @code {
-    AdminTable<SysResource> table;
+    [NotNull]
+    AdminTable<SysResource>? table { get; set; }
 }
 @code {
     RenderFragment Render(ResourceTableSearchModel model) =>

@@ -14,6 +14,6 @@ namespace ThingsGateway;
 /// 忽略Excel导入导出
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class IgnoreExcelAttribute : Attribute
+public sealed class IgnoreExcelAttribute : Attribute
 {
 }

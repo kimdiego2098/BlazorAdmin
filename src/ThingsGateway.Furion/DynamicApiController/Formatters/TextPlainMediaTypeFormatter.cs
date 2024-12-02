@@ -41,8 +41,8 @@ public sealed class TextPlainMediaTypeFormatter : TextInputFormatter
     public async override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context, Encoding effectiveEncoding)
     {
         using var reader = new StreamReader(context.HttpContext.Request.Body, effectiveEncoding);
-        var stringContent = await reader.ReadToEndAsync();
+        var stringContent = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-        return await InputFormatterResult.SuccessAsync(stringContent);
+        return await InputFormatterResult.SuccessAsync(stringContent).ConfigureAwait(false);
     }
 }

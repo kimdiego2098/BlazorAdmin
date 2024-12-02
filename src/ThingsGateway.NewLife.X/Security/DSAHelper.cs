@@ -12,7 +12,7 @@ public static class DSAHelper
     /// <returns>私钥和公钥</returns>
     public static String[] GenerateKey(Int32 keySize = 1024)
     {
-        var dsa = new DSACryptoServiceProvider(keySize);
+        using var dsa = new DSACryptoServiceProvider(keySize);
 
         var ss = new String[2];
         _ = dsa.ExportParameters(true);
@@ -31,7 +31,7 @@ public static class DSAHelper
     /// <returns></returns>
     public static Byte[] Sign(Byte[] buf, String priKey)
     {
-        var dsa = new DSACryptoServiceProvider();
+        using var dsa = new DSACryptoServiceProvider();
         dsa.FromXmlStringX(priKey);
 
         return dsa.SignData(buf);
@@ -44,7 +44,7 @@ public static class DSAHelper
     /// <returns></returns>
     public static Boolean Verify(Byte[] buf, String pukKey, Byte[] rgbSignature)
     {
-        var dsa = new DSACryptoServiceProvider();
+        using var dsa = new DSACryptoServiceProvider();
         dsa.FromXmlStringX(pukKey);
 
         return dsa.VerifyData(buf, rgbSignature);

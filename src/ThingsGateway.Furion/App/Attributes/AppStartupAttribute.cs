@@ -15,7 +15,7 @@ namespace ThingsGateway;
 /// 注册服务启动配置
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Class)]
-public class AppStartupAttribute : Attribute
+public sealed class AppStartupAttribute : Attribute
 {
     /// <summary>
     /// 构造函数

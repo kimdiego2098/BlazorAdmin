@@ -146,11 +146,11 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IAs
         // 处理 Blazor Server
         if (actionMethod == null)
         {
-            _ = await next.Invoke();
+            _ = await next.Invoke().ConfigureAwait(false);
             return;
         }
 
-        await MonitorAsync(actionMethod, context.ActionArguments, context, next);
+        await MonitorAsync(actionMethod, context.ActionArguments, context, next).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -178,11 +178,11 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IAs
         // 处理 Blazor Server
         if (actionMethod == null)
         {
-            _ = await next.Invoke();
+            _ = await next.Invoke().ConfigureAwait(false);
             return;
         }
 
-        await MonitorAsync(actionMethod, context.HandlerArguments, context, next);
+        await MonitorAsync(actionMethod, context.HandlerArguments, context, next).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -192,7 +192,7 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IAs
     /// <param name="claimsPrincipal"></param>
     /// <param name="authorization"></param>
     /// <returns></returns>
-    private List<string> GenerateAuthorizationTemplate(Utf8JsonWriter writer, ClaimsPrincipal claimsPrincipal, StringValues authorization)
+    private static List<string> GenerateAuthorizationTemplate(Utf8JsonWriter writer, ClaimsPrincipal claimsPrincipal, StringValues authorization)
     {
         var templates = new List<string>();
 
@@ -241,7 +241,7 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IAs
     /// <param name="writer"></param>
     /// <param name="headers"></param>
     /// <returns></returns>
-    private List<string> GenerateRequestHeadersTemplate(Utf8JsonWriter writer, IHeaderDictionary headers)
+    private static List<string> GenerateRequestHeadersTemplate(Utf8JsonWriter writer, IHeaderDictionary headers)
     {
         var templates = new List<string>();
 
@@ -395,7 +395,7 @@ public sealed class LoggingMonitorAttribute : Attribute, IAsyncActionFilter, IAs
 
             templates.Add($"##{name} ({parameterType.Name})## {rawValue}");
 
-writeEndObject: writer.WriteEndObject();
+        writeEndObject: writer.WriteEndObject();
         }
         writer.WriteEndArray();
 
@@ -492,7 +492,7 @@ writeEndObject: writer.WriteEndObject();
     /// <param name="exception"></param>
     /// <param name="isValidationException">是否是验证异常</param>
     /// <returns></returns>
-    private List<string> GenerateExcetpionInfomationTemplate(Utf8JsonWriter writer, Exception exception, bool isValidationException)
+    private static List<string> GenerateExcetpionInfomationTemplate(Utf8JsonWriter writer, Exception exception, bool isValidationException)
     {
         var templates = new List<string>();
 
@@ -559,7 +559,7 @@ writeEndObject: writer.WriteEndObject();
     /// <param name="writer"></param>
     /// <param name="httpContext"></param>
     /// <returns></returns>
-    private List<string> GenerateExtraTemplate(Utf8JsonWriter writer, HttpContext httpContext)
+    private static List<string> GenerateExtraTemplate(Utf8JsonWriter writer, HttpContext httpContext)
     {
         if (!httpContext.Items.TryGetValue(LoggingMonitorContext.KEY, out var values))
         {
@@ -1110,7 +1110,7 @@ writeEndObject: writer.WriteEndObject();
         LoggingMonitorSettings.Configure?.Invoke(logger, logContext, resultContext as FilterContext);
 
         writer.WriteEndObject();
-        writer.Flush();
+        await writer.FlushAsync().ConfigureAwait(false);
 
         // 获取 json 字符串
         var jsonString = Encoding.UTF8.GetString(stream.ToArray());

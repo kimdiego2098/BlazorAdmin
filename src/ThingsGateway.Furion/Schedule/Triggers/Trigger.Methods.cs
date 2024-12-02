@@ -363,7 +363,7 @@ public partial class Trigger
                 , timeline.Mode
                 , timeline);
 
-            await schedulerFactoryInstance.RecordTimelineAsync(context);
+            await schedulerFactoryInstance.RecordTimelineAsync(context).ConfigureAwait(false);
         }
     }
 

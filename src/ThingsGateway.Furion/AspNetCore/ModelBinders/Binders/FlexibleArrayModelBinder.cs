@@ -18,7 +18,7 @@ namespace ThingsGateway.AspNetCore;
 /// <summary>
 /// 数组 URL 地址参数模型绑定
 /// </summary>
-internal class FlexibleArrayModelBinder<T> : IModelBinder
+internal sealed class FlexibleArrayModelBinder<T> : IModelBinder
 {
     /// <inheritdoc />
     public Task BindModelAsync(ModelBindingContext bindingContext)

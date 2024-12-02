@@ -15,6 +15,6 @@ namespace ThingsGateway.DependencyInjection;
 /// 跳过全局代理
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Class)]
-public class SuppressProxyAttribute : Attribute
+public sealed class SuppressProxyAttribute : Attribute
 {
 }

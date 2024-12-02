@@ -25,7 +25,6 @@ public partial class SysUserEdit
 
     [Parameter]
     [NotNull]
-
     public SysUser? Model { get; set; }
 
     private List<CascaderItem> Items { get; set; }

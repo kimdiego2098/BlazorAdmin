@@ -134,7 +134,7 @@ public partial class SysResourcePage
 
     #region 树节点
 
-    private bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
 
     private async Task<IEnumerable<TableTreeNode<SysResource>>> OnTreeExpand(SysResource menu)
     {
@@ -143,7 +143,7 @@ public partial class SysResourcePage
         return result;
     }
 
-    private async Task<IEnumerable<TableTreeNode<SysResource>>> TreeNodeConverter(IEnumerable<SysResource> items)
+    private static async Task<IEnumerable<TableTreeNode<SysResource>>> TreeNodeConverter(IEnumerable<SysResource> items)
     {
         await Task.CompletedTask;
         var result = ResourceUtil.BuildTableTrees(items, 0);

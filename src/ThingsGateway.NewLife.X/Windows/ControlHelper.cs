@@ -195,7 +195,7 @@ public static class ControlHelper
     {
         if (txt.IsDisposed) return txt;
 
-        SendMessage(txt.Handle, WM_VSCROLL, bottom ? SB_BOTTOM : SB_TOP, 0);
+        _ = SendMessage(txt.Handle, WM_VSCROLL, bottom ? SB_BOTTOM : SB_TOP, 0);
 
         return txt;
     }

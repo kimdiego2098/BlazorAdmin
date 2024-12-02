@@ -79,7 +79,7 @@ public class BlazorAppContext
     {
         if (UserManager.UserId > 0)
         {
-            url = url.StartsWith("/") ? url : $"/{url}";
+            url = url.StartsWith('/') ? url : $"/{url}";
             var sysResources = (await ResourceService.GetAllAsync()).Adapt<List<SysResource>>();
             if (TitleLocalizer != null)
             {
@@ -152,7 +152,7 @@ public class BlazorAppContext
         url ??= string.Empty;
         if (!url.IsNullOrWhiteSpace())
         {
-            var data = CurrentUser?.ButtonCodeList?.TryGetValue(url.StartsWith("/") ? url : $"/{url}", out var titles) == true && titles.Contains(code);
+            var data = CurrentUser?.ButtonCodeList?.TryGetValue(url.StartsWith('/') ? url : $"/{url}", out var titles) == true && titles.Contains(code);
             return data;
         }
         else

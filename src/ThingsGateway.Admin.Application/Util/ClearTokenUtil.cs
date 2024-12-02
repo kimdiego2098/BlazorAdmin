@@ -40,7 +40,7 @@ public class ClearTokenUtil
     public static async Task DeleteUserTokenByOrgIds(List<long> orgIds)
     {
         // 获取用户ID列表
-        var userIds = await DbContext.Db.CopyNew().QueryableWithAttr<SysUser>().Where(it => orgIds.Contains(it.OrgId)).Select(it => it.Id).ToListAsync();
+        var userIds = await DbContext.Db.CopyNew().QueryableWithAttr<SysUser>().Where(it => orgIds.Contains(it.OrgId)).Select(it => it.Id).ToListAsync().ConfigureAwait(false);
         //从redis中删除所属机构的用户token
         App.CacheService.HashDel<VerificatInfo>(CacheConst.Cache_Token, userIds.Select(it => it.ToString()).ToArray());
     }

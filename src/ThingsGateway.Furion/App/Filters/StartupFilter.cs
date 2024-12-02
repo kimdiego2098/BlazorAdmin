@@ -1,4 +1,4 @@
-﻿// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
 // 版权信息
 // 版权归百小僧及百签科技（广东）有限公司所有。
 // 所有权利保留。
@@ -43,7 +43,7 @@ public class StartupFilter : IStartupFilter
             app.Use(async (context, next) =>
             {
                 // 处理 WebSocket 请求
-                if (context.IsWebSocketRequest()) await next.Invoke();
+                if (context.IsWebSocketRequest()) await next.Invoke().ConfigureAwait(false);
                 else
                 {
                     // 输出当前环境标识
@@ -53,7 +53,7 @@ public class StartupFilter : IStartupFilter
                     context.Response.Headers[nameof(ThingsGateway)] = version;
 
                     // 执行下一个中间件
-                    await next.Invoke();
+                    await next.Invoke().ConfigureAwait(false);
 
                     // 解决刷新 Token 时间和 Token 时间相近问题
                     if (!context.Response.HasStarted

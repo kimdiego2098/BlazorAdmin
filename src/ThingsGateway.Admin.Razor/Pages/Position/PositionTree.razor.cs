@@ -33,7 +33,7 @@ public partial class PositionTree : IDisposable
     [NotNull]
     private ISysPositionService? SysPositionService { get; set; }
 
-    private bool ModelEqualityComparer(PositionTreeOutput x, PositionTreeOutput y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(PositionTreeOutput x, PositionTreeOutput y) => x.Id == y.Id;
 
     private async Task OnTreeItemClick(TreeViewItem<PositionTreeOutput> item)
     {

@@ -69,7 +69,7 @@ namespace ThingsGateway.NewLife.Collections
 
         #region 缓存项
         /// <summary>缓存项</summary>
-        private class CacheItem
+        private sealed class CacheItem
         {
             /// <summary>数值</summary>
             public TValue Value { get; private set; }
@@ -328,7 +328,7 @@ namespace ThingsGateway.NewLife.Collections
         private void RemoveNotAlive(Object? state)
         {
             var dic = _cache;
-            if (_count == 0 && !dic.Any())
+            if (_count == 0 && dic.IsEmpty)
             {
                 // 缓存数小于0时关闭定时器
                 StopTimer();

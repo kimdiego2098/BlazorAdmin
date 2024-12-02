@@ -17,7 +17,7 @@ namespace ThingsGateway.AspNetCore;
 /// 数组 URL 地址参数模型绑定特性
 /// </summary>
 [SuppressSniffer]
-public class FlexibleArrayAttribute<T> : ModelBinderAttribute
+public sealed class FlexibleArrayAttribute<T> : ModelBinderAttribute
 {
     /// <summary>
     /// 构造函数

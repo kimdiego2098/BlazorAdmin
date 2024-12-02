@@ -45,7 +45,7 @@ public partial class MenuChoiceDialog
         await base.OnParametersSetAsync();
     }
 
-    private bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(SysResource x, SysResource y) => x.Id == y.Id;
 
     private async Task OnTreeItemClick(TreeViewItem<SysResource> item)
     {

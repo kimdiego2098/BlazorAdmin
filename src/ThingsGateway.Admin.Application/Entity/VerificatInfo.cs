@@ -64,7 +64,7 @@ public class VerificatInfo : PrimaryIdEntity
     [System.Text.Json.Serialization.JsonIgnore]
     [AutoGenerateColumn(Filterable = true, Sortable = true, Width = 120)]
     [SugarColumn(IsIgnore = true)]
-    public bool Online => ClientIds.Any();
+    public bool Online => ClientIds.Count > 0;
 
     /// <summary>
     /// 过期时间

@@ -48,7 +48,7 @@ public class Link
     public static Link[] Parse(String html, String? baseUrl = null, Func<Link, Boolean>? filter = null)
     {
         // baseurl必须是/结尾
-        if (baseUrl != null && !baseUrl.EndsWith("/")) baseUrl += "/";
+        if (baseUrl != null && !baseUrl.EndsWith('/')) baseUrl += "/";
         if (baseUrl.StartsWithIgnoreCase("ftp://")) return ParseFTP(html, baseUrl, filter);
 
         // 分析所有链接
@@ -232,7 +232,7 @@ public class Link
         if (name.IsNullOrEmpty()) return -1;
 
         // 分割名称，计算结尾的时间 yyyyMMddHHmmss
-        var p = name.LastIndexOf("_");
+        var p = name.LastIndexOf('_');
         if (p <= 0) return -1;
 
         var ts = name[(p + 1)..];

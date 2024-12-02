@@ -21,7 +21,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class SysResourceService : BaseService<SysResource>, ISysResourceService
+internal sealed class SysResourceService : BaseService<SysResource>, ISysResourceService
 {
     private readonly IRelationService _relationService;
 
@@ -44,14 +44,14 @@ internal class SysResourceService : BaseService<SysResource>, ISysResourceServic
         var parent = GetMyParentResources(resourceList, myResourceList);
         myResourceList = myResourceList.Concat(parent).Where(a => a.Category != ResourceCategoryEnum.Module).DistinctBy(a => a.Id).ToList();
         var tree = ConstructMenuTrees(myResourceList).ToList();
-        SetTreeValue(tree, moduleId, 0);
+        SysResourceService.SetTreeValue(tree, moduleId, 0);
         var data = MenuTreesToSaveLevel(tree);
         using var db = GetDB();
         var result = await db.Insertable(data).ExecuteCommandAsync().ConfigureAwait(false);
         RefreshCache();//刷新缓存
     }
 
-    private void SetTreeValue(List<SysResource> tree, long moduleId, long parentId)
+    private static void SetTreeValue(List<SysResource> tree, long moduleId, long parentId)
     {
         if (tree == null) return;
         foreach (var item in tree)
@@ -60,7 +60,7 @@ internal class SysResourceService : BaseService<SysResource>, ISysResourceServic
             item.ParentId = parentId;
             item.Code = RandomHelper.CreateRandomString(10);
             item.Module = moduleId;
-            SetTreeValue(item.Children, moduleId, item.Id);
+            SysResourceService.SetTreeValue(item.Children, moduleId, item.Id);
         }
     }
 
@@ -324,7 +324,7 @@ internal class SysResourceService : BaseService<SysResource>, ISysResourceServic
 
 
     /// <inheritdoc/>
-    public List<SysResource> MenuTreesToSaveLevel(IEnumerable<SysResource> resourceList)
+    private static List<SysResource> MenuTreesToSaveLevel(IEnumerable<SysResource> resourceList)
     {
         var flatList = new List<SysResource>();
 
@@ -334,7 +334,7 @@ internal class SysResourceService : BaseService<SysResource>, ISysResourceServic
             flatList.Add(node);
 
             // 如果当前节点有子节点，则递归处理每个子节点
-            if (node.Children != null && node.Children.Any())
+            if (node.Children != null && node.Children.Count > 0)
             {
                 foreach (var child in node.Children)
                 {

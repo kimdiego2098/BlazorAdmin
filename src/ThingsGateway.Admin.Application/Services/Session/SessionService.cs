@@ -19,7 +19,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class SessionService : BaseService<SysUser>, ISessionService
+internal sealed class SessionService : BaseService<SysUser>, ISessionService
 {
     private readonly IVerificatInfoService _verificatInfoService;
     private ISysUserService _sysUserService;
@@ -50,11 +50,11 @@ internal class SessionService : BaseService<SysUser>, ISessionService
         var ret = new QueryData<SessionOutput>()
         {
             IsSorted = option.SortOrder != SortOrder.Unset,
-            IsFiltered = option.Filters.Any(),
-            IsAdvanceSearch = option.AdvanceSearches.Any() || option.CustomerSearches.Any(),
-            IsSearch = option.Searches.Any()
+            IsFiltered = option.Filters.Count > 0,
+            IsAdvanceSearch = option.AdvanceSearches.Count > 0 || option.CustomerSearches.Count > 0,
+            IsSearch = option.Searches.Count > 0
         };
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false);
 
         using var db = GetDB();
         var query = db.GetQuery<SysUser>(option)
@@ -75,7 +75,7 @@ internal class SessionService : BaseService<SysUser>, ISessionService
                 var reuslt = it.Adapt<SessionOutput>();
                 if (verificatInfoDicts.TryGetValue(it.Id, out var verificatInfos))
                 {
-                    GetTokenInfos(verificatInfos);//获取剩余时间
+                    SessionService.GetTokenInfos(verificatInfos);//获取剩余时间
                     reuslt.VerificatCount = verificatInfos.Count;//令牌数量
                     reuslt.VerificatSignList = verificatInfos;//令牌列表
 
@@ -101,7 +101,7 @@ internal class SessionService : BaseService<SysUser>, ISessionService
                 var reuslt = it.Adapt<SessionOutput>();
                 if (verificatInfoDicts.TryGetValue(it.Id, out var verificatInfos))
                 {
-                    GetTokenInfos(verificatInfos);//获取剩余时间
+                    SessionService.GetTokenInfos(verificatInfos);//获取剩余时间
                     reuslt.VerificatCount = verificatInfos.Count;//令牌数量
                     reuslt.VerificatSignList = verificatInfos;//令牌列表
 
@@ -125,7 +125,7 @@ internal class SessionService : BaseService<SysUser>, ISessionService
                 var reuslt = it.Adapt<SessionOutput>();
                 if (verificatInfoDicts.TryGetValue(it.Id, out var verificatInfos))
                 {
-                    GetTokenInfos(verificatInfos);//获取剩余时间
+                    SessionService.GetTokenInfos(verificatInfos);//获取剩余时间
                     reuslt.VerificatCount = verificatInfos.Count;//令牌数量
                     reuslt.VerificatSignList = verificatInfos;//令牌列表
 
@@ -168,7 +168,7 @@ internal class SessionService : BaseService<SysUser>, ISessionService
     {
         var userId = input.Id;
         var data = input.VerificatIds.ToList();
-        if (data.Any())
+        if (data.Count > 0)
         {
             var data1 = _verificatInfoService.GetListByIds(data).SelectMany(a => a.ClientIds).ToList();
             _verificatInfoService.Delete(data);//如果还有verificat则更新verificat
@@ -184,7 +184,7 @@ internal class SessionService : BaseService<SysUser>, ISessionService
     /// 获取verificat剩余时间信息
     /// </summary>
     /// <param name="verificatInfos">verificat列表</param>
-    private void GetTokenInfos(List<VerificatInfo> verificatInfos)
+    private static void GetTokenInfos(List<VerificatInfo> verificatInfos)
     {
         verificatInfos.ForEach(it =>
         {

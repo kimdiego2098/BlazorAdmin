@@ -61,7 +61,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
 
     public async Task<SysPosition> GetSysPositionById(long id)
     {
-        var list = await GetAllAsync();
+        var list = await GetAllAsync().ConfigureAwait(false);
         return list.FirstOrDefault(x => x.Id == id);
     }
 
@@ -73,13 +73,13 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
         {
             using var db = GetDB();
             //如果组织下有用户则不能删除
-            if (await db.Queryable<SysUser>().AnyAsync(it => ids.Contains(it.PositionId.Value)))
+            if (await db.Queryable<SysUser>().AnyAsync(it => ids.Contains(it.PositionId.Value)).ConfigureAwait(false))
             {
                 throw Oops.Bah(Localizer["DeleteUserFirst"]);
             }
 
-            var dels = (await GetAllAsync()).Where(a => ids.Contains(a.Id));
-            await SysUserService.CheckApiDataScopeAsync(dels.Select(a => a.OrgId).ToList(), dels.Select(a => a.CreateUserId).ToList());
+            var dels = (await GetAllAsync().ConfigureAwait(false)).Where(a => ids.Contains(a.Id));
+            await SysUserService.CheckApiDataScopeAsync(dels.Select(a => a.OrgId).ToList(), dels.Select(a => a.CreateUserId).ToList()).ConfigureAwait(false);
             //删除职位
             var result = await base.DeleteAsync(ids).ConfigureAwait(false);
             if (result)
@@ -98,12 +98,12 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
     /// </summary>
     public async Task<QueryData<SysPosition>> PageAsync(QueryPageOptions option, Func<ISugarQueryable<SysPosition>, ISugarQueryable<SysPosition>>? queryFunc = null)
     {
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync(); //获取机构ID范围
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false); //获取机构ID范围
         queryFunc += a => a
                     .WhereIF(dataScope != null && dataScope?.Count > 0, b => dataScope.Contains(b.OrgId))
             .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId);
 
-        return await QueryAsync(option, queryFunc);
+        return await QueryAsync(option, queryFunc).ConfigureAwait(false);
     }
 
     [OperDesc("SavePosition")]
@@ -111,7 +111,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
     {
         await CheckInput(input).ConfigureAwait(false);//检查参数
         if (type == ItemChangedType.Update)
-            await SysUserService.CheckApiDataScopeAsync(input.OrgId, input.CreateUserId);
+            await SysUserService.CheckApiDataScopeAsync(input.OrgId, input.CreateUserId).ConfigureAwait(false);
 
         var reuslt = await base.SaveAsync(input, type).ConfigureAwait(false);
         if (reuslt)
@@ -134,9 +134,9 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
     public async Task<List<PositionTreeOutput>> TreeAsync()
     {
         var result = new List<PositionTreeOutput>();//返回结果
-        var sysOrgList = await _sysOrgService.GetAllAsync(false);//获取所有组织
-        var sysPositions = await GetAllAsync();//获取所有职位
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
+        var sysOrgList = await _sysOrgService.GetAllAsync(false).ConfigureAwait(false);//获取所有组织
+        var sysPositions = await GetAllAsync().ConfigureAwait(false);//获取所有职位
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         sysOrgList = sysOrgList
            .WhereIF(dataScope != null && dataScope?.Count > 0, b => dataScope.Contains(b.Id))
            .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId)
@@ -151,7 +151,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
         //遍历顶级组织
         foreach (var org in topOrgList)
         {
-            var childIds = await _sysOrgService.GetOrgChildIdsAsync(org.Id, true, sysOrgList);//获取组织下的所有子级ID
+            var childIds = await _sysOrgService.GetOrgChildIdsAsync(org.Id, true, sysOrgList).ConfigureAwait(false);//获取组织下的所有子级ID
             var orgPositions = sysPositions.Where(it => childIds.Contains(it.OrgId)).ToList();//获取组织下的职位
             if (orgPositions.Count == 0) continue;
             var positionTreeOutput = new PositionTreeOutput
@@ -192,9 +192,9 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
     /// <inheritdoc/>
     public async Task<List<PositionSelectorOutput>> SelectorAsync(PositionSelectorInput input)
     {
-        var sysOrgList = await _sysOrgService.GetAllAsync(false);//获取所有组织
-        var sysPositions = await GetAllAsync();//获取所有职位
-        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync();
+        var sysOrgList = await _sysOrgService.GetAllAsync(false).ConfigureAwait(false);//获取所有组织
+        var sysPositions = await GetAllAsync().ConfigureAwait(false);//获取所有职位
+        var dataScope = await SysUserService.GetCurrentUserDataScopeAsync().ConfigureAwait(false);
         sysOrgList = sysOrgList
            .WhereIF(dataScope != null && dataScope?.Count > 0, b => dataScope.Contains(b.Id))
            .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId)
@@ -204,7 +204,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
             .WhereIF(dataScope?.Count == 0, u => u.CreateUserId == UserManager.UserId)
             .ToList();//在指定职位列表查询
 
-        var result = await ConstructPositionSelector(sysOrgList, sysPositions);//构造树
+        var result = await ConstructPositionSelector(sysOrgList, sysPositions).ConfigureAwait(false);//构造树
         return result;
     }
 
@@ -225,7 +225,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
         {
             foreach (var item in orgInfos)//遍历组织
             {
-                var childIds = await _sysOrgService.GetOrgChildIdsAsync(item.Id, true, orgList);//获取组织下的所有子级ID
+                var childIds = await _sysOrgService.GetOrgChildIdsAsync(item.Id, true, orgList).ConfigureAwait(false);//获取组织下的所有子级ID
                 var orgPositions = sysPositions.Where(it => childIds.Contains(it.OrgId)).ToList();//获取组织下的职位
                 if (orgPositions.Count > 0)//如果组织和组织下级有职位
                 {
@@ -233,7 +233,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
                     {
                         Id = item.Id,
                         Name = item.Name,
-                        Children = await ConstructPositionSelector(orgList, sysPositions, item.Id)//递归
+                        Children = await ConstructPositionSelector(orgList, sysPositions, item.Id).ConfigureAwait(false)//递归
                     };//实例化职位树
                     var positions = orgPositions.Where(it => it.OrgId == item.Id).ToList();//获取组织下的职位
                     if (positions.Count > 0)//如果数量大于0
@@ -261,7 +261,7 @@ public class SysPositionService : BaseService<SysPosition>, ISysPositionService
     /// <param name="input"></param>
     private async Task CheckInput(SysPosition input)
     {
-        var sysPositions = await GetAllAsync();//获取全部
+        var sysPositions = await GetAllAsync().ConfigureAwait(false);//获取全部
         if (sysPositions.Any(it => it.OrgId == input.OrgId && it.Name == input.Name && it.Id != input.Id))//判断同级是否有名称重复的
             throw Oops.Bah(Localizer["NameDup", input.Name]);
         if (input.Id > 0)//如果ID大于0表示编辑

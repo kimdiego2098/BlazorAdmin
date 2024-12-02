@@ -28,6 +28,6 @@ public sealed class DynamicJob : IJob
         var dynamicExecuteAsync = context.JobDetail.DynamicExecuteAsync;
         if (dynamicExecuteAsync == null) return;
 
-        await dynamicExecuteAsync(context, stoppingToken);
+        await dynamicExecuteAsync(context, stoppingToken).ConfigureAwait(false);
     }
 }

@@ -220,7 +220,7 @@ public class BlazorAuthenticationStateProvider : AppAuthorizeHandler
         }
         else
         {
-            if (await JWTEncryption.AutoRefreshToken(context, currentHttpContext, expire, expire * 2))
+            if (await JWTEncryption.AutoRefreshToken(context, currentHttpContext, expire, expire * 2).ConfigureAwait(false))
             {
                 //var token = JWTEncryption.GetJwtBearerToken(currentHttpContext); //获取当前token
 

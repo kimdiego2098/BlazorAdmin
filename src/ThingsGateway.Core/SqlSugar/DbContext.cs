@@ -49,6 +49,7 @@ public static class DbContext
     {
         // 配置映射
         DbConfigs = App.GetOptions<SqlSugarOptions>();
+        DbConfigs = App.RootServices.GetService<ISugarConfigAopService>().Config(DbConfigs);
         Db = new(DbConfigs.Select(a => (ConnectionConfig)a).ToList(), db =>
         {
             DbConfigs.ForEach(it =>

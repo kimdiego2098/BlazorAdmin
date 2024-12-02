@@ -29,7 +29,7 @@ public static partial class Scoped
         CreateAsync(async (fac, scope) =>
         {
             handler(fac, scope);
-            await Task.CompletedTask;
+            await Task.CompletedTask.ConfigureAwait(false);
         }, scopeFactory).GetAwaiter().GetResult();
     }
 
@@ -49,7 +49,7 @@ public static partial class Scoped
         try
         {
             // 执行方法
-            await handler(scopeFactory, scoped);
+            await handler(scopeFactory, scoped).ConfigureAwait(false);
         }
         catch
         {
@@ -59,7 +59,7 @@ public static partial class Scoped
         {
             // 释放
             scoped.Dispose();
-            if (serviceProvider != null) await serviceProvider.DisposeAsync();
+            if (serviceProvider != null) await serviceProvider.DisposeAsync().ConfigureAwait(false);
         }
     }
 

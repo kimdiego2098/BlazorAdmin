@@ -166,7 +166,7 @@ public static class HttpContextExtensions
     public static async Task<string> ReadBodyContentAsync(this HttpContext httpContext)
     {
         if (httpContext == null) return default;
-        return await httpContext.Request.ReadBodyContentAsync();
+        return await httpContext.Request.ReadBodyContentAsync().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -180,7 +180,7 @@ public static class HttpContextExtensions
         request.Body.Seek(0, SeekOrigin.Begin);
 
         using var reader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true);
-        var body = await reader.ReadToEndAsync();
+        var body = await reader.ReadToEndAsync().ConfigureAwait(false);
 
         // 回到顶部，解决此类问题 https://gitee.com/dotnetchina/Furion/issues/I6NX9E
         request.Body.Seek(0, SeekOrigin.Begin);
@@ -196,7 +196,7 @@ public static class HttpContextExtensions
     /// <returns></returns>
     public static async ValueTask WriteAsync(this HttpResponse httpResponse, BadPageResult badPageResult, CancellationToken cancellationToken = default)
     {
-        await httpResponse.Body.WriteAsync(badPageResult.ToByteArray(), cancellationToken);
+        await httpResponse.Body.WriteAsync(badPageResult.ToByteArray(), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

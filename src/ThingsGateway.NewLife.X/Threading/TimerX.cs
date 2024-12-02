@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 
-using ThingsGateway.NewLife.Log;
-
 namespace ThingsGateway.NewLife.Threading;
 
 /// <summary>不可重入的定时器，支持Cron</summary>
@@ -78,13 +76,6 @@ public class TimerX : ITimer, IDisposable
 
     /// <summary>Cron表达式，实现复杂的定时逻辑</summary>
     public Cron[]? Crons => _crons;
-
-    /// <summary>Cron表达式，实现复杂的定时逻辑</summary>
-    [Obsolete("=>Crons")]
-    public Cron? Cron => _crons?.FirstOrDefault();
-
-    /// <summary>链路追踪。追踪每一次定时事件</summary>
-    public ITracer? Tracer { get; set; }
 
     /// <summary>链路追踪名称。默认使用方法名</summary>
     public String TracerName { get; set; }

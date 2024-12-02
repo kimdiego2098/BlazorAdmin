@@ -416,7 +416,7 @@ internal sealed class DynamicApiControllerApplicationModelConvention : IApplicat
                         selectorModel.AttributeRouteModel.Template = selectorModel.AttributeRouteModel.Name;
                     }
 
-                    var newTemplate = $"{(selectorModel.AttributeRouteModel.Template?.StartsWith("/") == true ? "/" : null)}{(string.IsNullOrWhiteSpace(module) ? null : $"{module}/")}{selectorModel.AttributeRouteModel.Template}";
+                    var newTemplate = $"{(selectorModel.AttributeRouteModel.Template?.StartsWith('/') == true ? "/" : null)}{(string.IsNullOrWhiteSpace(module) ? null : $"{module}/")}{selectorModel.AttributeRouteModel.Template}";
                     // 处理可能存在多斜杠问题
                     newTemplate = Regex.Replace(newTemplate, @"\/{2,}", "/");
                     selectorModel.AttributeRouteModel.Template = isLowercaseRoute ? ConvertToLowerCaseExceptBrackets(newTemplate) : newTemplate;
@@ -425,7 +425,7 @@ internal sealed class DynamicApiControllerApplicationModelConvention : IApplicat
                 }
 
                 // 2. 如果方法自定义路由模板且以 `/` 开头，则跳过
-                if (!string.IsNullOrWhiteSpace(selectorModel.AttributeRouteModel.Template) && selectorModel.AttributeRouteModel.Template.StartsWith("/")) continue;
+                if (!string.IsNullOrWhiteSpace(selectorModel.AttributeRouteModel.Template) && selectorModel.AttributeRouteModel.Template.StartsWith('/')) continue;
             }
 
             string template;
@@ -586,7 +586,7 @@ internal sealed class DynamicApiControllerApplicationModelConvention : IApplicat
             string constraint = default;
             if (parameterAttributes.FirstOrDefault(u => u is RouteConstraintAttribute) is RouteConstraintAttribute routeConstraint && !string.IsNullOrWhiteSpace(routeConstraint.Constraint))
             {
-                constraint = !routeConstraint.Constraint.StartsWith(":")
+                constraint = !routeConstraint.Constraint.StartsWith(':')
                     ? $":{routeConstraint.Constraint}" : routeConstraint.Constraint;
             }
 
@@ -913,7 +913,7 @@ internal sealed class DynamicApiControllerApplicationModelConvention : IApplicat
     /// <returns></returns>
     private static string HandleRouteTemplateRepeat(string template)
     {
-        var isStartDiagonal = template.StartsWith("/");
+        var isStartDiagonal = template.StartsWith('/');
         var paths = template.Split('/', StringSplitOptions.RemoveEmptyEntries);
         var routeParts = new List<string>();
 
@@ -933,11 +933,11 @@ internal sealed class DynamicApiControllerApplicationModelConvention : IApplicat
                 foreach (var temp in templates)
                 {
                     // 处理带路由约束的路由参数模板 https://gitee.com/zuohuaijun/Admin.NET/issues/I736XJ
-                    var t = !temp.Contains("?", StringComparison.CurrentCulture)
-                        ? (!temp.Contains(":", StringComparison.CurrentCulture)
+                    var t = !temp.Contains('?', StringComparison.CurrentCulture)
+                        ? (!temp.Contains(':', StringComparison.CurrentCulture)
                             ? temp
-                            : temp[..temp.IndexOf(":")] + "}")
-                        : temp[..temp.IndexOf("?")] + "}";
+                            : temp[..temp.IndexOf(':')] + "}")
+                        : temp[..temp.IndexOf('?')] + "}";
 
                     if (!paramTemplates.Contains(t, StringComparer.OrdinalIgnoreCase))
                     {

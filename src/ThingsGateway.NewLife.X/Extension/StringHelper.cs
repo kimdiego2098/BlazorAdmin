@@ -74,6 +74,22 @@ public static class StringHelper
         }
         return true;
     }
+#if !NET6_0_OR_GREATER
+    public static Boolean EndsWith(this String? value, char charValue)
+    {
+        return value.EndsWith(charValue.ToString());
+    }
+    public static Boolean StartsWith(this String? value, char charValue)
+    {
+        return value.StartsWith(charValue.ToString());
+    }
+
+    public static Boolean Contains(this String? value, string stringValue, StringComparison stringComparison)
+    {
+        return value.IndexOf(stringValue, stringComparison)>=0;
+    }
+
+#endif
 
     /// <summary>拆分字符串，过滤空格，无效时返回空数组</summary>
     /// <param name="value">字符串</param>

@@ -24,6 +24,18 @@ namespace ThingsGateway.Logging;
 [SuppressSniffer]
 public class JsonElementConverter : JsonConverter<System.Text.Json.JsonElement>
 {
+    private static readonly System.Text.Json.JsonSerializerOptions CachedJsonSerializerOptions = new System.Text.Json.JsonSerializerOptions()
+    {
+        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+
+    static JsonElementConverter()
+    {
+        CachedJsonSerializerOptions.Converters.Add(new SystemTextJsonLongToStringJsonConverter());
+        CachedJsonSerializerOptions.Converters.Add(new SystemTextJsonNullableLongToStringJsonConverter());
+    }
+
     /// <summary>
     /// 反序列化
     /// </summary>
@@ -47,14 +59,6 @@ public class JsonElementConverter : JsonConverter<System.Text.Json.JsonElement>
     /// <param name="serializer"></param>
     public override void WriteJson(JsonWriter writer, System.Text.Json.JsonElement value, JsonSerializer serializer)
     {
-        var jsonSerializerOptions = new System.Text.Json.JsonSerializerOptions()
-        {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        };
-        jsonSerializerOptions.Converters.Add(new SystemTextJsonLongToStringJsonConverter());
-        jsonSerializerOptions.Converters.Add(new SystemTextJsonNullableLongToStringJsonConverter());
-
-        serializer.Serialize(writer, System.Text.Json.JsonSerializer.Serialize(value, jsonSerializerOptions));
+        serializer.Serialize(writer, System.Text.Json.JsonSerializer.Serialize(value, CachedJsonSerializerOptions));
     }
 }

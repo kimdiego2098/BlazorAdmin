@@ -14,7 +14,7 @@ namespace ThingsGateway;
 /// 种子数据忽略新增
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class IgnoreSeedDataAddAttribute : Attribute
+public sealed class IgnoreSeedDataAddAttribute : Attribute
 {
 }
 
@@ -22,7 +22,7 @@ public class IgnoreSeedDataAddAttribute : Attribute
 /// 种子数据忽略修改
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class IgnoreSeedDataUpdateAttribute : Attribute
+public sealed class IgnoreSeedDataUpdateAttribute : Attribute
 {
 }
 
@@ -30,6 +30,6 @@ public class IgnoreSeedDataUpdateAttribute : Attribute
 /// 忽略初始化表
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class IgnoreInitTableAttribute : Attribute
+public sealed class IgnoreInitTableAttribute : Attribute
 {
 }

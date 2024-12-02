@@ -17,7 +17,7 @@ namespace ThingsGateway.DataValidation;
 /// 验证项元数据
 /// </summary>
 [SuppressSniffer, AttributeUsage(AttributeTargets.Field)]
-public class ValidationItemMetadataAttribute : Attribute
+public sealed class ValidationItemMetadataAttribute : Attribute
 {
     /// <summary>
     /// 构造函数

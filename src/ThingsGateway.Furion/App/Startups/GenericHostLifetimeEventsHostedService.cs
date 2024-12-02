@@ -16,7 +16,7 @@ namespace Microsoft.Extensions.Hosting;
 /// <summary>
 /// 监听泛型主机启动事件
 /// </summary>
-internal class GenericHostLifetimeEventsHostedService : IHostedService
+internal sealed class GenericHostLifetimeEventsHostedService : IHostedService
 {
     /// <summary>
     /// 构造函数

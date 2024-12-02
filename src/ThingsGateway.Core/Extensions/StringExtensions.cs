@@ -27,7 +27,7 @@ public static class StringExtensions
         {
             return input;
         }
-        return input.First().ToString().ToLower() + input.Substring(1);
+        return $"{input.First().ToString().ToLower()}{input.Substring(1)}";
     }
 
     /// <summary>

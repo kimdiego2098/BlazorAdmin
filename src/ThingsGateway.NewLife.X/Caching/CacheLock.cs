@@ -8,7 +8,7 @@ public class CacheLock : DisposeBase
     /// <summary>
     /// 是否持有锁
     /// </summary>
-    private Boolean _hasLock = false;
+    private Boolean _hasLock;
 
     /// <summary>键</summary>
     public String Key { get; set; }

@@ -26,7 +26,7 @@ public class ProtectedKey
     /// <returns></returns>
     public String Protect(String value)
     {
-        var alg = Create(Algorithm);
+        using var alg = Create(Algorithm);
 
         // 单纯待加密数据
         var p = value.IndexOf('=');
@@ -68,7 +68,7 @@ public class ProtectedKey
             var ss = value.Split('$');
             if (ss == null || ss.Length < 3) return value;
 
-            var alg = Create(ss[1]);
+            using var alg = Create(ss[1]);
 
             return alg.Decrypt(ss[2].ToBase64(), Secret).ToStr();
         }
@@ -85,7 +85,7 @@ public class ProtectedKey
                 var ss = pass.Split('$');
                 if (ss == null || ss.Length < 3) continue;
 
-                var alg = Create(ss[1]);
+                using var alg = Create(ss[1]);
 
                 dic[item] = alg.Decrypt(ss[2].ToBase64(), Secret).ToStr();
 

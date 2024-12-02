@@ -8,7 +8,16 @@
 // QQ群：605534569
 // ------------------------------------------------------------------------------
 
-namespace ThingsGateway.Razor;
-public partial class _Imports
-{
-}
+
+global using BootstrapBlazor.Components;
+
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.Extensions.Localization;
+global using Microsoft.Extensions.Options;
+
+global using System.Diagnostics.CodeAnalysis;
+global using System.Globalization;
+
+
+
+[assembly: SuppressMessage("Reliability", "CA2007", Justification = "<挂起>", Scope = "module")]

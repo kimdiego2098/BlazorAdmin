@@ -98,8 +98,6 @@ public static class XTrace
     {
         if (e.ExceptionObject is Exception ex)
         {
-            // 全局异常埋点
-            DefaultTracer.Instance?.NewError(ex.GetType().Name, ex);
             WriteException(ex);
         }
         if (e.IsTerminating)
@@ -118,7 +116,6 @@ public static class XTrace
             foreach (var ex in e.Exception.Flatten().InnerExceptions)
             {
                 // 全局异常埋点
-                DefaultTracer.Instance?.NewError(ex.GetType().Name, ex);
                 WriteException(ex);
             }
             e.SetObserved();
@@ -157,13 +154,13 @@ public static class XTrace
          */
 
         if (_Log != null && _Log != Logger.Null) return true;
-        if (_initing > 0 && _initing == Thread.CurrentThread.ManagedThreadId) return false;
+        if (_initing > 0 && _initing == Environment.CurrentManagedThreadId) return false;
 
         lock (_lock)
         {
             if (_Log != null && _Log != Logger.Null) return true;
 
-            _initing = Thread.CurrentThread.ManagedThreadId;
+            _initing = Environment.CurrentManagedThreadId;
 
             var set = Setting.Current;
             if (set.LogFileFormat.Contains("{1}"))
@@ -297,55 +294,6 @@ public static class XTrace
         if (show) MessageBox.Show(e.Exception == null ? "" : e.Exception.Message, "出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
-    /// <summary>在WinForm控件上输出日志，主要考虑非UI线程操作</summary>
-    /// <remarks>不是常用功能，为了避免干扰常用功能，保持UseWinForm开头</remarks>
-    /// <param name="control">要绑定日志输出的WinForm控件</param>
-    /// <param name="useFileLog">是否同时使用文件日志，默认使用</param>
-    /// <param name="maxLines">最大行数</param>
-    public static void UseWinFormControl(this Control control, Boolean useFileLog = true, Int32 maxLines = 1000)
-    {
-        var clg = _Log as TextControlLog;
-        var ftl = _Log as TextFileLog;
-        if (_Log is CompositeLog cmp)
-        {
-            ftl = cmp.Get<TextFileLog>();
-            clg = cmp.Get<TextControlLog>();
-        }
-
-        // 控制控制台日志
-        clg ??= new TextControlLog();
-        clg.Control = control;
-        clg.MaxLines = maxLines;
-
-        if (!useFileLog)
-        {
-            Log = clg;
-            ftl?.Dispose();
-        }
-        else
-        {
-            ftl ??= TextFileLog.Create(String.Empty);
-            Log = new CompositeLog(clg, ftl);
-        }
-    }
-
-    /// <summary>控件绑定到日志，生成混合日志</summary>
-    /// <param name="control"></param>
-    /// <param name="log"></param>
-    /// <param name="maxLines"></param>
-    /// <returns></returns>
-    public static ILog Combine(this Control control, ILog log, Int32 maxLines = 1000)
-    {
-        //if (control == null || log == null) return log;
-
-        var clg = new TextControlLog
-        {
-            Control = control,
-            MaxLines = maxLines
-        };
-
-        return new CompositeLog(log, clg);
-    }
 
 #endif
 

@@ -105,7 +105,7 @@ internal static class AspectDispatchProxyGenerator
         return generatedProxyType;
     }
 
-    private class ProxyMethodResolverContext
+    private sealed class ProxyMethodResolverContext
     {
         public PackedArgs Packed { get; }
         public MethodBase Method { get; }
@@ -158,8 +158,8 @@ internal static class AspectDispatchProxyGenerator
         try
         {
             Debug.Assert(s_dispatchProxyInvokeAsyncMethod != null);
-            await (Task)s_dispatchProxyInvokeAsyncMethod.Invoke(context.Packed.DispatchProxy,
-                                                                   new object[] { context.Method, context.Packed.Args });
+            await ((Task)s_dispatchProxyInvokeAsyncMethod.Invoke(context.Packed.DispatchProxy,
+                                                                   new object[] { context.Method, context.Packed.Args })).ConfigureAwait(false);
         }
         catch (TargetInvocationException tie)
         {
@@ -179,8 +179,8 @@ internal static class AspectDispatchProxyGenerator
         {
             Debug.Assert(s_dispatchProxyInvokeAsyncTMethod != null);
             var genericmethod = s_dispatchProxyInvokeAsyncTMethod.MakeGenericMethod(typeof(T));
-            returnValue = await (Task<T>)genericmethod.Invoke(context.Packed.DispatchProxy,
-                                                                   new object[] { context.Method, context.Packed.Args });
+            returnValue = await ((Task<T>)genericmethod.Invoke(context.Packed.DispatchProxy,
+                                                                   new object[] { context.Method, context.Packed.Args })).ConfigureAwait(false);
             context.Packed.ReturnValue = returnValue;
         }
         catch (TargetInvocationException tie)
@@ -192,7 +192,7 @@ internal static class AspectDispatchProxyGenerator
         return returnValue;
     }
 
-    private class PackedArgs
+    private sealed class PackedArgs
     {
         internal const int DispatchProxyPosition = 0;
         internal const int DeclaringTypePosition = 1;
@@ -224,7 +224,7 @@ internal static class AspectDispatchProxyGenerator
         { /*get { return args[ReturnValuePosition]; }*/ set { _args[ReturnValuePosition] = value; } }
     }
 
-    private class ProxyAssembly
+    private sealed class ProxyAssembly
     {
         public AssemblyBuilder _ab;
         private readonly ModuleBuilder _mb;
@@ -403,7 +403,7 @@ internal static class AspectDispatchProxyGenerator
         }
     }
 
-    private class ProxyBuilder
+    private sealed class ProxyBuilder
     {
         private static readonly MethodInfo s_delegateInvoke = typeof(DispatchProxyHandler).GetMethod("InvokeHandle");
         private static readonly MethodInfo s_delegateInvokeAsync = typeof(DispatchProxyHandler).GetMethod("InvokeAsyncHandle");
@@ -894,7 +894,7 @@ internal static class AspectDispatchProxyGenerator
             }
         }
 
-        private class ParametersArray
+        private sealed class ParametersArray
         {
             private readonly ILGenerator _il;
             private readonly Type[] _paramTypes;
@@ -924,7 +924,7 @@ internal static class AspectDispatchProxyGenerator
             }
         }
 
-        private class GenericArray<T>
+        private sealed class GenericArray<T>
         {
             private readonly ILGenerator _il;
             private readonly LocalBuilder _lb;

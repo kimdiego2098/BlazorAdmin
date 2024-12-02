@@ -18,7 +18,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static String[] GenerateKey(Int32 keySize = 2048)
     {
-        var rsa = new RSACryptoServiceProvider(keySize);
+        using var rsa = new RSACryptoServiceProvider(keySize);
 
         var ss = new String[2];
         ss[0] = rsa.ToXmlString(true);
@@ -36,7 +36,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static String[] GenerateParameters(Int32 keySize = 2048)
     {
-        var rsa = new RSACryptoServiceProvider(keySize);
+        using var rsa = new RSACryptoServiceProvider(keySize);
 
         var ss = new String[2];
         ss[0] = WriteParameters(rsa.ExportParameters(true));
@@ -128,7 +128,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Byte[] Encrypt(Byte[] data, String pubKey, Boolean fOAEP = true)
     {
-        var rsa = Create(pubKey);
+        using var rsa = Create(pubKey);
 
         return rsa.Encrypt(data, fOAEP);
     }
@@ -144,7 +144,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Byte[] Decrypt(Byte[] data, String priKey, Boolean fOAEP = true)
     {
-        var rsa = Create(priKey);
+        using var rsa = Create(priKey);
 
         return rsa.Decrypt(data, fOAEP);
     }
@@ -157,9 +157,9 @@ public static class RSAHelper
     /// <returns></returns>
     public static Byte[] Sign(Byte[] data, String priKey)
     {
-        var rsa = Create(priKey);
-
-        return rsa.SignData(data, MD5.Create());
+        using var rsa = Create(priKey);
+        using var value = MD5.Create();
+        return rsa.SignData(data, value);
     }
 
     /// <summary>验证，MD5散列</summary>
@@ -169,9 +169,9 @@ public static class RSAHelper
     /// <returns></returns>
     public static Boolean Verify(Byte[] data, String pukKey, Byte[] rgbSignature)
     {
-        var rsa = Create(pukKey);
-
-        return rsa.VerifyData(data, MD5.Create(), rgbSignature);
+        using var rsa = Create(pukKey);
+        using var value = MD5.Create();
+        return rsa.VerifyData(data, value, rgbSignature);
     }
 
     private static HashAlgorithm _sha256 = SHA256.Create();
@@ -181,7 +181,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Byte[] SignSha256(this Byte[] data, String priKey)
     {
-        var rsa = Create(priKey);
+        using var rsa = Create(priKey);
         return rsa.SignData(data, _sha256);
     }
 
@@ -192,7 +192,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Boolean VerifySha256(this Byte[] data, String pukKey, Byte[] rgbSignature)
     {
-        var rsa = Create(pukKey);
+        using var rsa = Create(pukKey);
         return rsa.VerifyData(data, _sha256, rgbSignature);
     }
 
@@ -203,7 +203,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Byte[] SignSha384(this Byte[] data, String priKey)
     {
-        var rsa = Create(priKey);
+        using var rsa = Create(priKey);
         return rsa.SignData(data, _sha384);
     }
 
@@ -214,7 +214,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Boolean VerifySha384(this Byte[] data, String pukKey, Byte[] rgbSignature)
     {
-        var rsa = Create(pukKey);
+        using var rsa = Create(pukKey);
         return rsa.VerifyData(data, _sha384, rgbSignature);
     }
 
@@ -225,7 +225,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Byte[] SignSha512(this Byte[] data, String priKey)
     {
-        var rsa = Create(priKey);
+        using var rsa = Create(priKey);
         return rsa.SignData(data, _sha512);
     }
 
@@ -236,7 +236,7 @@ public static class RSAHelper
     /// <returns></returns>
     public static Boolean VerifySha512(this Byte[] data, String pukKey, Byte[] rgbSignature)
     {
-        var rsa = Create(pukKey);
+        using var rsa = Create(pukKey);
         return rsa.VerifyData(data, _sha512, rgbSignature);
     }
     #endregion

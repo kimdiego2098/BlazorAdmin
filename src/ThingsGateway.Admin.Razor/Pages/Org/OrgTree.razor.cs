@@ -34,7 +34,7 @@ public partial class OrgTree : IDisposable
     [NotNull]
     private ISysOrgService? SysOrgService { get; set; }
 
-    private bool ModelEqualityComparer(SysOrg x, SysOrg y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(SysOrg x, SysOrg y) => x.Id == y.Id;
 
     private async Task OnTreeItemClick(TreeViewItem<SysOrg> item)
     {

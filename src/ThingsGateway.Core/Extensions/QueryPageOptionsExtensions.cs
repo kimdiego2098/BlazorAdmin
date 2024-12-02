@@ -29,11 +29,11 @@ public static class QueryPageOptionsExtensions
             datas = datas.Where(where.GetFilterFunc<T>());//name asc模式
         }
 
-        if (option.SortList.Any())
+        if (option.SortList.Count > 0)
         {
             datas = datas.Sort(option.SortList);//name asc模式
         }
-        if (option.AdvancedSortList.Any())
+        if (option.AdvancedSortList.Count > 0)
         {
             datas = datas.Sort(option.AdvancedSortList);//name asc模式
         }
@@ -87,9 +87,9 @@ public static class QueryPageOptionsExtensions
         var ret = new QueryData<T>()
         {
             IsSorted = option.SortOrder != SortOrder.Unset,
-            IsFiltered = option.Filters.Any(),
-            IsAdvanceSearch = option.AdvanceSearches.Any() || option.CustomerSearches.Any(),
-            IsSearch = option.Searches.Any()
+            IsFiltered = option.Filters.Count > 0,
+            IsAdvanceSearch = option.AdvanceSearches.Count > 0 || option.CustomerSearches.Count > 0,
+            IsSearch = option.Searches.Count > 0
         };
         var items = datas.GetData(option, where);
         ret.TotalCount = datas.Count();

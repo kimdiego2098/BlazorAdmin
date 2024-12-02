@@ -122,7 +122,7 @@ public class BadPageResult : StatusCodeResult
         if (httpContext.IsWebSocketRequest() || httpContext.Response.HasStarted) return;
 
         base.ExecuteResult(context);
-        httpContext.Response.Body.WriteAsync(ToByteArray());
+        httpContext.Response.Body.Write(ToByteArray());
     }
 
     /// <summary>

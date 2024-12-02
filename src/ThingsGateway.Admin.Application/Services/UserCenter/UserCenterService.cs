@@ -19,7 +19,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class UserCenterService : BaseService<SysUser>, IUserCenterService
+internal sealed class UserCenterService : BaseService<SysUser>, IUserCenterService
 {
     private readonly ISysDictService _configService;
     private readonly IRelationService _relationService;

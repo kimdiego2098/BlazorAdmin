@@ -18,7 +18,7 @@ namespace System.ComponentModel.DataAnnotations;
 /// 数据类型验证特性
 /// </summary>
 [SuppressSniffer]
-public class DataValidationAttribute : ValidationAttribute
+public sealed class DataValidationAttribute : ValidationAttribute
 {
     /// <summary>
     /// 构造函数

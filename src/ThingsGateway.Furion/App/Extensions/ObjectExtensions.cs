@@ -1,4 +1,4 @@
-﻿// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
 // 版权信息
 // 版权归百小僧及百签科技（广东）有限公司所有。
 // 所有权利保留。
@@ -155,7 +155,7 @@ public static class ObjectExtensions
         }
 
         using var fileStream = File.Create(path);
-        await stream.CopyToAsync(fileStream);
+        await stream.CopyToAsync(fileStream).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -167,7 +167,7 @@ public static class ObjectExtensions
     public static async Task CopyToSaveAsync(this byte[] bytes, string path)
     {
         using var stream = new MemoryStream(bytes);
-        await stream.CopyToSaveAsync(path);
+        await stream.CopyToSaveAsync(path).ConfigureAwait(false);
     }
     /// <summary>
     /// 添加防抖操作
@@ -648,6 +648,7 @@ public static class ObjectExtensions
     {
         return collection == null || !collection.Any();
     }
+
 
     /// <summary>
     /// 获取类型自定义特性

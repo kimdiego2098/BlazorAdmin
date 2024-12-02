@@ -10,8 +10,6 @@
 
 using Microsoft.AspNetCore.Components.Forms;
 
-using Yitter.IdGenerator;
-
 namespace ThingsGateway;
 
 /// <inheritdoc/>

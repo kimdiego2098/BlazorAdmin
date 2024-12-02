@@ -109,7 +109,7 @@ public static class Serve
             : GenericRunOptions.Default.WithArgs(args)
                      .ConfigureServices(additional);
 
-        return await RunNativeAsync(runOptions, urls, cancellationToken);
+        return await RunNativeAsync(runOptions, urls, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -166,19 +166,19 @@ public static class Serve
             : dynamicOptions.Silence(true, false);
 
         // 创建主机
-        var host = await RunAsync(runOptions, urls, cancellationToken);
+        var host = await RunAsync(runOptions, urls, cancellationToken).ConfigureAwait(false);
 
         // 监听主机关闭
         AssemblyLoadContext.Default.Unloading += async (ctx) =>
         {
-            await host.StopAsync(cancellationToken);
+            await host.StopAsync(cancellationToken).ConfigureAwait(false);
             host.Dispose();
         };
 
         // 监听未知异常
         AppDomain.CurrentDomain.UnhandledException += async (s, e) =>
         {
-            await host.StopAsync(cancellationToken);
+            await host.StopAsync(cancellationToken).ConfigureAwait(false);
             host.Dispose();
         };
 
@@ -220,7 +220,7 @@ public static class Serve
         , string[] args = default
         , CancellationToken cancellationToken = default)
     {
-        return await RunAsync(urls, silence, logging, args, additional, cancellationToken);
+        return await RunAsync(urls, silence, logging, args, additional, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -268,7 +268,7 @@ public static class Serve
                      .Silence(silence, logging)
                      .ConfigureServices(additional)
                      .AddComponent<ServeServiceComponent>()
-                     .UseComponent<ServeApplicationComponent>(), urls, cancellationToken);
+                     .UseComponent<ServeApplicationComponent>(), urls, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -315,17 +315,17 @@ public static class Serve
         // .NET6+ 主机
         if (options is RunOptions runOptions)
         {
-            host = await RunAsync(runOptions, urls, cancellationToken);
+            host = await RunAsync(runOptions, urls, cancellationToken).ConfigureAwait(false);
         }
         // .NET6- 主机
         else if (options is LegacyRunOptions legacyRunOptions)
         {
-            host = await RunAsync(legacyRunOptions, urls, cancellationToken);
+            host = await RunAsync(legacyRunOptions, urls, cancellationToken).ConfigureAwait(false);
         }
         // 泛型主机
         else if (options is GenericRunOptions genericRunOptions)
         {
-            host = await RunAsync(genericRunOptions, cancellationToken);
+            host = await RunAsync(genericRunOptions, cancellationToken).ConfigureAwait(false);
         }
         else throw new InvalidCastException("Unsupported IRunOptions implementation type.");
 
@@ -363,7 +363,7 @@ public static class Serve
         , string[] args = default
         , CancellationToken cancellationToken = default)
     {
-        return await RunGenericAsync(silence, logging, args, additional, cancellationToken);
+        return await RunGenericAsync(silence, logging, args, additional, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -417,7 +417,7 @@ public static class Serve
 
                  // 调用自定义配置
                  additional?.Invoke(services);
-             }), cancellationToken);
+             }), cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -442,7 +442,7 @@ public static class Serve
     /// <returns><see cref="IHost"/></returns>
     public static async Task<IHost> RunAsync(LegacyRunOptions options, string urls = default, CancellationToken cancellationToken = default)
     {
-        return await RunAsync<FakeStartup>(options, urls, cancellationToken);
+        return await RunAsync<FakeStartup>(options, urls, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -490,11 +490,11 @@ public static class Serve
         // 是否静默启动
         if (!options.IsSilence)
         {
-            await app.RunAsync(cancellationToken);
+            await app.RunAsync(cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            await app.StartAsync(cancellationToken);
+            await app.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
         return app;
@@ -537,11 +537,11 @@ public static class Serve
         // 是否静默启动
         if (!options.IsSilence)
         {
-            await app.RunAsync(cancellationToken);
+            await app.RunAsync(cancellationToken).ConfigureAwait(false);
         }
         else
         {
-            await app.StartAsync(cancellationToken);
+            await app.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
         return app;
@@ -590,11 +590,11 @@ public static class Serve
         if (!options.IsSilence)
         {
             // 配置启动地址和端口
-            await app.RunAsync(string.IsNullOrWhiteSpace(urls) ? null : startUrls);
+            await app.RunAsync(string.IsNullOrWhiteSpace(urls) ? null : startUrls).ConfigureAwait(false);
         }
         else
         {
-            await app.StartAsync(cancellationToken);
+            await app.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
         return app;
@@ -618,7 +618,7 @@ public static class Serve
             : WebApplication.CreateBuilder(options.Options));
 
         // 注册 WebApplicationBuilder 组件
-        if (options.WebComponents.Any())
+        if (options.WebComponents.Count > 0)
         {
             foreach (var (componentType, opt) in options.WebComponents)
             {
@@ -642,7 +642,7 @@ public static class Serve
         builder.Inject(options.ActionInject);
 
         // 注册服应用务组件
-        if (options.ServiceComponents.Any())
+        if (options.ServiceComponents.Count > 0)
         {
             foreach (var (componentType, opt) in options.ServiceComponents)
             {
@@ -677,7 +677,7 @@ public static class Serve
         App.AppStartups.Clear();
 
         // 注册应用中间件组件
-        if (options.ApplicationComponents.Any())
+        if (options.ApplicationComponents.Count > 0)
         {
             foreach (var (componentType, opt) in options.ApplicationComponents)
             {
@@ -720,7 +720,7 @@ public static class Serve
         builder = builder.ConfigureWebHostDefaults(webHostBuilder =>
         {
             // 注册 IWebHostBuilder 组件
-            if (options.WebComponents.Any())
+            if (options.WebComponents.Count > 0)
             {
                 foreach (var (componentType, opt) in options.WebComponents)
                 {
@@ -740,7 +740,7 @@ public static class Serve
             }
 
             // 配置服务
-            if (options.ServiceComponents.Any())
+            if (options.ServiceComponents.Count > 0)
             {
                 webHostBuilder = webHostBuilder.ConfigureServices(services =>
                 {
@@ -753,7 +753,7 @@ public static class Serve
             }
 
             // 配置中间件
-            if (options.ApplicationComponents.Any())
+            if (options.ApplicationComponents.Count > 0)
             {
                 webHostBuilder = webHostBuilder.Configure((context, app) =>
                 {
@@ -822,7 +822,7 @@ public static class Serve
         builder = builder.Inject(options.ActionInject);
 
         // 配置服务
-        if (options.ServiceComponents.Any())
+        if (options.ServiceComponents.Count > 0)
         {
             builder = builder.ConfigureServices(services =>
             {
@@ -879,7 +879,7 @@ public static class Serve
 
         // 处理【部署】二级虚拟目录
         var virtualPath = App.Settings.VirtualPath;
-        if (!string.IsNullOrWhiteSpace(virtualPath) && virtualPath.StartsWith("/"))
+        if (!string.IsNullOrWhiteSpace(virtualPath) && virtualPath.StartsWith('/'))
         {
             app.Map(virtualPath, _app => UseStartups(startups, _app));
             return;

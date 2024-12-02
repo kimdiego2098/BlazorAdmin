@@ -59,7 +59,7 @@ public class UnifyResultStatusCodesMiddleware
     /// <returns></returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        await _next(context);
+        await _next(context).ConfigureAwait(false);
 
         // 只有请求错误（短路状态码）和非 WebSocket 才支持规范化处理
         if (context.IsWebSocketRequest()
@@ -97,7 +97,7 @@ public class UnifyResultStatusCodesMiddleware
                 statusCode = Convert.ToInt32(authorizationFailStatusCode);
             }
 
-            await unifyResult.OnResponseStatusCodes(context, statusCode, context.RequestServices.GetService<IOptions<UnifyResultSettingsOptions>>()?.Value);
+            await unifyResult.OnResponseStatusCodes(context, statusCode, context.RequestServices.GetService<IOptions<UnifyResultSettingsOptions>>()?.Value).ConfigureAwait(false);
         }
     }
 }

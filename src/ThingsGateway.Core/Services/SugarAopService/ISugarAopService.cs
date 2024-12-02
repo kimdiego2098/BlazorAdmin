@@ -25,3 +25,10 @@ public interface ISugarAopService
     public void AopSetting(ISqlSugarClient db, bool isShowSql = false);
 
 }
+/// <summary>
+/// Aop设置，可自定义加解密等
+/// </summary>
+public interface ISugarConfigAopService
+{
+    public SqlSugarOptions Config(SqlSugarOptions sqlSugarOptions);
+}

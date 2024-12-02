@@ -15,7 +15,7 @@ using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway.Admin.Application;
 
-internal class SysDictService : BaseService<SysDict>, ISysDictService
+internal sealed class SysDictService : BaseService<SysDict>, ISysDictService
 {
     /// <summary>
     /// 删除业务配置
@@ -47,7 +47,7 @@ internal class SysDictService : BaseService<SysDict>, ISysDictService
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(LoginPolicy), Name = nameof(LoginPolicy.ErrorResetTime), Code = input.ErrorResetTime.ToString() },
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(LoginPolicy), Name = nameof(LoginPolicy.VerificatExpireTime), Code = input.VerificatExpireTime.ToString() },
     };
-        var storageable = db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorage();
+        var storageable = await db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorageAsync().ConfigureAwait(false);
 
         //事务
         var result = await db.UseTranAsync(async () =>
@@ -79,7 +79,7 @@ internal class SysDictService : BaseService<SysDict>, ISysDictService
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(PagePolicy), Name = nameof(PagePolicy.Shortcuts), Code = input.Shortcuts.ToJsonNetString() },
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(PagePolicy), Name = nameof(PagePolicy.Razor), Code = input.Razor.ToString() },
     };
-        var storageable = db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorage();
+        var storageable = await db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorageAsync().ConfigureAwait(false);
 
         //事务
         var result = await db.UseTranAsync(async () =>
@@ -115,7 +115,7 @@ internal class SysDictService : BaseService<SysDict>, ISysDictService
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(PasswordPolicy), Name = nameof(PasswordPolicy.PasswordMinLen), Code = input.PasswordMinLen.ToString() },
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(PasswordPolicy), Name = nameof(PasswordPolicy.PasswordContainNum), Code = input.PasswordContainNum.ToString() },
     };
-        var storageable = db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorage();
+        var storageable = await db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorageAsync().ConfigureAwait(false);
 
         //事务
         var result = await db.UseTranAsync(async () =>
@@ -153,7 +153,7 @@ internal class SysDictService : BaseService<SysDict>, ISysDictService
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(WebsitePolicy), Name = nameof(WebsitePolicy.WebStatus), Code = input.WebStatus.ToString() },
             new SysDict() { DictType = DictTypeEnum.System, Category = nameof(WebsitePolicy), Name = nameof(WebsitePolicy.CloseTip), Code = input.CloseTip },
          };
-        var storageable = db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorage();
+        var storageable = await db.Storageable(dicts).WhereColumns(it => new { it.DictType, it.Category, it.Name }).ToStorageAsync().ConfigureAwait(false);
 
         //事务
         var result = await db.UseTranAsync(async () =>

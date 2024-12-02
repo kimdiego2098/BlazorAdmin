@@ -40,12 +40,12 @@ public sealed class Retry
         InvokeAsync(async () =>
         {
             action();
-            await Task.CompletedTask;
+            await Task.CompletedTask.ConfigureAwait(false);
         }, numRetries, retryTimeout, finalThrow, exceptionTypes, fallbackPolicy == null ? null
         : async (ex) =>
         {
             fallbackPolicy?.Invoke(ex);
-            await Task.CompletedTask;
+            await Task.CompletedTask.ConfigureAwait(false);
         }, retryAction).GetAwaiter().GetResult();
     }
 
@@ -73,7 +73,7 @@ public sealed class Retry
         // 如果重试次数小于或等于 0，则直接调用
         if (numRetries <= 0)
         {
-            await action();
+            await action().ConfigureAwait(false);
             return;
         }
 
@@ -85,7 +85,7 @@ public sealed class Retry
         {
             try
             {
-                await action();
+                await action().ConfigureAwait(false);
                 break;
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ public sealed class Retry
                 {
                     if (finalThrow)
                     {
-                        if (fallbackPolicy != null) await fallbackPolicy.Invoke(ex);
+                        if (fallbackPolicy != null) await fallbackPolicy.Invoke(ex).ConfigureAwait(false);
                         throw;
                     }
                     else return;
@@ -106,7 +106,7 @@ public sealed class Retry
                 {
                     if (finalThrow)
                     {
-                        if (fallbackPolicy != null) await fallbackPolicy.Invoke(ex);
+                        if (fallbackPolicy != null) await fallbackPolicy.Invoke(ex).ConfigureAwait(false);
                         throw;
                     }
                     else return;
@@ -116,7 +116,7 @@ public sealed class Retry
                 retryAction?.Invoke(totalNumRetries, totalNumRetries - numRetries);
 
                 // 如果可重试异常数大于 0，则间隔指定时间后继续执行
-                if (retryTimeout > 0) await Task.Delay(retryTimeout);
+                if (retryTimeout > 0) await Task.Delay(retryTimeout).ConfigureAwait(false);
             }
         }
     }

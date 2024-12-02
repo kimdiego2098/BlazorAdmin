@@ -37,6 +37,7 @@ public class Startup : AppStartup
         services.AddSingleton(typeof(IEventService<>), typeof(EventService<>));
         services.AddSingleton<ISugarAopService, SugarAopService>();
         services.AddSingleton<IAppService, AppService>();
+        services.AddSingleton<ISugarConfigAopService, SugarConfigAopService>();
 
     }
 

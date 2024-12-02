@@ -188,7 +188,7 @@ internal sealed class EventBusHostedService : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             // 执行具体任务
-            await BackgroundProcessing(stoppingToken);
+            await BackgroundProcessing(stoppingToken).ConfigureAwait(false);
         }
 
         Log(LogLevel.Critical, $"EventBus hosted service is stopped.");
@@ -202,7 +202,7 @@ internal sealed class EventBusHostedService : BackgroundService
     private async Task BackgroundProcessing(CancellationToken stoppingToken)
     {
         // 从事件存储器中读取一条
-        var eventSource = await _eventSourceStorer.ReadAsync(stoppingToken);
+        var eventSource = await _eventSourceStorer.ReadAsync(stoppingToken).ConfigureAwait(false);
 
         // 处理动态新增/删除事件订阅器
         if (eventSource is EventSubscribeOperateSource subscribeOperateSource)
@@ -226,7 +226,7 @@ internal sealed class EventBusHostedService : BackgroundService
             .ToList();
 
         // 空订阅
-        if (!eventHandlersThatShouldRun.Any())
+        if (eventHandlersThatShouldRun.Count <= 0)
         {
             Log(LogLevel.Warning, "Subscriber with event ID <{EventId}> was not found.", new[] { eventSource.EventId });
 
@@ -272,7 +272,7 @@ internal sealed class EventBusHostedService : BackgroundService
                     // 调用执行前监视器
                     if (Monitor != default)
                     {
-                        await Monitor.OnExecutingAsync(eventHandlerExecutingContext);
+                        await Monitor.OnExecutingAsync(eventHandlerExecutingContext).ConfigureAwait(false);
                     }
 
                     // 判断是否自定义了执行器
@@ -286,21 +286,21 @@ internal sealed class EventBusHostedService : BackgroundService
                         // 调用事件处理程序并配置出错执行重试
                         await Retry.InvokeAsync(async () =>
                         {
-                            await eventHandlerThatShouldRun.Handler!(eventHandlerExecutingContext);
+                            await eventHandlerThatShouldRun.Handler!(eventHandlerExecutingContext).ConfigureAwait(false);
                         }
                         , eventSubscribeAttribute?.NumRetries ?? 0
                         , eventSubscribeAttribute?.RetryTimeout ?? 1000
                         , exceptionTypes: eventSubscribeAttribute?.ExceptionTypes
-                        , fallbackPolicy: fallbackPolicyService == null ? null : async (ex) => await fallbackPolicyService.CallbackAsync(eventHandlerExecutingContext, ex)
+                        , fallbackPolicy: fallbackPolicyService == null ? null : async (ex) => await fallbackPolicyService.CallbackAsync(eventHandlerExecutingContext, ex).ConfigureAwait(false)
                         , retryAction: (total, times) =>
                         {
                             // 输出重试日志
                             _logger.LogWarning("Retrying {times}/{total} times for {EventId}", times, total, eventSource.EventId);
-                        });
+                        }).ConfigureAwait(false);
                     }
                     else
                     {
-                        await Executor.ExecuteAsync(eventHandlerExecutingContext, eventHandlerThatShouldRun.Handler!);
+                        await Executor.ExecuteAsync(eventHandlerExecutingContext, eventHandlerThatShouldRun.Handler!).ConfigureAwait(false);
                     }
 
                     // 触发事件处理程序事件
@@ -341,7 +341,7 @@ internal sealed class EventBusHostedService : BackgroundService
                             Exception = executionException
                         };
 
-                        await Monitor.OnExecutedAsync(eventHandlerExecutedContext);
+                        await Monitor.OnExecutedAsync(eventHandlerExecutedContext).ConfigureAwait(false);
                     }
 
                     // 判断是否执行完成后调用 GC 回收

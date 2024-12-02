@@ -14,7 +14,7 @@ namespace ThingsGateway.DynamicApiController;
 /// <summary>
 /// 参数路由模板
 /// </summary>
-internal class ParameterRouteTemplate
+internal sealed class ParameterRouteTemplate
 {
     /// <summary>
     /// 构造函数

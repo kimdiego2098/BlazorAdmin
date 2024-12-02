@@ -194,7 +194,7 @@ public class ExcelReader : DisposeBase
         }
     }
 
-    private String[]? ReadStrings(Stream ms)
+    private static String[]? ReadStrings(Stream ms)
     {
         var doc = XDocument.Load(ms);
         if (doc?.Root == null) return null;
@@ -208,7 +208,7 @@ public class ExcelReader : DisposeBase
         return list.ToArray();
     }
 
-    private String?[]? ReadStyles(Stream ms)
+    private static String?[]? ReadStyles(Stream ms)
     {
         var doc = XDocument.Load(ms);
         if (doc?.Root == null) return null;
@@ -242,7 +242,7 @@ public class ExcelReader : DisposeBase
         return list.ToArray();
     }
 
-    private IDictionary<String, ZipArchiveEntry> ReadSheets(ZipArchive zip)
+    private Dictionary<String, ZipArchiveEntry> ReadSheets(ZipArchive zip)
     {
         var dic = new Dictionary<String, String?>();
 

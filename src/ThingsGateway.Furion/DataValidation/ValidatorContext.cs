@@ -22,6 +22,12 @@ namespace ThingsGateway.DataValidation;
 /// </summary>
 internal static class ValidatorContext
 {
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        WriteIndented = true
+    };
+
     /// <summary>
     /// 获取验证错误信息
     /// </summary>
@@ -56,11 +62,7 @@ internal static class ValidatorContext
                 validationResults = dicResults;
             }
 
-            message = JsonSerializer.Serialize(validationResults, new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true
-            });
+            message = JsonSerializer.Serialize(validationResults, _jsonSerializerOptions);
             firstErrorMessage = (validationResults as Dictionary<string, string[]>).First().Value[0];
             firstErrorProperty = (validationResults as Dictionary<string, string[]>).First().Key;
         }

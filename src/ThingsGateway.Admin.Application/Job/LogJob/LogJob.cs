@@ -24,10 +24,10 @@ public class LogJob : IJob
     public async Task ExecuteAsync(JobExecutingContext context, CancellationToken stoppingToken)
     {
         var daysAgo = App.Configuration.GetSection("LogJob:OperateLogDaysAgo").Get<int?>() ?? 1;
-        await DeleteSysOperateLog(daysAgo, stoppingToken).ConfigureAwait(false);
+        await LogJob.DeleteSysOperateLog(daysAgo, stoppingToken).ConfigureAwait(false);
     }
 
-    private async Task DeleteSysOperateLog(int daysAgo, CancellationToken stoppingToken)
+    private static async Task DeleteSysOperateLog(int daysAgo, CancellationToken stoppingToken)
     {
         using var db = DbContext.Db.GetConnectionScopeWithAttr<SysOperateLog>().CopyNew();
         await db.DeleteableWithAttr<SysOperateLog>().Where(u => u.OpTime < DateTime.Now.AddDays(-daysAgo)).ExecuteCommandAsync(stoppingToken).ConfigureAwait(false); // 删除操作日志

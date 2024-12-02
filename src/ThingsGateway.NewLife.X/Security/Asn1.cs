@@ -67,13 +67,11 @@ public class Asn1
     /// <summary>读取</summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    public static Asn1? Read(Byte[] data) => Read(new BinaryReader(new MemoryStream(data)));
-
-    /// <summary>读取</summary>
-    /// <param name="stream"></param>
-    /// <returns></returns>
-    public static Asn1? Read(Stream stream) => Read(new BinaryReader(stream));
-
+    public static Asn1? Read(Byte[] data)
+    {
+        using var reader = new BinaryReader(new MemoryStream(data));
+        return Read(reader);
+    }
     /// <summary>读取对象</summary>
     /// <param name="reader"></param>
     /// <returns></returns>
@@ -98,17 +96,19 @@ public class Asn1
                 case Asn1Tags.External:
                     break;
                 case Asn1Tags.Sequence:
-                    var reader2 = new BinaryReader(new MemoryStream(reader.ReadBytes(len)));
-                    var list = new List<Asn1>();
-                    while (true)
+                    using (var reader2 = new BinaryReader(new MemoryStream(reader.ReadBytes(len))))
                     {
-                        var obj = Read(reader2);
-                        if (obj == null) break;
+                        var list = new List<Asn1>();
+                        while (true)
+                        {
+                            var obj = Read(reader2);
+                            if (obj == null) break;
 
-                        list.Add(obj);
+                            list.Add(obj);
+                        }
+                        asn.Value = list.ToArray();
+                        return asn;
                     }
-                    asn.Value = list.ToArray();
-                    return asn;
                 case Asn1Tags.Set:
                     break;
             }

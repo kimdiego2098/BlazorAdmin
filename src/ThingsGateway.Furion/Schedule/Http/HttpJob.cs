@@ -110,7 +110,7 @@ public class HttpJob : IJob
         }
 
         // 发送请求
-        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, stoppingToken);
+        var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, stoppingToken).ConfigureAwait(false);
 
         // 确保请求成功
         if (httpJobMessage.EnsureSuccessStatusCode)
@@ -123,7 +123,7 @@ public class HttpJob : IJob
         if (httpJobMessage.PrintResponseContent)
         {
             // 解析返回值
-            responseContent = await httpResponseMessage.Content.ReadAsStringAsync(stoppingToken);
+            responseContent = await httpResponseMessage.Content.ReadAsStringAsync(stoppingToken).ConfigureAwait(false);
 
             // 输出日志
             _logger.LogInformation($"Received HTTP response body with a length of <{responseContent.Length}> output as follows - {(int)httpResponseMessage.StatusCode}{Environment.NewLine}{responseContent}");

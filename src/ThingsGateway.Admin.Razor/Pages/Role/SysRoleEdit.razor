@@ -37,13 +37,13 @@
 
                     <TreeView TItem="SysOrg" Items="Items" ShowIcon="true" ShowSearch ClickToggleCheck="true"
                               ShowCheckbox="true" AutoCheckParent="false" AutoCheckChildren="false" IsVirtualize="true"
-                              IsAccordion=false OnTreeItemChecked="OnTreeItemChecked" ModelEqualityComparer="ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnClickSearch">
+                              IsAccordion=false OnTreeItemChecked="OnTreeItemChecked" ModelEqualityComparer="SysRoleEdit.ModelEqualityComparer" IsFixedSearch OnSearchAsync="OnClickSearch">
                     </TreeView>
                 </ChildContent>
 
                 <Template>
                     @{
-                        var text = items.FirstOrDefault(a => Model.DefaultDataScope.ScopeDefineOrgIdList.Contains(a.Id))?.Names;
+                        var text = items?.FirstOrDefault(a => Model.DefaultDataScope.ScopeDefineOrgIdList.Contains(a.Id))?.Names;
                     }
                     <span>@($"{text}...")</span>
                 </Template>

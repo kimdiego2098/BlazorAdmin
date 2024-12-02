@@ -69,7 +69,7 @@ public class HardwareJob : IJob, IHardwareJob
             {
                 if (HardwareInfo.MachineInfo == null)
                 {
-                    await MachineInfo.RegisterAsync();
+                    await MachineInfo.RegisterAsync().ConfigureAwait(false);
                     HardwareInfo.MachineInfo = MachineInfo.Current;
 
                     string currentPath = Directory.GetCurrentDirectory();
@@ -122,11 +122,11 @@ public class HardwareJob : IJob, IHardwareJob
                                 CpuUsage = (HardwareInfo.MachineInfo.CpuRate * 100).ToString("F2"),
                                 Temperature = (HardwareInfo.MachineInfo.Temperature).ToString("F2"),
                             };
-                            await db.Insertable(his).ExecuteCommandAsync().ConfigureAwait(false);
+                            await db.Insertable(his).ExecuteCommandAsync(stoppingToken).ConfigureAwait(false);
                         }
                         var sevenDaysAgo = TimerX.Now.AddDays(-HardwareInfoOptions.DaysAgo);
                         //删除特定信息
-                        await db.Deleteable<HistoryHardwareInfo>(a => a.Date <= sevenDaysAgo).ExecuteCommandAsync().ConfigureAwait(false);
+                        await db.Deleteable<HistoryHardwareInfo>(a => a.Date <= sevenDaysAgo).ExecuteCommandAsync(stoppingToken).ConfigureAwait(false);
                     }
                 }
                 error = false;

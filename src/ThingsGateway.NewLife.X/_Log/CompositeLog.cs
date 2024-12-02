@@ -48,7 +48,7 @@ public class CompositeLog : Logger
     /// <summary>删除日志提供者</summary>
     /// <param name="log"></param>
     /// <returns></returns>
-    public CompositeLog Remove(ILog log) { if (Logs.Contains(log)) Logs.Remove(log); return this; }
+    public CompositeLog Remove(ILog log) { Logs.Remove(log); return this; }
 
     /// <summary>写日志</summary>
     /// <param name="level"></param>

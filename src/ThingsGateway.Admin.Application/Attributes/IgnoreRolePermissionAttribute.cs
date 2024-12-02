@@ -14,13 +14,13 @@ namespace ThingsGateway.Admin.Application;
 /// 需要角色授权权限
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class RolePermissionAttribute : Attribute
+public sealed class RolePermissionAttribute : Attribute
 {
 }
 
 /// <summary>
 /// 忽略角色授权权限
 /// </summary>
-public class IgnoreRolePermissionAttribute : Attribute
+public sealed class IgnoreRolePermissionAttribute : Attribute
 {
 }

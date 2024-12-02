@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace ThingsGateway.Admin.Application;
-internal class NoticeService : INoticeService
+internal sealed class NoticeService : INoticeService
 {
     private IEventService<AppMessage>? MessageDispatchService { get; set; }
     private IEventService<UserLoginOut>? UserLoginOutDispatchService { get; set; }

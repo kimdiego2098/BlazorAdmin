@@ -91,7 +91,7 @@ public class ObjectPool<T> : DisposeBase, IPool<T> where T : notnull
     #endregion
 
     #region 内嵌
-    private class Item
+    private sealed class Item
     {
         /// <summary>数值</summary>
         public T? Value { get; set; }

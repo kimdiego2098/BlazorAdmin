@@ -130,7 +130,7 @@ public class NetUri
     #endregion
 
     #region 方法
-    private static readonly String Sep = "://";
+    private const String Sep = "://";
 
     /// <summary>分析</summary>
     /// <param name="uri"></param>

@@ -16,7 +16,7 @@ public class ByteArrayToNumberArrayConverter : JsonConverter<byte[]>
 {
     public override void WriteJson(JsonWriter writer, byte[]? value, JsonSerializer serializer)
     {
-        if(value == null)
+        if (value == null)
         {
             writer.WriteNull();
             return;

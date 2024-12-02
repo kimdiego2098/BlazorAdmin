@@ -13,6 +13,8 @@ namespace ThingsGateway.Admin.Razor;
 public partial class ChoiceTable<TItem> where TItem : class, new()
 {
     [Parameter]
+    [EditorRequired]
+    [NotNull]
     public Func<HashSet<TItem>, Task>? OnChangedAsync { get; set; }
     [Parameter]
     [EditorRequired]

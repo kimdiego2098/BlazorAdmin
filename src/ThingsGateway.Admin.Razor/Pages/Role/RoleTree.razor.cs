@@ -33,7 +33,7 @@ public partial class RoleTree : IDisposable
     [NotNull]
     private ISysRoleService? SysRoleService { get; set; }
 
-    private bool ModelEqualityComparer(RoleTreeOutput x, RoleTreeOutput y) => x.Id == y.Id;
+    private static bool ModelEqualityComparer(RoleTreeOutput x, RoleTreeOutput y) => x.Id == y.Id;
 
     private async Task OnTreeItemClick(TreeViewItem<RoleTreeOutput> item)
     {

@@ -14,11 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Web;
 
-using Yitter.IdGenerator;
-
 namespace ThingsGateway.Admin.Application;
 
-internal class ImportExportService : IImportExportService
+internal sealed class ImportExportService : IImportExportService
 {
     private readonly IFileService _fileService;
 
@@ -91,7 +89,7 @@ internal class ImportExportService : IImportExportService
     /// <returns></returns>
     public string GetUrlEncodeFileName(string fileName)
     {
-        if (!fileName.Contains("."))
+        if (!fileName.Contains('.'))
             fileName += ".xlsx";
         fileName = HttpUtility.UrlEncode(fileName, Encoding.GetEncoding("UTF-8"));//文件名转utf8不然前端下载会乱码
         return fileName;

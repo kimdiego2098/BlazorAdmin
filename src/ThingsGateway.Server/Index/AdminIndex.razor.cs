@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 
+#pragma warning disable CA2007 // 考虑对等待的任务调用 ConfigureAwait
 
 using BootstrapBlazor.Components;
 
