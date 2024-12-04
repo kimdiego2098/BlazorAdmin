@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Hosting;
 
 using ThingsGateway.Admin.Application;
 
@@ -47,15 +48,16 @@ public partial class UserLogin
         Model.TenantId = tenantList.FirstOrDefault().Id;        //默认第一个
 
         await base.OnInitializedAsync();
-#if DEBUG
-        Model.Account = "SuperAdmin";
-        Model.Password = "111111";
-#else
-        if (WebsiteOption.Value.Demo)
+
+        if (App.HostEnvironment.IsDevelopment())
         {
             Model.Account = "SuperAdmin";
             Model.Password = "111111";
         }
-#endif
+        else if (WebsiteOption.Value.Demo)
+        {
+            Model.Account = "SuperAdmin";
+            Model.Password = "111111";
+        }
     }
 }

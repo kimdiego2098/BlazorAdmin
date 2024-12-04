@@ -8,6 +8,8 @@
 //  QQ群：605534569
 //------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Hosting;
+
 namespace ThingsGateway.Razor;
 
 /// <inheritdoc/>
@@ -26,10 +28,9 @@ public static class ToastServiceExtensions
     /// <inheritdoc/>
     public static Task Warn(this ToastService toastService, Exception ex)
     {
-#if DEBUG
-        return toastService.Warning("Warn", ex.ToString());
-#else
-        return toastService.Warning("Warn", ex.Message);
-#endif
+        if (App.HostEnvironment.IsDevelopment())
+            return toastService.Warning("Warn", ex.ToString());
+        else
+            return toastService.Warning("Warn", ex.Message);
     }
 }

@@ -287,7 +287,7 @@ public partial class AdminTable<TItem> where TItem : class, new()
 
     /// <inheritdoc cref="Table{TItem}.FixedExtendButtonsColumn"/>
     [Parameter]
-    public bool FixedExtendButtonsColumn { get; set; } = false;
+    public bool FixedExtendButtonsColumn { get; set; } = true;
 
     /// <inheritdoc cref="Table{TItem}.FixedMultipleColumn"/>
     [Parameter]
