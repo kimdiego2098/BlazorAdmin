@@ -29,6 +29,7 @@ using System.Security.Claims;
 using ThingsGateway.ConfigurableOptions;
 using ThingsGateway.NewLife.Caching;
 using ThingsGateway.NewLife.Collections;
+using ThingsGateway.NewLife.Log;
 using ThingsGateway.Reflection;
 using ThingsGateway.Templates;
 
@@ -360,7 +361,8 @@ public static class App
     /// </summary>
     public static IEnumerable<Assembly> RazorAssemblies { get; private set; }
 
-    private static readonly ConcurrentHashSet<String> _BakImages = new();
+    public static readonly ConcurrentHashSet<String> BakImagePaths = new();
+    public static readonly ConcurrentHashSet<String> BakImageNames = new();
 
     /// <summary>
     /// 获取应用有效程序集
@@ -393,7 +395,7 @@ public static class App
                       (u.Type == "project" && !excludeAssemblyNames.Any(j => u.Name.EndsWith(j))) ||
                       (u.Type == "package" && !excludeAssemblyNames.Any(j => u.Name.EndsWith(j)) && (
                       //(u.Name.StartsWith(nameof(ThingsGateway)) && !u.Name.Contains("Plugin")) ||
-                      supportPackageNamePrefixs.Any(p => u.Name.StartsWith(p)))) ||
+                      supportPackageNamePrefixs.Any(p => u.Name.StartsWith(p) && u.RuntimeAssemblyGroups.Count > 0))) ||
                       (Settings.EnabledReferenceAssemblyScan == true && u.Type == "reference"))    // 判断是否启用引用程序集扫描
                .Select(u => Reflect.GetAssembly(u.Name));
         }
@@ -482,14 +484,32 @@ public static class App
             {
                 try
                 {
-                    if (_BakImages.Contains(assemblyFileFullPath)) continue;
+                    if (BakImagePaths.Contains(assemblyFileFullPath)) continue;
                     // 根据路径加载程序集
                     //var loadedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyFileFullPath);
+                    var runtimeAssembliesPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+                    // 将目标程序集和运行时核心程序集一起提供给 PathAssemblyResolver
+                    var assemblies = Directory.GetFiles(runtimeAssembliesPath, "*.dll");
+                    var resolver = new PathAssemblyResolver(new[] { assemblyFileFullPath }.Concat(assemblies));
+                    // 使用 MetadataLoadContext
+                    using var metadataContext = new MetadataLoadContext(resolver);
+
+                    var referencedAssemblies = metadataContext.LoadFromAssemblyPath(assemblyFileFullPath)?.GetReferencedAssemblies();
+                    if ((referencedAssemblies?.Any(a => a.Name.StartsWith("ThingsGateway"))) != true)
+                    {
+                        continue;
+                    }
                     var loadedAssembly = Reflect.LoadAssembly(assemblyFileFullPath);
                     if (loadedAssembly == default) continue;
 
-                    _ = GetTypes(loadedAssembly);
+                    var loadTypes = GetTypes(loadedAssembly);
+                    if (!loadTypes.Any())
+                    {
 
+                        BakImagePaths.TryAdd(assemblyFileFullPath);
+                        BakImageNames.TryAdd(loadedAssembly.GetName().Name);
+                        continue;
+                    }
                     var assembly = new[] { loadedAssembly };
 
                     if (scanAssemblies.Any(u => u == loadedAssembly)) continue;
@@ -501,7 +521,8 @@ public static class App
                 }
                 catch (Exception ex)
                 {
-                    _BakImages.TryAdd(assemblyFileFullPath);
+                    BakImagePaths.TryAdd(assemblyFileFullPath);
+                    XTrace.Log.Warn("Load external assembly error: {0} {1} {2}", assemblyFileFullPath, Environment.NewLine, ex);
                     Console.WriteLine("Load external assembly error: {0} {1} {2}", assemblyFileFullPath, Environment.NewLine, ex);
                 }
             }
@@ -531,6 +552,7 @@ public static class App
         }
         catch
         {
+            XTrace.Log.Warn($"Error load `{ass.FullName}` assembly.");
             Console.WriteLine($"Error load `{ass.FullName}` assembly.");
         }
 

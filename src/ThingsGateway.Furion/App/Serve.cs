@@ -11,6 +11,7 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,7 @@ using System.Runtime.Loader;
 
 using ThingsGateway;
 using ThingsGateway.Components;
+using ThingsGateway.Extension.Generic;
 
 namespace System;
 
@@ -669,6 +671,11 @@ public static class Serve
         app = builder.Build();
         InternalApp.RootServices ??= app.Services;
 
+
+
+        var applicationPartManager = app.Services.GetService<ApplicationPartManager>();
+
+        applicationPartManager.ApplicationParts.RemoveWhere(p => App.BakImageNames.Any(b => b == p.Name));
         // 配置所有 Starup Configure
         UseStartups(app);
         UseStartups(app.Services);
@@ -788,6 +795,9 @@ public static class Serve
         app = builder.Build();
         InternalApp.RootServices ??= app.Services;
 
+        var applicationPartManager = app.Services.GetService<ApplicationPartManager>();
+
+        applicationPartManager.ApplicationParts.RemoveWhere(p => App.BakImageNames.Any(b => b == p.Name));
         // 配置所有 Starup Configure
         UseStartups(app.Services);
         // 释放内存
@@ -847,6 +857,11 @@ public static class Serve
         app = builder.Build();
         InternalApp.RootServices ??= app.Services;
 
+
+        var applicationPartManager = app.Services.GetService<ApplicationPartManager>();
+
+        applicationPartManager.ApplicationParts.RemoveWhere(p => App.BakImageNames.Any(b => b == p.Name));
+
         // 配置所有 Starup Configure
         UseStartups(app.Services);
         // 释放内存
@@ -873,6 +888,7 @@ public static class Serve
     /// <param name="app">应用构建器</param>
     private static void UseStartups(IApplicationBuilder app)
     {
+
         // 反转，处理排序
         var startups = App.AppStartups.Reverse();
         if (!startups.Any()) return;
