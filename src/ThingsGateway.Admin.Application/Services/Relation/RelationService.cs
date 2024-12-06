@@ -95,7 +95,7 @@ internal sealed class RelationService : BaseService<SysRelation>, IRelationServi
     /// <returns></returns>
     public async Task<IEnumerable<long>> GetUserModuleId(IEnumerable<long> roleIdList, long userId)
     {
-        IEnumerable<long>? moduleIds = null;
+        IEnumerable<long>? moduleIds = Enumerable.Empty<long>();
         var roleRelation = await GetRelationByCategoryAsync(RelationCategoryEnum.RoleHasModule).ConfigureAwait(false);//获取角色模块关系集合
         if (roleRelation?.Count > 0)
         {
