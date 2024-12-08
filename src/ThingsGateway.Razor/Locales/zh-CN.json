@@ -23,7 +23,10 @@
     "False": "否",
     "Save": "保存",
     "Fail": "失败 {0}",
-    "Success": "成功"
+    "Success": "成功",
+    "PleaseSelect": "请选择需要操作的数据",
+    "TablesExportButtonExcelText": "导出Excel",
+    "TablesImportButtonExcelText": "导入Excel"
   },
   "ThingsGateway.Razor.GlobalSearch": {
     "SearchText": "搜索页面"

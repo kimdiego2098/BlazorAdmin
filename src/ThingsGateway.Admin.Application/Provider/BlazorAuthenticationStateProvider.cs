@@ -83,8 +83,7 @@ public class BlazorAuthenticationStateProvider : AppAuthorizeHandler
         if (context.Resource is Microsoft.AspNetCore.Components.RouteData routeData)
         {
             var roles = await _sysRoleService.GetRoleListByUserIdAsync(userId).ConfigureAwait(false);
-            if (roles.All(a => a.Category != RoleCategoryEnum.Global))
-                return false;
+
             //这里鉴别用户使能状态
             if (user == null || !user.Status)
             {

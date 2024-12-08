@@ -23,7 +23,10 @@
     "False": "No",
     "Save": "Save",
     "Fail": "Fail {0}",
-    "Success": "Success"
+    "Success": "Success",
+    "PleaseSelect": "Please select the data",
+    "TablesExportButtonExcelText": "Export Excel",
+    "TablesImportButtonExcelText": "Import Excel"
   },
   "ThingsGateway.Razor.GlobalSearch": {
     "SearchText": "Search Page"
