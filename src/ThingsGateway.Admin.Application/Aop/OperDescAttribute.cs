@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 
 using Rougamo;
 using Rougamo.Context;
+using Rougamo.Metadatas;
 
 using System.Collections.Concurrent;
 
@@ -24,6 +25,8 @@ namespace ThingsGateway.Admin.Application;
 /// <summary>
 /// Aop拦截器
 /// </summary>
+[Pointcut(AccessFlags.Public | AccessFlags.Method)]
+[Advice(Feature.OnException | Feature.OnSuccess)]
 public sealed class OperDescAttribute : MoAttribute
 {
     /// <summary>
@@ -50,9 +53,6 @@ public sealed class OperDescAttribute : MoAttribute
     /// 说明，需配置本地化json文件
     /// </summary>
     public string Description { get; }
-
-    public override Feature Features => Feature.OnException | Feature.OnSuccess;
-    public override AccessFlags Flags => AccessFlags.Public | AccessFlags.Method;
 
     /// <summary>
     /// 是否记录进出参数

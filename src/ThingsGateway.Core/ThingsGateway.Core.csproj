@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
-		<PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.171" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
 		<PackageReference Include="SqlSugarCore" Version="5.1.4.122" />
