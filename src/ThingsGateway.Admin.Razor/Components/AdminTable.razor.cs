@@ -13,6 +13,21 @@ namespace ThingsGateway.Admin.Razor;
 [CascadingTypeParameter(nameof(TItem))]
 public partial class AdminTable<TItem> where TItem : class, new()
 {
+
+    /// <inheritdoc cref="Table{TItem}.DoubleClickToEdit"/>
+    [Parameter]
+    public bool DoubleClickToEdit { get; set; } = false;
+    /// <inheritdoc cref="Table{TItem}.OnDoubleClickCellCallback"/>
+    [Parameter]
+    public Func<string, TItem, object?, Task>? OnDoubleClickCellCallback { get; set; }
+    /// <inheritdoc cref="Table{TItem}.OnDoubleClickRowCallback"/>
+    [Parameter]
+    public Func<TItem, Task>? OnDoubleClickRowCallback { get; set; }
+    /// <inheritdoc cref="Table{TItem}.OnClickRowCallback"/>
+    [Parameter]
+    public Func<TItem, Task>? OnClickRowCallback { get; set; }
+    
+        
     /// <inheritdoc cref="Table{TItem}.AllowDragColumn"/>
     [Parameter]
     public bool AllowDragColumn { get; set; } = false;
