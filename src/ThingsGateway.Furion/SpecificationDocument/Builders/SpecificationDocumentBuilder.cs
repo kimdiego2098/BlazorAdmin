@@ -114,7 +114,10 @@ public static class SpecificationDocumentBuilder
 
         // 处理贴有 [ApiExplorerSettings(IgnoreApi = true)] 或者 [ApiDescriptionSettings(false)] 特性的接口
         var apiExplorerSettings = method.GetFoundAttribute<ApiExplorerSettingsAttribute>(true);
-        if (apiExplorerSettings?.IgnoreApi == true) return false;
+
+        var apiDescriptionSettings = method.GetFoundAttribute<ApiDescriptionSettingsAttribute>(true);
+
+        if (apiExplorerSettings?.IgnoreApi == true || apiDescriptionSettings?.IgnoreApi == true) return false;
 
         if (currentGroup == AllGroupsKey)
         {
