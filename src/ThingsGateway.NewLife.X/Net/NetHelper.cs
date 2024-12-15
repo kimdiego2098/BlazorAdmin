@@ -215,7 +215,7 @@ public static class NetHelper
     /// <returns></returns>
     public static Boolean CheckPort(this IPAddress address, NetType protocol, Int32 port)
     {
-        //if (NewLife.Runtime.Mono) return false;
+        //if (ThingsGateway.NewLife.Runtime.Mono) return false;
         if (!Runtime.Windows) return false;
 
         try

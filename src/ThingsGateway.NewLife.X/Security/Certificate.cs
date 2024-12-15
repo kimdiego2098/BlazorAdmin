@@ -57,7 +57,7 @@ namespace ThingsGateway.NewLife.Security
         }
 
         /// <summary>建立自签名证书</summary>
-        /// <param name="x500">例如CN=SelfSignCertificate;C=China;OU=NewLife;O=Development Team;E=nnhy@vip.qq.com，其中CN是显示名</param>
+        /// <param name="x500">例如CN=SelfSignCertificate;C=China;OU=ThingsGateway.NewLife;O=Development Team;E=nnhy@vip.qq.com，其中CN是显示名</param>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <param name="password"></param>

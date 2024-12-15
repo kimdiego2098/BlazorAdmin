@@ -314,6 +314,6 @@ public static class SecurityHelper
     /// <param name="data"></param>
     /// <param name="pass"></param>
     /// <returns></returns>
-    public static Byte[] RC4(this Byte[] data, Byte[] pass) => NewLife.Security.RC4.Encrypt(data, pass);
+    public static Byte[] RC4(this Byte[] data, Byte[] pass) => ThingsGateway.NewLife.Security.RC4.Encrypt(data, pass);
     #endregion
 }

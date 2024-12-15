@@ -65,7 +65,7 @@ public class DynamicXml : DynamicObject
     //public static void Test()
     //{
     //    dynamic xml = new DynamicXml("Test");
-    //    xml.Name = "NewLife";
+    //    xml.Name = "ThingsGateway.NewLife";
     //    xml.Sign = "学无先后达者为师！";
     //    xml.Detail = new DynamicXml();
     //    xml.Detail.Name = "新生命开发团队";

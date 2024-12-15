@@ -926,14 +926,14 @@ public static class StringHelper
     #endregion
 
     #region 文字转语音
-    private static NewLife.Extension.SpeakProvider? _provider;
+    private static ThingsGateway.NewLife.Extension.SpeakProvider? _provider;
     //private static System.Speech.Synthesis.SpeechSynthesizer _provider;
     [MemberNotNull(nameof(_provider))]
     private static void Init()
     {
         //_provider = new Speech.Synthesis.SpeechSynthesizer();
         //_provider.SetOutputToDefaultAudioDevice();
-        _provider ??= new NewLife.Extension.SpeakProvider();
+        _provider ??= new ThingsGateway.NewLife.Extension.SpeakProvider();
     }
 
     /// <summary>调用语音引擎说出指定话</summary>
