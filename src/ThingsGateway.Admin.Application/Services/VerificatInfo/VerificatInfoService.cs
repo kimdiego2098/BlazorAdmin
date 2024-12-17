@@ -10,6 +10,8 @@
 
 using SqlSugar;
 
+using ThingsGateway.List;
+
 namespace ThingsGateway.Admin.Application;
 
 /// <summary>
@@ -164,7 +166,7 @@ internal sealed class VerificatInfoService : BaseService<VerificatInfo>, IVerifi
     public void RemoveAllClientId()
     {
         using var db = GetDB();
-        db.Updateable<VerificatInfo>().SetColumns(it => it.ClientIds == default).Where(a => a.Id >= 0).ExecuteCommand();
+        db.Updateable<VerificatInfo>().SetColumns("ClientIds", new ConcurrentList<long>().ToJsonNetString()).Where(a => a.Id >= 0).ExecuteCommand();
         VerificatInfoService.RemoveCache();
     }
 
