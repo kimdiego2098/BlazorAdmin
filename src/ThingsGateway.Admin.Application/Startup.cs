@@ -12,6 +12,8 @@ using BootstrapBlazor.Components;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using SqlSugar;
+
 using System.Reflection;
 
 using ThingsGateway.UnifyResult;
@@ -23,6 +25,8 @@ public class Startup : AppStartup
 {
     public void ConfigureAdminApp(IServiceCollection services)
     {
+        StaticConfig.EnableAllWhereIF = true;
+
         services.AddConfigurableOptions<EmailOptions>();
         services.AddConfigurableOptions<HardwareInfoOptions>();
         services.AddSingleton<IEmailService, EmailService>();
