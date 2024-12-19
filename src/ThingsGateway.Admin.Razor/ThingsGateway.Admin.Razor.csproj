@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
-  <Import Project="$(SolutionDir)Version.props" />
-  <Import Project="$(SolutionDir)PackNuget.props" />
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <Import Project="..\Version.props" />
+  <Import Project="..\PackNuget.props" />
+	<Import Project="..\Admin.props" />
 
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\ThingsGateway.Razor\ThingsGateway.Razor.csproj" />
-    <ProjectReference Include="$(SolutionDir)\ThingsGateway.Admin.Application\ThingsGateway.Admin.Application.csproj" />
+	<ItemGroup>
+    <ProjectReference Include="..\ThingsGateway.Razor\ThingsGateway.Razor.csproj" />
+    <ProjectReference Include="..\ThingsGateway.Admin.Application\ThingsGateway.Admin.Application.csproj" />
     <PackageReference Include="BootstrapBlazor.Chart" Version="9.0.0" />
     <PackageReference Include="BootstrapBlazor.TableExport" Version="9.0.0" />
   </ItemGroup>

@@ -28,7 +28,7 @@ using ThingsGateway.Extension;
 using ThingsGateway.Logging;
 using ThingsGateway.NewLife.Caching;
 
-namespace ThingsGateway.Server;
+namespace ThingsGateway.AdminServer;
 
 [AppStartup(-99999)]
 public class Startup : AppStartup

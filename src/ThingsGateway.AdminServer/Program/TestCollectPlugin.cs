@@ -13,7 +13,7 @@
 //using ThingsGateway.Foundation;
 //using ThingsGateway.Gateway.Application;
 
-//namespace ThingsGateway.Server;
+//namespace ThingsGateway.AdminServer;
 
 ///// <summary>
 ///// 插件类

@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <Import Project="$(SolutionDir)Version.props" />
-  <Import Project="$(SolutionDir)PackNuget.props" />
+  <Import Project="..\Version.props" />
+  <Import Project="..\PackNuget.props" />
+	<Import Project="..\Admin.props" />
 
 	<ItemGroup>
     <Content Remove="Locales\*.json" />

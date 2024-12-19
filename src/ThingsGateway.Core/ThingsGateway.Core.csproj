@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 
-	<Import Project="$(SolutionDir)PackNuget.props" />
-	<Import Project="$(SolutionDir)Version.props" />
+	<Import Project="..\PackNuget.props" />
+	<Import Project="..\Version.props" />
+	<Import Project="..\Admin.props" />
 
 
 

@@ -29,7 +29,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="$(SolutionDir)Directory.Build.props" Pack="true" PackagePath="\" />
+		<None Include="..\Admin.props" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<PropertyGroup>

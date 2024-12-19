@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <Version>7.2.0.51</Version>
+    <Version>7.2.0.52</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)Version.props" Pack="true" PackagePath="\" />
+    <None Include="..\Version.props" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

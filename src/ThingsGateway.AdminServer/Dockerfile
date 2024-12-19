@@ -1,11 +1,11 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-#构建：docker build -t registry.cn-shenzhen.aliyuncs.com/thingsgateway/thingsgateway_arm64:latest .
-#拉取：docker pull registry.cn-shenzhen.aliyuncs.com/thingsgateway/thingsgateway_arm64
-#推送：docker push registry.cn-shenzhen.aliyuncs.com/thingsgateway/thingsgateway_arm64
+#构建：docker build -t registry.cn-shenzhen.aliyuncs.com/thingsgateway/thingsgateway:latest .
+#拉取：docker pull registry.cn-shenzhen.aliyuncs.com/thingsgateway/thingsgateway
+#推送：docker push registry.cn-shenzhen.aliyuncs.com/thingsgateway/thingsgateway
 
 #aspnetcore9.0环境
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine-arm64v8  AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 COPY .  /app
 WORKDIR /app
 #默认web
@@ -16,4 +16,4 @@ ENV TimeZone=Asia/Shanghai
 # 使用软连接，并且将时区配置覆盖/etc/timezone
 RUN ln -snf /usr/share/zoneinfo/$TimeZone /etc/localtime && echo $TimeZone > /etc/timezone
 
-ENTRYPOINT ["dotnet", "ThingsGateway.Server.dll","--urls","http://*:5000"]
+ENTRYPOINT ["dotnet", "ThingsGateway.AdminServer.dll","--urls","http://*:5000"]

@@ -11,7 +11,7 @@ Description=ThingsGateway
 WorkingDirectory=/iot/ThingsGateway
 
 # 自启动项目的命令
-ExecStart=/usr/share/dotnet/dotnet /iot/ThingsGateway/ThingsGateway.Server.dll --urls=http://*:5000
+ExecStart=/usr/share/dotnet/dotnet /iot/ThingsGateway/ThingsGateway.AdminServer.dll --urls=http://*:5000
 Restart=always
 RestartSec=10
 # User=iot

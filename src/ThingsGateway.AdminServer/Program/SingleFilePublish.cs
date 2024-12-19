@@ -10,7 +10,7 @@
 
 using System.Reflection;
 
-namespace ThingsGateway.Server;
+namespace ThingsGateway.AdminServer;
 
 /// <summary>
 /// 解决单文件发布程序集扫描问题

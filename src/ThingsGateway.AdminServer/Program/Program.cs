@@ -17,7 +17,7 @@ using ThingsGateway.NewLife.Log;
 
 using Console = System.Console;
 
-namespace ThingsGateway.Server;
+namespace ThingsGateway.AdminServer;
 
 public class Program
 {

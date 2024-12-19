@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(SolutionDir)PackNuget.props" />
-  <Import Project="$(SolutionDir)Version.props" />
+  <Import Project="..\PackNuget.props" />
+  <Import Project="..\Version.props" />
+	<Import Project="..\Admin.props" />
 
-  <PropertyGroup>
+	<PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0;net6.0;net6.0-windows;net8.0;net8.0-windows;net9.0;net9.0-windows</TargetFrameworks>
     <AssemblyName>ThingsGateway.NewLife.X</AssemblyName>
     <RootNamespace>ThingsGateway.NewLife</RootNamespace>
@@ -18,8 +19,8 @@
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="README.zh-CN.md" Pack="true" PackagePath="\" />
-    <None Remove="$(SolutionDir)..\README.md" Pack="false" PackagePath="\" />
-    <None Remove="$(SolutionDir)..\README.zh-CN.md" Pack="false" PackagePath="\" />
+    <None Remove="..\..\README.md" Pack="false" PackagePath="\" />
+    <None Remove="..\..\README.zh-CN.md" Pack="false" PackagePath="\" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net462' or '$(TargetFramework)'=='net5.0-windows' or '$(TargetFramework)'=='net6.0-windows' or '$(TargetFramework)'=='net7.0-windows' or '$(TargetFramework)'=='net8.0-windows' or '$(TargetFramework)'=='net9.0-windows'">
