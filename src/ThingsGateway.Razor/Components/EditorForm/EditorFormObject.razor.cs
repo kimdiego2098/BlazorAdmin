@@ -272,7 +272,7 @@ public partial class EditorFormObject<TModel> : IShowLabel
         {
             items.AddRange(Items.Where(i => !i.GetIgnore() && !string.IsNullOrEmpty(i.GetFieldName())));
         }
-        else
+        //else  //需删除，否则会导致自定义模板无法显示
         {
             // 如果 EditorItems 有值表示 用户自定义列
             if (AutoGenerateAllItem)
