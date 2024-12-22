@@ -17,7 +17,7 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="BootstrapBlazor" Version="9.1.5" />
+		<PackageReference Include="BootstrapBlazor" Version="9.1.7" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
