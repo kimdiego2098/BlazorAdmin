@@ -144,6 +144,7 @@ public class MachineInfo
     /// <returns></returns>
     public static Task<MachineInfo> RegisterAsync()
     {
+
         if (_task != null) return _task;
 
         return _task = Task.Factory.StartNew(() =>
@@ -194,6 +195,7 @@ public class MachineInfo
 
             return mi;
         });
+
     }
 
     /// <summary>获取当前信息，如果未设置则等待异步注册结果</summary>

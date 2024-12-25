@@ -1,4 +1,5 @@
 ﻿using System;
+
 using ThingsGateway.NewLife.Serialization.Interface;
 
 namespace ThingsGateway.NewLife.Serialization

@@ -86,7 +86,7 @@ public static class StringHelper
 
     public static Boolean Contains(this String? value, string stringValue, StringComparison stringComparison)
     {
-        return value.IndexOf(stringValue, stringComparison)>=0;
+        return value.IndexOf(stringValue, stringComparison) >= 0;
     }
 
 #endif

@@ -33,7 +33,7 @@ public class Config<TConfig> where TConfig : Config<TConfig>, new()
             if (value.EndsWith("Setting") && value != "Setting") value = value.TrimEnd("Setting");
         }
         var prv = ConfigProvider.Create(att?.Provider);
-         if (prv is ConfigProvider prv2)
+        if (prv is ConfigProvider prv2)
         {
             prv2.Init(value);
         }

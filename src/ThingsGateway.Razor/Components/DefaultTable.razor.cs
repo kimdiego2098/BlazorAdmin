@@ -99,7 +99,7 @@ public partial class DefaultTable<TItem> where TItem : class, new()
 
     /// <inheritdoc cref="Table{TItem}.IsAutoRefresh"/>
     [Parameter]
-    public bool IsAutoRefresh { get; set; } = true;
+    public bool IsAutoRefresh { get; set; } = false;
 
     /// <inheritdoc cref="Table{TItem}.IsFixedHeader"/>
     [Parameter]

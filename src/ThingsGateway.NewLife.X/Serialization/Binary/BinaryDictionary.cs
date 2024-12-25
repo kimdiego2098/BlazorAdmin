@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+
 using ThingsGateway.NewLife.Reflection;
 
 namespace ThingsGateway.NewLife.Serialization;

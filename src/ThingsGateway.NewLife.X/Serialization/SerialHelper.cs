@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Serialization;
+
 using ThingsGateway.NewLife.Reflection;
 
 namespace ThingsGateway.NewLife.Serialization;

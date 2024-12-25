@@ -26,8 +26,8 @@ public partial class AdminTable<TItem> where TItem : class, new()
     /// <inheritdoc cref="Table{TItem}.OnClickRowCallback"/>
     [Parameter]
     public Func<TItem, Task>? OnClickRowCallback { get; set; }
-    
-        
+
+
     /// <inheritdoc cref="Table{TItem}.AllowDragColumn"/>
     [Parameter]
     public bool AllowDragColumn { get; set; } = false;
@@ -116,7 +116,7 @@ public partial class AdminTable<TItem> where TItem : class, new()
 
     /// <inheritdoc cref="Table{TItem}.IsAutoRefresh"/>
     [Parameter]
-    public bool IsAutoRefresh { get; set; } = true;
+    public bool IsAutoRefresh { get; set; } = false;
 
     /// <inheritdoc cref="Table{TItem}.IsFixedHeader"/>
     [Parameter]

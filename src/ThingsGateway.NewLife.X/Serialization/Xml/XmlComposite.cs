@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+
 using ThingsGateway.NewLife.Reflection;
 
 namespace ThingsGateway.NewLife.Serialization;

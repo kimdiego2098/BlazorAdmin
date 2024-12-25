@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+
 using ThingsGateway.NewLife.Data;
 using ThingsGateway.NewLife.Reflection;
 using ThingsGateway.NewLife.Serialization.Interface;
@@ -176,8 +177,8 @@ public class BinaryComposite : BinaryHandlerBase
                 Host.Hosts.Pop();
                 return false;
             }
- 
-                value.SetValue(member, v);
+
+            value.SetValue(member, v);
         }
         Host.Hosts.Pop();
 

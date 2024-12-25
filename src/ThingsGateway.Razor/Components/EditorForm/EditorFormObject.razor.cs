@@ -278,7 +278,7 @@ public partial class EditorFormObject<TModel> : IShowLabel
             if (AutoGenerateAllItem)
             {
                 // 获取绑定模型所有属性
-                var columns = Utility.GetTableColumns(Model.GetType(),defaultOrderCallback: ColumnOrderCallback).ToList();
+                var columns = Utility.GetTableColumns(Model.GetType(), defaultOrderCallback: ColumnOrderCallback).ToList();
 
                 // 通过设定的 FieldItems 模板获取项进行渲染
                 foreach (var el in _editorItems)
