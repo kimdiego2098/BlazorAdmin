@@ -16,7 +16,10 @@ using SqlSugar;
 
 using System.Reflection;
 
+using ThingsGateway.NewLife;
 using ThingsGateway.UnifyResult;
+
+using Yitter.IdGenerator;
 
 namespace ThingsGateway.Admin.Application;
 
@@ -25,6 +28,22 @@ public class Startup : AppStartup
 {
     public void ConfigureAdminApp(IServiceCollection services)
     {
+        services.AddConfigurableOptions<SqlSugarOptions>();
+
+        services.AddSingleton(typeof(IDataService<>), typeof(BaseService<>));
+        services.AddSingleton<ISugarAopService, SugarAopService>();
+        services.AddSingleton<ISugarConfigAopService, SugarConfigAopService>();
+
+        services.AddSingleton<IAppService, AppService>();
+
+        MachineInfo.RegisterAsync();
+
+        // 配置雪花Id算法机器码
+        YitIdHelper.SetIdGenerator(new IdGeneratorOptions
+        {
+            WorkerId = 1// 取值范围0~63
+        });
+
         StaticConfig.EnableAllWhereIF = true;
 
         services.AddConfigurableOptions<EmailOptions>();

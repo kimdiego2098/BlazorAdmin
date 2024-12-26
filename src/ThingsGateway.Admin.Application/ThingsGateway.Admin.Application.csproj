@@ -1,44 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Version.props" />
+	<Import Project="..\Version.props" />
 	<Import Project="..\PackNuget.props" />
 	<Import Project="..\Admin.props" />
 	<PropertyGroup>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Rougamo.Fody" Version="5.0.0" />
-    <PackageReference Include="MailKit" Version="4.9.0" />
-    <ProjectReference Include="..\ThingsGateway.Core\ThingsGateway.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+	<ItemGroup>
+		<PackageReference Include="UAParser" Version="3.1.47" />
+		<PackageReference Include="Yitter.IdGenerator" Version="1.0.14" />
+		<PackageReference Include="Rougamo.Fody" Version="5.0.0" />
+		<PackageReference Include="MailKit" Version="4.9.0" />
+		<ProjectReference Include="..\ThingsGateway.Core\ThingsGateway.Core.csproj" />
+	</ItemGroup>
 
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.172" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+		<PackageReference Include="SqlSugarCore" Version="5.1.4.122" />
+	</ItemGroup>
 
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net9.0' ">
 
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
 
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Locales\*.json" />
-    <EmbeddedResource Include="Locales\*.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="SeedData\Admin\*.json" />
-    <Content Include="SeedData\Admin\*.json" Pack="true" PackagePath="\Content\SeedData\Admin\">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
 
-  <ItemGroup>
-    <Content Include="Directory.build.targets">
-      <Pack>true</Pack>
-      <PackagePath>Directory.build.targets</PackagePath>
-    </Content>
-  </ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net9.0' ">
+
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<Content Remove="Locales\*.json" />
+		<EmbeddedResource Include="Locales\*.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Remove="SeedData\Admin\*.json" />
+		<Content Include="SeedData\Admin\*.json" Pack="true" PackagePath="\Content\SeedData\Admin\">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Directory.build.targets">
+			<Pack>true</Pack>
+			<PackagePath>Directory.build.targets</PackagePath>
+		</Content>
+	</ItemGroup>
 
 </Project>

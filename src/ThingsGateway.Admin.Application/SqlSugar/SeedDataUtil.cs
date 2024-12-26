@@ -18,6 +18,7 @@ using SqlSugar;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+using ThingsGateway.NewLife;
 using ThingsGateway.NewLife.Extension;
 
 namespace ThingsGateway;

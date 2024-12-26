@@ -17,8 +17,6 @@ using MiniExcelLibs;
 using MiniExcelLibs.Attributes;
 using MiniExcelLibs.OpenXml;
 
-using SqlSugar;
-
 using System.Data;
 using System.Reflection;
 
