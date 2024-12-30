@@ -88,14 +88,13 @@ public partial class PositionTree : IDisposable
     private IDispatchService<SysPosition> DispatchService { get; set; }
     private string SearchText;
 
-    private async Task OnClickSearch(string searchText)
+    private async Task<List<TreeViewItem<PositionTreeOutput>>> OnClickSearch(string searchText)
     {
         SearchText = searchText;
         var items = (await SysPositionService.TreeAsync());
         items = items.WhereIF(!searchText.IsNullOrEmpty(), a => a.Name.Contains(searchText)).ToList();
-        Items = ZItem.Concat(PositionUtil.BuildTreeItemList(items, new List<long> { Value })).ToList();
+        return ZItem.Concat(PositionUtil.BuildTreeItemList(items, new List<long> { Value })).ToList();
 
-        StateHasChanged();
     }
 
     public void Dispose()

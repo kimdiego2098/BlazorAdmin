@@ -56,14 +56,12 @@ public partial class SysRoleEdit
     }
 
     private string SearchText;
-    private async Task OnClickSearch(string searchText)
+    private async Task<List<TreeViewItem<SysOrg>>> OnClickSearch(string searchText)
     {
         SearchText = searchText;
         var items = (await SysOrgService.SelectorAsync());
         items = items.WhereIf(!searchText.IsNullOrEmpty(), a => a.Name.Contains(searchText)).ToList();
-        Items = OrgUtil.BuildTreeItemList(items, Model.DefaultDataScope.ScopeDefineOrgIdList).ToList();
-
-        StateHasChanged();
+        return OrgUtil.BuildTreeItemList(items, Model.DefaultDataScope.ScopeDefineOrgIdList);
     }
     [NotNull]
     private List<TreeViewItem<long>> OrgItems { get; set; }

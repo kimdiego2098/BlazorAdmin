@@ -90,14 +90,12 @@ public partial class OrgTree : IDisposable
     private IDispatchService<SysOrg> DispatchService { get; set; }
     private string SearchText;
 
-    private async Task OnClickSearch(string searchText)
+    private async Task<List<TreeViewItem<SysOrg>>> OnClickSearch(string searchText)
     {
         SearchText = searchText;
         var items = (await SysOrgService.SelectorAsync());
         items = items.WhereIF(!searchText.IsNullOrEmpty(), a => a.Name.Contains(searchText)).ToList();
-        Items = ZItem.Concat(OrgUtil.BuildTreeItemList(items, new List<long> { Value })).ToList();
-
-        StateHasChanged();
+        return ZItem.Concat(OrgUtil.BuildTreeItemList(items, new List<long> { Value })).ToList();
     }
 
     public void Dispose()

@@ -90,14 +90,12 @@ public partial class RoleTree : IDisposable
 
     private string SearchText;
 
-    private async Task OnClickSearch(string searchText)
+    private async Task<List<TreeViewItem<RoleTreeOutput>>> OnClickSearch(string searchText)
     {
         SearchText = searchText;
         var items = (await SysRoleService.TreeAsync());
         items = items.WhereIF(!searchText.IsNullOrEmpty(), a => a.Name.Contains(searchText)).ToList();
-        Items = ZItem.Concat(RoleUtil.BuildTreeItemList(items, new List<long> { Value })).ToList();
-
-        StateHasChanged();
+        return ZItem.Concat(RoleUtil.BuildTreeItemList(items, new List<long> { Value })).ToList();
     }
 
     public void Dispose()

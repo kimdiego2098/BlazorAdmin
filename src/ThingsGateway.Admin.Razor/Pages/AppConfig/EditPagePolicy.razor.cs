@@ -52,22 +52,20 @@ public partial class EditPagePolicy
     }
 
     private string ShortcutsSearchText;
-    private Task OnShortcutsClickSearch(string searchText)
-    {
-        ShortcutsSearchText = searchText;
-        ShortcutsTreeViewItems = ResourceUtil.BuildTreeItemList(AppContext.OwnMenus.WhereIf(!ShortcutsSearchText.IsNullOrEmpty(), a => a.Title.Contains(ShortcutsSearchText)), Model.Shortcuts, null);
 
-        StateHasChanged();
-        return Task.CompletedTask;
+    private async Task<List<TreeViewItem<SysResource>>> OnShortcutsClickSearch(string searchText)
+    {
+        await Task.CompletedTask;
+        ShortcutsSearchText = searchText;
+        return ResourceUtil.BuildTreeItemList(AppContext.OwnMenus.WhereIf(!ShortcutsSearchText.IsNullOrEmpty(), a => a.Title.Contains(ShortcutsSearchText)), Model.Shortcuts, null);
+
     }
     private string RazorSearchText;
-    private Task OnRazorClickSearch(string searchText)
+    private async Task<List<TreeViewItem<SysResource>>> OnRazorClickSearch(string searchText)
     {
+        await Task.CompletedTask;
         RazorSearchText = searchText;
-        RazorTreeViewItems = ResourceUtil.BuildTreeItemList(AppContext.OwnMenus.WhereIf(!RazorSearchText.IsNullOrEmpty(), a => a.Title.Contains(RazorSearchText)), new List<long>() { Model.Razor }, null, disableFunc: (a => a.Href.IsNullOrEmpty()));
+        return  ResourceUtil.BuildTreeItemList(AppContext.OwnMenus.WhereIf(!RazorSearchText.IsNullOrEmpty(), a => a.Title.Contains(RazorSearchText)), new List<long>() { Model.Razor }, null, disableFunc: (a => a.Href.IsNullOrEmpty())).ToList();
 
-        StateHasChanged();
-
-        return Task.CompletedTask;
     }
 }
