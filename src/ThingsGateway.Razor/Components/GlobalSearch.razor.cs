@@ -19,9 +19,6 @@ public partial class GlobalSearch
     [NotNull]
     public IEnumerable<MenuItem>? Menus { get; set; }
 
-    [NotNull]
-    private IEnumerable<string?>? ComponentItems => Menus?.Select(i => i.Text);
-
     [Inject]
     [NotNull]
     private IStringLocalizer<GlobalSearch>? Localizer { get; set; }
@@ -42,19 +39,29 @@ public partial class GlobalSearch
     [Inject]
     IServiceProvider ServiceProvider { get; set; }
 
-    private Task OnSearch(string searchText)
+    private async Task<IEnumerable<string>> OnSearch(string searchText)
     {
-
-        if (!string.IsNullOrEmpty(searchText))
+        await Task.CompletedTask;
+        if (!string.IsNullOrWhiteSpace(searchText))
         {
-            var item = Menus?.FirstOrDefault(i => i.Text?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false);
+            return Menus?.Where(i => i.Text?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false).Where(a => a != null && !string.IsNullOrEmpty(a.Url)).Select(a => a.Text);
+        }
+        else
+        {
+            return Menus?.Where(a => a != null && !string.IsNullOrEmpty(a.Url)).Select(a => a.Text);
+        }
+    }
+
+    private async Task OnSelectedItemChanged(string searchText)
+    {
+        await Task.CompletedTask;
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            var item = Menus?.FirstOrDefault(i => i.Text?.Equals(searchText, StringComparison.OrdinalIgnoreCase) ?? false);
             if (item != null && !string.IsNullOrEmpty(item.Url))
             {
                 NavigationManager.NavigateTo(ServiceProvider, item.Url, item.Text, item.Icon);
             }
         }
-        return Task.CompletedTask;
     }
-
-    private Task OnSelectedItemChanged(string searchText) => OnSearch(searchText);
 }
