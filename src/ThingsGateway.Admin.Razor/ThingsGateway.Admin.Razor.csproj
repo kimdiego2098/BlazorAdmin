@@ -7,7 +7,7 @@
     <ProjectReference Include="..\ThingsGateway.Razor\ThingsGateway.Razor.csproj" />
     <ProjectReference Include="..\ThingsGateway.Admin.Application\ThingsGateway.Admin.Application.csproj" />
     <PackageReference Include="BootstrapBlazor.Chart" Version="9.0.0" />
-    <PackageReference Include="BootstrapBlazor.TableExport" Version="9.0.1" />
+    <PackageReference Include="BootstrapBlazor.TableExport" Version="9.1.0" />
   </ItemGroup>
 
   <ItemGroup>
