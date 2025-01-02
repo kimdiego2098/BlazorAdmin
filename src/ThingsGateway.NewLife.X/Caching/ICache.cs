@@ -229,6 +229,12 @@ public interface ICache
     /// <inheritdoc/>
     public IDictionary<string, T> HashGetAll<T>(string key);
 
+    /// <summary>
+    /// 按前缀删除
+    /// </summary>
+    /// <param name="v"></param>
+    void DelByPattern(string v);
+
     #endregion
 
 #endif

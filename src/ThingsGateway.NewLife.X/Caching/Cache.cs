@@ -810,7 +810,16 @@ public abstract class Cache : DisposeBase, ICache
         var data = GetDictionary<T>(key);
         return data;
     }
-
+    /// <inheritdoc/>
+    public void DelByPattern(string pattern)
+    {
+        var keys = Keys;//获取所有key
+        foreach (var item in keys.ToList())
+        {
+            if (item.StartsWith(pattern))//如果匹配
+                Remove(item);
+        }
+    }
     #endregion
 
 #endif
